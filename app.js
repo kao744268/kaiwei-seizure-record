@@ -1294,15 +1294,15 @@ body:JSON.stringify({
 
 
 recordTime:
-record.time,
+formatDate(record.time),
 
 
 startTime:
-record.start,
+formatTime(record.start),
 
 
 endTime:
-record.end,
+formatTime(record.end),
 
 
 duration:

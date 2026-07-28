@@ -691,6 +691,91 @@ array.push(value);
 function startSeizure(){
 
 
+if(timer){
+
+return;
+
+}
+
+
+
+currentRecord=createNewRecord();
+
+
+startTime=new Date();
+
+
+currentRecord.startTime =
+startTime.toLocaleString();
+
+
+
+timer=setInterval(function(){
+
+
+
+let now = new Date();
+
+
+let seconds = Math.floor(
+(now - startTime) / 1000
+);
+
+
+
+let min =
+Math.floor(seconds / 60);
+
+
+
+let sec =
+seconds % 60;
+
+
+
+let display =
+document.getElementById(
+"timer"
+);
+
+
+
+if(display){
+
+
+display.innerText =
+
+String(min).padStart(2,"0")
+
++
+
+":"
+
++
+
+String(sec).padStart(2,"0");
+
+}
+
+
+
+if(seconds>=300){
+
+
+showFiveMinuteWarning();
+
+
+}
+
+
+
+},500);
+
+
+
+}
+
+
 
 if(timer){
 
@@ -799,6 +884,98 @@ showFiveMinuteWarning();
 
 
 function endSeizure(){
+
+
+
+if(!timer){
+
+
+alert(
+"尚未開始計時"
+);
+
+
+return;
+
+
+}
+
+
+
+let endTime = new Date();
+
+
+
+clearInterval(timer);
+
+
+timer=null;
+
+
+
+currentRecord.endTime =
+endTime.toLocaleString();
+
+
+
+let duration =
+Math.floor(
+(endTime-startTime)/1000
+);
+
+
+
+currentRecord.duration =
+duration+"秒";
+
+
+
+let display =
+document.getElementById(
+"timer"
+);
+
+
+
+if(display){
+
+
+let min =
+Math.floor(duration/60);
+
+
+let sec =
+duration%60;
+
+
+
+display.innerText =
+
+String(min).padStart(2,"0")
+
++
+
+":"
+
++
+
+String(sec).padStart(2,"0");
+
+}
+
+
+
+alert(
+
+"發作結束\n持續時間："+
+
+currentRecord.duration
+
+);
+
+
+
+}
 
 
 

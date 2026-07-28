@@ -1,6 +1,5 @@
 /* =================================
-愷威癲癇紀錄系統 V2.0
-
+愷威癲癇紀錄系統 V2.1 Stable
 style.css
 ================================= */
 
@@ -11,7 +10,6 @@ style.css
 box-sizing:border-box;
 
 font-family:
-
 "Microsoft JhengHei",
 Arial,
 sans-serif;
@@ -24,7 +22,7 @@ body{
 
 margin:0;
 
-background:#f5f5f5;
+background:#f2f4f7;
 
 color:#333;
 
@@ -36,13 +34,13 @@ color:#333;
 
 header{
 
-background:#2c3e50;
+background:#34495e;
 
 color:white;
 
-padding:20px;
-
 text-align:center;
+
+padding:22px 15px;
 
 }
 
@@ -64,7 +62,7 @@ font-size:26px;
 
 header p{
 
-margin-top:10px;
+margin:10px 0 0;
 
 font-size:15px;
 
@@ -78,10 +76,19 @@ main{
 
 padding:20px;
 
+max-width:600px;
+
+margin:auto;
+
 }
 
 
 
+
+
+/* ===============================
+頁面切換
+=============================== */
 
 
 .page{
@@ -89,8 +96,6 @@ padding:20px;
 display:none;
 
 }
-
-
 
 
 
@@ -104,6 +109,13 @@ display:block;
 
 
 
+
+
+/* ===============================
+按鈕
+=============================== */
+
+
 button{
 
 width:100%;
@@ -114,7 +126,7 @@ margin:10px 0;
 
 border:none;
 
-border-radius:15px;
+border-radius:16px;
 
 font-size:20px;
 
@@ -131,12 +143,13 @@ cursor:pointer;
 
 
 
-
 button:active{
 
 transform:scale(0.98);
 
 }
+
+
 
 
 
@@ -148,7 +161,7 @@ background:#7f8c8d;
 
 font-size:16px;
 
-padding:12px;
+padding:14px;
 
 }
 
@@ -156,15 +169,20 @@ padding:12px;
 
 
 
+/* ===============================
+卡片
+=============================== */
+
+
 .card{
 
 background:white;
 
-border-radius:18px;
-
 padding:20px;
 
 margin:15px 0;
+
+border-radius:18px;
 
 box-shadow:
 
@@ -186,13 +204,24 @@ margin-top:0;
 
 
 
-#timer{
+
+
+/* ===============================
+計時器
+=============================== */
+
+
+.timer{
+
+font-size:50px;
+
+font-weight:bold;
 
 text-align:center;
 
-font-size:45px;
-
 color:#2c3e50;
+
+margin:20px 0;
 
 }
 
@@ -200,13 +229,22 @@ color:#2c3e50;
 
 
 
-.option{
+
+
+/* ===============================
+選項按鈕
+=============================== */
+
+
+.option-btn{
 
 background:white;
 
 color:#333;
 
-border:2px solid #ddd;
+border:
+
+2px solid #ddd;
 
 font-size:18px;
 
@@ -216,7 +254,9 @@ padding:14px;
 
 
 
-.option.active{
+
+
+.option-btn.active{
 
 background:#27ae60;
 
@@ -230,46 +270,146 @@ border-color:#27ae60;
 
 
 
+
+
+/* ===============================
+輸入框
+=============================== */
+
+
 textarea{
 
 width:100%;
 
 height:120px;
 
-border-radius:12px;
-
 padding:15px;
 
 font-size:18px;
 
+border-radius:12px;
+
 border:2px solid #ddd;
 
+resize:none;
+
 }
+
+
 
 
 
 
 
 /* ===============================
-緊急提醒
+儲存按鈕
 =============================== */
 
 
-.emergency-alert{
+.save-btn{
+
+background:#27ae60;
+
+}
 
 
-background:#ffe5e5;
 
-border:4px solid #e74c3c;
+
+
+.cancel-btn{
+
+background:#e74c3c;
+
+}
+
+
+
+
+
+
+
+/* ===============================
+醫療資訊
+=============================== */
+
+
+.info-card{
+
+background:white;
+
+padding:18px;
+
+border-radius:15px;
+
+margin:12px 0;
+
+font-size:18px;
+
+line-height:1.8;
+
+}
+
+
+
+
+
+
+
+/* ===============================
+歷史紀錄
+=============================== */
+
+
+.history-item{
+
+background:white;
+
+padding:18px;
+
+border-radius:15px;
+
+margin:12px 0;
+
+box-shadow:
+
+0 2px 8px rgba(0,0,0,0.1);
+
+}
+
+
+
+
+
+.history-item h3{
+
+margin-top:0;
+
+}
+
+
+
+
+
+
+
+/* ===============================
+緊急區塊
+=============================== */
+
+
+.emergency-box{
+
+background:#ffe6e6;
+
+border:
+
+4px solid #e74c3c;
 
 border-radius:20px;
 
 padding:20px;
 
-margin:15px 0;
-
-color:#c0392b;
-
+margin-bottom:20px;
 
 }
 
@@ -277,19 +417,19 @@ color:#c0392b;
 
 
 
-.emergency-alert h2{
+.emergency-box h2{
+
+color:#c0392b;
 
 text-align:center;
 
-color:#c0392b;
-
 }
 
 
 
 
 
-.emergency-alert li{
+.emergency-box li{
 
 font-size:18px;
 
@@ -301,13 +441,14 @@ margin:10px 0;
 
 
 
+
+
 /* ===============================
 電話按鈕
 =============================== */
 
 
-.call-btn{
-
+.phone-btn{
 
 display:block;
 
@@ -329,7 +470,6 @@ font-size:20px;
 
 font-weight:bold;
 
-
 }
 
 
@@ -337,67 +477,8 @@ font-weight:bold;
 
 
 /* ===============================
-醫療資訊
+警告
 =============================== */
-
-
-.info-item{
-
-
-background:white;
-
-padding:15px;
-
-border-radius:12px;
-
-margin:10px 0;
-
-font-size:18px;
-
-
-}
-
-
-
-
-
-/* ===============================
-歷史紀錄
-=============================== */
-
-
-.record-item{
-
-
-background:white;
-
-border-radius:15px;
-
-padding:15px;
-
-margin:12px 0;
-
-box-shadow:
-
-0 2px 8px rgba(0,0,0,0.1);
-
-
-}
-
-
-
-
-
-.success{
-
-color:#27ae60;
-
-font-weight:bold;
-
-}
-
-
-
 
 
 .warning{
@@ -423,14 +504,27 @@ font-weight:bold;
 
 
 
+
+.success{
+
+color:#27ae60;
+
+font-weight:bold;
+
+}
+
+
+
+
+
+
+
 @media(min-width:700px){
 
 
 main{
 
-max-width:600px;
-
-margin:auto;
+padding-top:30px;
 
 }
 

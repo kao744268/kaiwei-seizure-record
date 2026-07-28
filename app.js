@@ -895,7 +895,7 @@ currentRecord
 
 saveRecords();
 
-
+sendToGoogleSheet(currentRecord);
 
 alert(
 "✅ 已保存紀錄"
@@ -1265,6 +1265,102 @@ page.appendChild(a);
 
 });
 
+
+
+}
+// ===============================
+// 傳送 Google Sheet
+// V2.2
+// ===============================
+
+
+function sendToGoogleSheet(record){
+
+
+const apiUrl =
+
+"https://script.google.com/macros/s/AKfycbxlLMrK83W_Oqn3bmafxdtLmpH-07KtjocEBWe5-Owa1DLK6u8fi80QiZl5g5CmfyX6AA/exec";
+
+
+
+
+fetch(apiUrl, {
+
+
+method:"POST",
+
+
+body:JSON.stringify({
+
+
+recordTime:
+record.time,
+
+
+startTime:
+record.start,
+
+
+endTime:
+record.end,
+
+
+duration:
+record.duration,
+
+
+location:
+record.location,
+
+
+type:
+record.types.join("、"),
+
+
+awareness:
+record.consciousness,
+
+
+afterState:
+record.recovery.join("、"),
+
+
+note:
+record.note
+
+
+
+})
+
+
+})
+
+
+.then(response=>response.json())
+
+
+.then(data=>{
+
+
+console.log(
+"Google Sheet同步成功",
+data
+);
+
+
+})
+
+
+.catch(error=>{
+
+
+console.error(
+"Google Sheet同步失敗",
+error
+);
+
+
+});
 
 
 }

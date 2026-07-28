@@ -10,7 +10,11 @@
 // 新增紀錄初始化
 // =================================
 
+// Google Sheet API網址
 
+const GOOGLE_SCRIPT_URL =
+
+"https://script.google.com/macros/s/AKfycbz7NTKNSgzGET2zkReQTi_nMcWU0LYWz3gD9cwuJkKPfyVG81a_bgzbOa8WUK5e5qv5-w/exec";
 
 let currentRecord = {};
 
@@ -1112,7 +1116,7 @@ JSON.stringify(records)
 alert(
 "紀錄已保存"
 );
-
+sendToGoogleSheet();
 resetRecord();
 
 renderHistory();
@@ -1425,6 +1429,102 @@ ${person.phone}
 area.insertAdjacentHTML(
 "afterbegin",
 html
+);
+
+
+
+}
+// ===============================
+// 傳送 Google Sheet
+// ===============================
+
+
+function sendToGoogleSheet(){
+
+
+
+fetch(
+GOOGLE_SCRIPT_URL,
+{
+
+method:"POST",
+
+body:JSON.stringify({
+
+
+startTime:
+currentRecord.startTime,
+
+
+endTime:
+currentRecord.endTime,
+
+
+duration:
+currentRecord.duration,
+
+
+location:
+currentRecord.location,
+
+
+type:
+currentRecord.type.join("、"),
+
+
+awareness:
+currentRecord.awareness,
+
+
+afterState:
+currentRecord.afterState.join("、"),
+
+
+note:
+currentRecord.note,
+
+
+person:
+"老師"
+
+
+})
+
+
+}
+
+)
+
+.then(
+response=>response.json()
+)
+
+.then(
+data=>{
+
+
+console.log(
+"Google Sheet:",
+data
+);
+
+
+}
+
+)
+
+.catch(
+error=>{
+
+
+console.log(
+"傳送失敗",
+error
+);
+
+
+}
+
 );
 
 

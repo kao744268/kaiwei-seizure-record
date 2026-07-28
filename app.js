@@ -1028,9 +1028,10 @@ Math.floor(
 if(diff===300){
 
 
-alert(
-"🚨 愷威發作已超過5分鐘\n\n請依醫師指示處理"
-);
+showEmergencyAlert();
+
+
+}
 
 
 
@@ -1317,3 +1318,115 @@ startEmergencyMonitor();
 
 
 };
+// ===============================
+// 五分鐘緊急提醒畫面
+// ===============================
+
+
+function showEmergencyAlert(){
+
+
+
+let area = document.getElementById(
+"recordArea"
+);
+
+
+
+if(!area){
+
+return;
+
+}
+
+
+
+
+let html = `
+
+
+<div class="emergency-alert">
+
+
+<h2>
+🚨 緊急提醒
+</h2>
+
+
+
+<p>
+
+愷威發作已超過 5 分鐘
+
+</p>
+
+
+
+<p>
+
+請依醫師指示處理：
+
+<br>
+
+＊給予緊急藥物
+
+<br>
+
+＊通知鄰近醫院送醫
+
+<br>
+
+＊通知家長
+
+</p>
+
+
+</div>
+
+
+
+`;
+
+
+
+
+
+emergencyContacts.forEach(person=>{
+
+
+html += `
+
+
+<a
+
+class="call-btn"
+
+href="tel:${person.phone}"
+
+>
+
+📞 ${person.name}
+
+<br>
+
+${person.phone}
+
+</a>
+
+
+`;
+
+
+});
+
+
+
+
+area.insertAdjacentHTML(
+"afterbegin",
+html
+);
+
+
+
+}

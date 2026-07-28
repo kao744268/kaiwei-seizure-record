@@ -597,7 +597,18 @@ currentRecord.afterState.push(value);
 
 function startSeizure(){
 
+
+if(startTimestamp){
+
+alert("目前已在計時中");
+
+return;
+
+}
+
+
 resetRecord();
+
 
 startTimestamp=new Date();
 
@@ -634,7 +645,20 @@ Math.floor(diff/60);
 let sec =
 diff%60;
 
+let startButton =
+document.querySelector(
+'button[onclick="startSeizure()"]'
+);
 
+
+if(startButton){
+
+startButton.innerText =
+"⏱ 發作計時中...";
+
+startButton.disabled=true;
+
+}
 
 document.getElementById(
 "timer"
@@ -718,12 +742,25 @@ document.getElementById(
 "timer"
 ).innerText =
 
-"完成 "
+"✅ 發作結束\n\n持續時間："
 
 +
 
 currentRecord.duration;
+let startButton =
+document.querySelector(
+'button[onclick="startSeizure()"]'
+);
 
+
+if(startButton){
+
+startButton.innerText =
+"▶ 開始發作";
+
+startButton.disabled=false;
+
+}
 
 
 }// ===============================
@@ -1075,7 +1112,7 @@ alert(
 "紀錄已保存"
 );
 
-
+resetRecord();
 
 renderHistory();
 

@@ -1,105 +1,42 @@
 // =================================
-// 愷威癲癇紀錄系統 V2.0
+// 愷威癲癇紀錄系統 V2.1 Stable
 // app.js
-// 第一段：初始化與頁面控制
 // =================================
 
 
 
 // ===============================
-// 全域變數
+// 全域資料
 // ===============================
 
 
 let currentRecord = null;
 
+let startTimestamp = null;
 
 let timer = null;
 
-
-let startTime = null;
-
-
-let historyRecords = [];
-
+let records = [];
 
 
 
 
 
 // ===============================
-// 初始化
+// 啟動
 // ===============================
 
 
 window.onload = function(){
 
 
-loadHistory();
+loadRecords();
 
 
-showPage("home");
-
-
-};
-
-
-
-
-
-
-
-// ===============================
-// 建立新的紀錄資料
-// ===============================
-
-
-function createNewRecord(){
-
-
-
-return {
-
-
-id:
-Date.now(),
-
-
-recordTime:
-new Date().toLocaleString(),
-
-
-startTime:"",
-
-
-endTime:"",
-
-
-duration:"",
-
-
-location:"",
-
-
-type:[],
-
-
-awareness:"",
-
-
-afterState:[],
-
-
-note:""
-
+openPage("home");
 
 
 };
-
-
-}
-
-
 
 
 
@@ -112,7 +49,7 @@ note:""
 // ===============================
 
 
-function showPage(pageId){
+function openPage(pageId){
 
 
 
@@ -130,65 +67,50 @@ page.classList.remove("active");
 
 
 
-let page =
-
+let target =
 document.getElementById(pageId);
 
 
 
-
-if(page){
-
-
-page.classList.add("active");
+if(target){
 
 
-}
-
-
-
-
-
-if(pageId==="medical"){
-
-
-renderMedical();
+target.classList.add("active");
 
 
 }
 
-
-
-
-
-if(pageId==="history"){
-
-
-renderHistory();
-
-
-}
-
-
-
-
-
-if(pageId==="emergency"){
-
-
-renderEmergency();
-
-
-}
 
 
 
 
 if(pageId==="record"){
 
-
 renderRecord();
 
+}
+
+
+
+if(pageId==="medical"){
+
+renderMedical();
+
+}
+
+
+
+if(pageId==="history"){
+
+renderHistory();
+
+}
+
+
+
+if(pageId==="emergency"){
+
+renderEmergency();
 
 }
 
@@ -205,42 +127,55 @@ renderRecord();
 
 
 // ===============================
-// 歷史紀錄讀取
+// 建立新紀錄
 // ===============================
 
 
-function loadHistory(){
+function createRecord(){
 
 
 
-let data =
-
-localStorage.getItem(
-"kaiweiHistory"
-);
+return {
 
 
-
-if(data){
-
-
-historyRecords =
-JSON.parse(data);
+id:Date.now(),
 
 
-}else{
+time:
+new Date().toLocaleString(),
 
 
-historyRecords=[];
+start:"",
+
+
+end:"",
+
+
+duration:0,
+
+
+location:"",
+
+
+types:[],
+
+
+consciousness:"",
+
+
+recovery:[],
+
+
+note:""
+
+
+};
 
 
 }
 
 
 
-}
-
-
 
 
 
@@ -248,35 +183,7 @@ historyRecords=[];
 
 
 // ===============================
-// 儲存歷史紀錄
-// ===============================
-
-
-function saveHistory(){
-
-
-
-localStorage.setItem(
-
-"kaiweiHistory",
-
-JSON.stringify(historyRecords)
-
-);
-
-
-
-}
-// =================================
-// V2.0 app.js
-// 第二段：發作紀錄功能
-// =================================
-
-
-
-
-// ===============================
-// 發作紀錄頁面
+// 發作紀錄頁
 // ===============================
 
 
@@ -284,13 +191,14 @@ function renderRecord(){
 
 
 
-let area = document.getElementById(
-"recordArea"
+let page =
+document.getElementById(
+"recordPage"
 );
 
 
 
-area.innerHTML = `
+page.innerHTML = `
 
 
 
@@ -298,13 +206,15 @@ area.innerHTML = `
 
 
 <h3>
-⏱ 發作計時
+⏱ 發作時間
 </h3>
 
 
-<h1 id="timer">
+<div class="timer" id="timer">
+
 00:00
-</h1>
+
+</div>
 
 
 
@@ -324,14 +234,17 @@ area.innerHTML = `
 
 
 
-<button onclick="cancelRecord()">
+<button class="cancel-btn" onclick="cancelRecord()">
 
 ❌ 取消本次紀錄
 
 </button>
 
 
+
 </div>
+
+
 
 
 
@@ -343,10 +256,11 @@ area.innerHTML = `
 📍 發作地點
 </h3>
 
-<div id="locationButtons"></div>
-
+<div id="locationBox"></div>
 
 </div>
+
+
 
 
 
@@ -358,10 +272,11 @@ area.innerHTML = `
 ⚡ 發作型態
 </h3>
 
-<div id="typeButtons"></div>
-
+<div id="typeBox"></div>
 
 </div>
+
+
 
 
 
@@ -373,10 +288,11 @@ area.innerHTML = `
 🧠 意識狀態
 </h3>
 
-<div id="awarenessButtons"></div>
-
+<div id="consciousBox"></div>
 
 </div>
+
+
 
 
 
@@ -388,10 +304,11 @@ area.innerHTML = `
 📝 發作後狀態
 </h3>
 
-<div id="afterButtons"></div>
-
+<div id="recoveryBox"></div>
 
 </div>
+
+
 
 
 
@@ -399,14 +316,27 @@ area.innerHTML = `
 
 <div class="card">
 
+
 <h3>
 備註
 </h3>
 
-<textarea id="noteInput"></textarea>
+
+<textarea id="note"></textarea>
 
 
 </div>
+
+
+
+
+
+<button class="save-btn" onclick="saveRecord()">
+
+💾 儲存紀錄
+
+</button>
+
 
 
 `;
@@ -415,13 +345,14 @@ area.innerHTML = `
 
 if(!currentRecord){
 
-currentRecord=createNewRecord();
+currentRecord=createRecord();
 
 }
 
 
 
-createOptionButtons();
+createButtons();
+
 
 
 }
@@ -435,58 +366,42 @@ createOptionButtons();
 
 
 // ===============================
-// 建立選項按鈕
+// 建立選項
 // ===============================
 
 
-function createOptionButtons(){
+function createButtons(){
 
 
 
-createOptionGroup(
-
-"locationButtons",
-
-locationList,
-
+createOptionButtons(
+"locationBox",
+seizureLocations,
 "location"
-
 );
 
 
 
-createOptionGroup(
-
-"typeButtons",
-
-seizureTypeList,
-
-"type"
-
+createOptionButtons(
+"typeBox",
+seizureTypes,
+"types"
 );
 
 
 
-createOptionGroup(
-
-"awarenessButtons",
-
-awarenessList,
-
-"awareness"
-
+createOptionButtons(
+"consciousBox",
+consciousnessStates,
+"consciousness"
 );
 
 
 
-createOptionGroup(
-
-"afterButtons",
-
-afterStateList,
-
-"afterState"
-
+createOptionButtons(
+"recoveryBox",
+recoveryStates,
+"recovery"
 );
 
 
@@ -500,49 +415,52 @@ afterStateList,
 
 
 
-function createOptionGroup(
-id,
+function createOptionButtons(
+boxId,
 list,
 type
 ){
 
 
 
-let area=document.getElementById(id);
+let box =
+document.getElementById(boxId);
 
 
 
-if(!area)return;
+if(!box)return;
 
 
 
-area.innerHTML="";
+box.innerHTML="";
 
 
 
 list.forEach(item=>{
 
 
-let button=document.createElement(
-"button"
-);
+
+let btn =
+document.createElement("button");
 
 
 
-button.className="option";
-
-
-button.innerText=item;
+btn.className =
+"option-btn";
 
 
 
-button.onclick=function(){
+btn.innerText=item;
+
+
+
+btn.onclick=function(){
 
 
 selectOption(
 type,
 item,
-button
+btn
 );
 
 
@@ -551,11 +469,12 @@ button
 
 
 
-area.appendChild(button);
+box.appendChild(btn);
 
 
 
 });
+
 
 
 }
@@ -568,22 +487,15 @@ area.appendChild(button);
 
 
 
-// ===============================
-// 選擇紀錄項目
-// ===============================
-
-
 function selectOption(
 type,
 value,
-button
+btn
 ){
 
 
 
-button.classList.toggle(
-"active"
-);
+btn.classList.toggle("active");
 
 
 
@@ -597,13 +509,11 @@ currentRecord.location=value;
 
 
 
-
-
-if(type==="type"){
+if(type==="types"){
 
 
 toggleArray(
-currentRecord.type,
+currentRecord.types,
 value
 );
 
@@ -612,25 +522,21 @@ value
 
 
 
+if(type==="consciousness"){
 
 
-if(type==="awareness"){
-
-
-currentRecord.awareness=value;
+currentRecord.consciousness=value;
 
 
 }
 
 
 
-
-
-if(type==="afterState"){
+if(type==="recovery"){
 
 
 toggleArray(
-currentRecord.afterState,
+currentRecord.recovery,
 value
 );
 
@@ -653,12 +559,12 @@ value
 ){
 
 
+let index =
+array.indexOf(value);
 
-let index=array.indexOf(value);
 
 
-
-if(index>-1){
+if(index>=0){
 
 
 array.splice(index,1);
@@ -684,13 +590,14 @@ array.push(value);
 
 
 // ===============================
-// 開始發作
+// 開始計時
 // ===============================
 
 
 function startSeizure(){
 
 
+
 if(timer){
 
 return;
@@ -699,138 +606,71 @@ return;
 
 
 
-currentRecord=createNewRecord();
-
-
-startTime=new Date();
-
-
-currentRecord.startTime =
-startTime.toLocaleString();
+currentRecord=createRecord();
 
 
 
-timer=setInterval(function(){
+startTimestamp =
+Date.now();
 
 
 
-let now = new Date();
+currentRecord.start =
+new Date().toLocaleString();
 
 
-let seconds = Math.floor(
-(now - startTime) / 1000
+
+
+
+timer=setInterval(updateTimer,500);
+
+
+
+}
+
+
+
+
+
+
+
+
+function updateTimer(){
+
+
+
+if(!startTimestamp)return;
+
+
+
+let seconds =
+Math.floor(
+(Date.now()-startTimestamp)/1000
 );
 
 
 
 let min =
-Math.floor(seconds / 60);
+Math.floor(seconds/60);
 
 
 
 let sec =
-seconds % 60;
+seconds%60;
 
 
 
-let display =
+let timerBox =
 document.getElementById(
 "timer"
 );
 
 
 
-if(display){
+if(timerBox){
 
 
-display.innerText =
-
-String(min).padStart(2,"0")
-
-+
-
-":"
-
-+
-
-String(sec).padStart(2,"0");
-
-}
-
-
-
-if(seconds>=300){
-
-
-showFiveMinuteWarning();
-
-
-}
-
-
-
-},500);
-
-
-
-}
-
-
-
-if(timer){
-
-
-return;
-
-
-}
-
-
-
-
-currentRecord=createNewRecord();
-
-
-
-startTime=new Date();
-
-
-
-currentRecord.startTime=
-
-startTime.toLocaleString();
-
-
-
-
-let seconds=0;
-
-
-
-timer=setInterval(function(){
-
-
-seconds++;
-
-
-
-let min=Math.floor(seconds/60);
-
-
-let sec=seconds%60;
-
-
-
-let display=document.getElementById(
-"timer"
-);
-
-
-
-if(display){
-
-
-display.innerText=
+timerBox.innerText =
 
 String(min).padStart(2,"0")
 
@@ -842,29 +682,17 @@ String(min).padStart(2,"0")
 
 String(sec).padStart(2,"0");
 
-
 }
 
 
 
+if(seconds>=systemConfig.warningTime){
 
 
-
-// 五分鐘提醒
-
-if(seconds===300){
-
-
-showFiveMinuteWarning();
+timerBox.classList.add("danger");
 
 
 }
-
-
-
-
-
-},1000);
 
 
 
@@ -891,7 +719,7 @@ if(!timer){
 
 
 alert(
-"尚未開始計時"
+"尚未開始發作"
 );
 
 
@@ -902,7 +730,8 @@ return;
 
 
 
-let endTime = new Date();
+let end =
+Date.now();
 
 
 
@@ -913,124 +742,36 @@ timer=null;
 
 
 
-currentRecord.endTime =
-endTime.toLocaleString();
-
-
-
-let duration =
+let seconds =
 Math.floor(
-(endTime-startTime)/1000
+(end-startTimestamp)/1000
 );
 
 
 
 currentRecord.duration =
-duration+"秒";
+seconds;
 
 
 
-let display =
-document.getElementById(
-"timer"
-);
+currentRecord.end =
+new Date().toLocaleString();
 
 
 
-if(display){
 
 
-let min =
-Math.floor(duration/60);
+alert(
 
-
-let sec =
-duration%60;
-
-
-
-display.innerText =
-
-String(min).padStart(2,"0")
+"發作結束\n\n持續時間："
 
 +
 
-":"
+seconds
 
 +
 
-String(sec).padStart(2,"0");
-
-}
-
-
-
-alert(
-
-"發作結束\n持續時間："+
-
-currentRecord.duration
-
-);
-
-
-
-}
-
-
-
-if(!timer){
-
-
-alert(
-"尚未開始計時"
-);
-
-
-return;
-
-
-}
-
-
-
-let endTime=new Date();
-
-
-
-clearInterval(timer);
-
-
-
-timer=null;
-
-
-
-currentRecord.endTime=
-
-endTime.toLocaleString();
-
-
-
-let duration=
-
-Math.floor(
-(endTime-startTime)/1000
-);
-
-
-
-currentRecord.duration=
-
-duration+"秒";
-
-
-
-alert(
-
-"發作結束\n持續時間："+
-
-currentRecord.duration
+" 秒"
 
 );
 
@@ -1047,7 +788,7 @@ currentRecord.duration
 
 
 // ===============================
-// 取消紀錄
+// 取消
 // ===============================
 
 
@@ -1061,25 +802,16 @@ if(confirm(
 
 
 
-if(timer){
-
-
 clearInterval(timer);
 
 
 timer=null;
 
 
-}
-
-
-
 currentRecord=null;
 
 
-
-showPage("home");
-
+openPage("home");
 
 
 }
@@ -1087,29 +819,42 @@ showPage("home");
 
 
 }
-// =================================
-// V2.0 app.js
-// 第三段：儲存、歷史、醫療資訊
-// =================================
+
+
+
+
 
 
 
 
 
 // ===============================
-// 儲存目前紀錄
+// 儲存紀錄
 // ===============================
 
 
-function saveCurrentRecord(){
+function saveRecord(){
 
 
 
 if(!currentRecord){
 
+alert(
+"沒有紀錄"
+);
+
+return;
+
+}
+
+
+
+
+if(currentRecord.duration===0){
+
 
 alert(
-"目前沒有紀錄"
+"請先結束發作"
 );
 
 
@@ -1121,9 +866,10 @@ return;
 
 
 
+
 let note =
 document.getElementById(
-"noteInput"
+"note"
 );
 
 
@@ -1131,7 +877,7 @@ document.getElementById(
 if(note){
 
 
-currentRecord.note =
+currentRecord.note=
 note.value;
 
 
@@ -1141,15 +887,26 @@ note.value;
 
 
 
-if(!currentRecord.endTime){
-
-
-alert(
-"請先結束發作計時"
+records.unshift(
+currentRecord
 );
 
 
-return;
+
+saveRecords();
+
+
+
+alert(
+"✅ 已保存紀錄"
+);
+
+
+
+currentRecord=null;
+
+
+openPage("home");
 
 
 }
@@ -1159,31 +916,133 @@ return;
 
 
 
-historyRecords.unshift(
-currentRecord
+
+
+
+// ===============================
+// LocalStorage
+// ===============================
+
+
+function loadRecords(){
+
+
+
+let data =
+localStorage.getItem(
+systemConfig.storageKey
 );
 
 
 
-saveHistory();
+records =
+data ?
+JSON.parse(data)
+:
+[];
 
 
 
+}
 
 
-alert(
-"✅ 紀錄已保存"
+
+function saveRecords(){
+
+
+
+localStorage.setItem(
+
+systemConfig.storageKey,
+
+JSON.stringify(records)
+
 );
 
 
 
+}
 
 
-currentRecord=null;
 
 
 
-showPage("home");
+
+
+
+
+// ===============================
+// 醫療卡
+// ===============================
+
+
+function renderMedical(){
+
+
+
+let page =
+document.getElementById(
+"medicalPage"
+);
+
+
+
+page.innerHTML=`
+
+
+<div class="info-card">
+
+
+👦 姓名：
+${medicalCard.name}
+
+
+<br>
+
+
+🏥 疾病：
+${medicalCard.disease}
+
+
+<br>
+
+
+🏥 醫院：
+${medicalCard.hospital}
+
+
+<br>
+
+
+👨‍⚕️ 醫師：
+${medicalCard.doctor}
+
+
+<br>
+
+
+💊 固定藥物：
+${medicalCard.medication}
+
+
+<br>
+
+
+🚨 緊急藥物：
+${medicalCard.emergencyMedication}
+
+
+<br>
+
+
+📝 注意事項：
+${medicalCard.notes}
+
+
+</div>
+
+
+`;
 
 
 
@@ -1206,29 +1065,21 @@ function renderHistory(){
 
 
 
-let area =
+let page =
 document.getElementById(
-"historyArea"
+"historyPage"
 );
 
 
 
-if(!area)return;
+if(records.length===0){
 
 
-
-
-if(historyRecords.length===0){
-
-
-
-area.innerHTML=`
+page.innerHTML=`
 
 <div class="card">
 
-<p>
-目前尚無發作紀錄
-</p>
+目前尚無紀錄
 
 </div>
 
@@ -1241,18 +1092,11 @@ return;
 
 
 
+page.innerHTML="";
 
 
 
-
-area.innerHTML="";
-
-
-
-
-
-historyRecords.forEach(record=>{
-
+records.forEach(record=>{
 
 
 let div =
@@ -1263,52 +1107,39 @@ document.createElement(
 
 
 div.className=
-"record-item";
-
-
+"history-item";
 
 
 
 div.innerHTML=`
 
 <h3>
-📅 ${record.recordTime}
+📅 ${record.time}
 </h3>
 
 
 <p>
-📍 地點：
-${record.location || "未填寫"}
+📍 ${record.location}
 </p>
 
 
 <p>
-⚡ 型態：
-${record.type.join("、") || "未填寫"}
+⚡ ${record.types.join("、")}
 </p>
 
 
 <p>
-🧠 意識：
-${record.awareness || "未填寫"}
+🧠 ${record.consciousness}
 </p>
 
 
 <p>
-📝 發作後：
-${record.afterState.join("、") || "未填寫"}
+📝 ${record.note || "無"}
 </p>
 
 
 <p>
-⏱ 持續：
-${record.duration || "未計算"}
-</p>
-
-
-<p>
-備註：
-${record.note || "無"}
+⏱ ${record.duration} 秒
 </p>
 
 
@@ -1316,7 +1147,7 @@ ${record.note || "無"}
 
 
 
-area.appendChild(div);
+page.appendChild(div);
 
 
 
@@ -1335,110 +1166,7 @@ area.appendChild(div);
 
 
 // ===============================
-// 醫療資訊卡
-// ===============================
-
-
-function renderMedical(){
-
-
-
-let area =
-document.getElementById(
-"medicalArea"
-);
-
-
-
-if(!area)return;
-
-
-
-
-
-area.innerHTML=`
-
-<div class="card">
-
-
-<h3>
-👦 ${medicalInfo.name}
-</h3>
-
-
-<div class="info-item">
-
-疾病：
-${medicalInfo.disease}
-
-</div>
-
-
-
-<div class="info-item">
-
-主要醫院：
-${medicalInfo.hospital || "尚未設定"}
-
-</div>
-
-
-
-<div class="info-item">
-
-醫師：
-${medicalInfo.doctor || "尚未設定"}
-
-</div>
-
-
-
-<div class="info-item">
-
-固定藥物：
-${medicalInfo.medicine || "尚未設定"}
-
-</div>
-
-
-
-<div class="info-item">
-
-緊急藥物：
-${medicalInfo.emergencyMedicine || "依醫囑使用"}
-
-</div>
-
-
-
-<div class="info-item">
-
-注意事項：
-${medicalInfo.note || "尚未設定"}
-
-</div>
-
-
-
-</div>
-
-`;
-
-
-
-}
-// =================================
-// V2.0 app.js
-// 第四段：緊急聯絡、提醒、補強功能
-// =================================
-
-
-
-
-
-
-// ===============================
-// 緊急聯絡頁面
+// 緊急聯絡
 // ===============================
 
 
@@ -1446,23 +1174,17 @@ function renderEmergency(){
 
 
 
-let area =
+let page =
 document.getElementById(
-"emergencyArea"
+"emergencyPage"
 );
 
 
 
-if(!area)return;
+page.innerHTML=`
 
 
-
-
-
-area.innerHTML = `
-
-
-<div class="emergency-alert">
+<div class="emergency-box">
 
 
 <h2>
@@ -1494,34 +1216,13 @@ area.innerHTML = `
 
 
 
-<div class="card">
-
-<h3>
-📞 緊急聯絡人
-</h3>
-
-
-<div id="contactList"></div>
-
-
-</div>
-
-
-
 `;
 
 
 
 
-let list =
-document.getElementById(
-"contactList"
-);
 
-
-
-emergencyContacts.forEach(
-contact=>{
+emergencyContacts.forEach(person=>{
 
 
 let a =
@@ -1531,21 +1232,22 @@ document.createElement(
 
 
 
-a.className="call-btn";
+a.className=
+"phone-btn";
 
 
-a.href =
-"tel:" + contact.phone;
+a.href=
+"tel:"+person.phone;
 
 
 
-a.innerText =
+a.innerText=
 
 "📞 "
 
 +
 
-contact.name
+person.name
 
 +
 
@@ -1553,135 +1255,16 @@ contact.name
 
 +
 
-contact.phone;
+person.phone;
 
 
 
-list.appendChild(a);
+page.appendChild(a);
 
 
 
 });
 
 
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 五分鐘提醒
-// ===============================
-
-
-function showFiveMinuteWarning(){
-
-
-
-alert(
-
-"⚠️ 發作已超過五分鐘\n\n"
-
-+
-
-"請依醫師指示處理\n"
-
-+
-
-"並通知家長"
-
-);
-
-
 
 }
-
-
-
-
-
-
-
-
-
-// ===============================
-// 補上儲存按鈕
-// ===============================
-
-
-function addSaveButton(){
-
-
-
-let area =
-document.getElementById(
-"recordArea"
-);
-
-
-
-if(!area)return;
-
-
-
-
-let button =
-document.createElement(
-"button"
-);
-
-
-
-button.innerText =
-"💾 儲存本次紀錄";
-
-
-
-button.onclick =
-saveCurrentRecord;
-
-
-
-area.appendChild(button);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 修改原本發作頁
-// 自動加入儲存按鈕
-// ===============================
-
-
-const oldRenderRecord =
-renderRecord;
-
-
-
-renderRecord=function(){
-
-
-
-oldRenderRecord();
-
-
-
-addSaveButton();
-
-
-
-};

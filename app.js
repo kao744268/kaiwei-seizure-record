@@ -5,20 +5,130 @@
 
 
 
-let currentRecord = {
+// =================================
+// 愷威癲癇紀錄系統 V1.0.1
+// 新增紀錄初始化
+// =================================
+
+
+
+let currentRecord = {};
+
+
+
+let timer = null;
+
+
+let startTimestamp = null;
+
+
+
+
+
+// ===============================
+// 建立新的紀錄
+// ===============================
+
+
+function resetRecord(){
+
+
+
+currentRecord = {
+
 
 startTime:"",
+
 endTime:"",
+
 duration:"",
 
+
 location:"",
+
+
 type:[],
+
+
 awareness:"",
+
+
 afterState:[],
+
+
 note:""
+
 
 };
 
+
+
+startTimestamp = null;
+
+
+
+if(timer){
+
+
+clearInterval(timer);
+
+
+timer=null;
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+// ===============================
+// 取消本次紀錄
+// ===============================
+
+
+function cancelRecord(){
+
+
+
+let confirmCancel = confirm(
+
+"確定取消本次發作紀錄？"
+
+);
+
+
+
+if(!confirmCancel){
+
+return;
+
+}
+
+
+
+resetRecord();
+
+
+
+alert(
+
+"已取消本次紀錄"
+
+);
+
+
+
+showPage("home");
+
+
+
+}
 
 
 let timer=null;
@@ -483,7 +593,7 @@ currentRecord.afterState.push(value);
 
 function startSeizure(){
 
-
+resetRecord();
 
 startTimestamp=new Date();
 

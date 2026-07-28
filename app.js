@@ -910,3 +910,601 @@ showPage("home");
 
 
 }
+// =================================
+// V2.0 app.js
+// 第三段：儲存、歷史、醫療資訊
+// =================================
+
+
+
+
+
+// ===============================
+// 儲存目前紀錄
+// ===============================
+
+
+function saveCurrentRecord(){
+
+
+
+if(!currentRecord){
+
+
+alert(
+"目前沒有紀錄"
+);
+
+
+return;
+
+
+}
+
+
+
+
+let note =
+document.getElementById(
+"noteInput"
+);
+
+
+
+if(note){
+
+
+currentRecord.note =
+note.value;
+
+
+}
+
+
+
+
+
+if(!currentRecord.endTime){
+
+
+alert(
+"請先結束發作計時"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+historyRecords.unshift(
+currentRecord
+);
+
+
+
+saveHistory();
+
+
+
+
+
+alert(
+"✅ 紀錄已保存"
+);
+
+
+
+
+
+currentRecord=null;
+
+
+
+showPage("home");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 歷史紀錄
+// ===============================
+
+
+function renderHistory(){
+
+
+
+let area =
+document.getElementById(
+"historyArea"
+);
+
+
+
+if(!area)return;
+
+
+
+
+if(historyRecords.length===0){
+
+
+
+area.innerHTML=`
+
+<div class="card">
+
+<p>
+目前尚無發作紀錄
+</p>
+
+</div>
+
+`;
+
+return;
+
+
+}
+
+
+
+
+
+
+
+area.innerHTML="";
+
+
+
+
+
+historyRecords.forEach(record=>{
+
+
+
+let div =
+document.createElement(
+"div"
+);
+
+
+
+div.className=
+"record-item";
+
+
+
+
+
+div.innerHTML=`
+
+<h3>
+📅 ${record.recordTime}
+</h3>
+
+
+<p>
+📍 地點：
+${record.location || "未填寫"}
+</p>
+
+
+<p>
+⚡ 型態：
+${record.type.join("、") || "未填寫"}
+</p>
+
+
+<p>
+🧠 意識：
+${record.awareness || "未填寫"}
+</p>
+
+
+<p>
+📝 發作後：
+${record.afterState.join("、") || "未填寫"}
+</p>
+
+
+<p>
+⏱ 持續：
+${record.duration || "未計算"}
+</p>
+
+
+<p>
+備註：
+${record.note || "無"}
+</p>
+
+
+`;
+
+
+
+area.appendChild(div);
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 醫療資訊卡
+// ===============================
+
+
+function renderMedical(){
+
+
+
+let area =
+document.getElementById(
+"medicalArea"
+);
+
+
+
+if(!area)return;
+
+
+
+
+
+area.innerHTML=`
+
+<div class="card">
+
+
+<h3>
+👦 ${medicalInfo.name}
+</h3>
+
+
+<div class="info-item">
+
+疾病：
+${medicalInfo.disease}
+
+</div>
+
+
+
+<div class="info-item">
+
+主要醫院：
+${medicalInfo.hospital || "尚未設定"}
+
+</div>
+
+
+
+<div class="info-item">
+
+醫師：
+${medicalInfo.doctor || "尚未設定"}
+
+</div>
+
+
+
+<div class="info-item">
+
+固定藥物：
+${medicalInfo.medicine || "尚未設定"}
+
+</div>
+
+
+
+<div class="info-item">
+
+緊急藥物：
+${medicalInfo.emergencyMedicine || "依醫囑使用"}
+
+</div>
+
+
+
+<div class="info-item">
+
+注意事項：
+${medicalInfo.note || "尚未設定"}
+
+</div>
+
+
+
+</div>
+
+`;
+
+
+
+}
+// =================================
+// V2.0 app.js
+// 第四段：緊急聯絡、提醒、補強功能
+// =================================
+
+
+
+
+
+
+// ===============================
+// 緊急聯絡頁面
+// ===============================
+
+
+function renderEmergency(){
+
+
+
+let area =
+document.getElementById(
+"emergencyArea"
+);
+
+
+
+if(!area)return;
+
+
+
+
+
+area.innerHTML = `
+
+
+<div class="emergency-alert">
+
+
+<h2>
+⚠️ 超過五分鐘
+</h2>
+
+
+<ul>
+
+<li>
+給予緊急藥物
+</li>
+
+
+<li>
+通知鄰近醫院送醫
+</li>
+
+
+<li>
+通知家長
+</li>
+
+
+</ul>
+
+
+</div>
+
+
+
+<div class="card">
+
+<h3>
+📞 緊急聯絡人
+</h3>
+
+
+<div id="contactList"></div>
+
+
+</div>
+
+
+
+`;
+
+
+
+
+let list =
+document.getElementById(
+"contactList"
+);
+
+
+
+emergencyContacts.forEach(
+contact=>{
+
+
+let a =
+document.createElement(
+"a"
+);
+
+
+
+a.className="call-btn";
+
+
+a.href =
+"tel:" + contact.phone;
+
+
+
+a.innerText =
+
+"📞 "
+
++
+
+contact.name
+
++
+
+" "
+
++
+
+contact.phone;
+
+
+
+list.appendChild(a);
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 五分鐘提醒
+// ===============================
+
+
+function showFiveMinuteWarning(){
+
+
+
+alert(
+
+"⚠️ 發作已超過五分鐘\n\n"
+
++
+
+"請依醫師指示處理\n"
+
++
+
+"並通知家長"
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 補上儲存按鈕
+// ===============================
+
+
+function addSaveButton(){
+
+
+
+let area =
+document.getElementById(
+"recordArea"
+);
+
+
+
+if(!area)return;
+
+
+
+
+let button =
+document.createElement(
+"button"
+);
+
+
+
+button.innerText =
+"💾 儲存本次紀錄";
+
+
+
+button.onclick =
+saveCurrentRecord;
+
+
+
+area.appendChild(button);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 修改原本發作頁
+// 自動加入儲存按鈕
+// ===============================
+
+
+const oldRenderRecord =
+renderRecord;
+
+
+
+renderRecord=function(){
+
+
+
+oldRenderRecord();
+
+
+
+addSaveButton();
+
+
+
+};

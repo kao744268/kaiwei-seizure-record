@@ -1,22 +1,46 @@
 // =================================
-// 愷威癲癇紀錄系統 V1.0
+// 愷威癲癇紀錄系統 V1.1
 // app.js
+// 第一段：基礎架構
 // =================================
 
 
 
-// =================================
-// 愷威癲癇紀錄系統 V1.0.1
-// 新增紀錄初始化
-// =================================
-
-// Google Sheet API網址
+// Google Sheet API
 
 const GOOGLE_SCRIPT_URL =
 
 "https://script.google.com/macros/s/AKfycbz7NTKNSgzGET2zkReQTi_nMcWU0LYWz3gD9cwuJkKPfyVG81a_bgzbOa8WUK5e5qv5-w/exec";
 
-let currentRecord = {};
+
+
+
+// ===============================
+// 發作紀錄資料
+// ===============================
+
+
+let currentRecord = {
+
+startTime:"",
+
+endTime:"",
+
+duration:"",
+
+location:"",
+
+type:[],
+
+awareness:"",
+
+afterState:[],
+
+note:""
+
+};
+
+
 
 
 
@@ -29,8 +53,11 @@ let startTimestamp = null;
 
 
 
+
+
+
 // ===============================
-// 建立新的紀錄
+// 初始化新紀錄
 // ===============================
 
 
@@ -47,18 +74,13 @@ endTime:"",
 
 duration:"",
 
-
 location:"",
-
 
 type:[],
 
-
 awareness:"",
 
-
 afterState:[],
-
 
 note:""
 
@@ -91,58 +113,6 @@ timer=null;
 
 
 
-// ===============================
-// 取消本次紀錄
-// ===============================
-
-
-function cancelRecord(){
-
-
-
-let confirmCancel = confirm(
-
-"確定取消本次發作紀錄？"
-
-);
-
-
-
-if(!confirmCancel){
-
-return;
-
-}
-
-
-
-resetRecord();
-
-
-
-alert(
-
-"已取消本次紀錄"
-
-);
-
-
-
-showPage("home");
-
-
-
-}
-
-
-let timer=null;
-
-let startTimestamp=null;
-
-
-
-
-
 
 
 // ===============================
@@ -150,11 +120,14 @@ let startTimestamp=null;
 // ===============================
 
 
-function showPage(id){
+function showPage(pageId){
+
 
 
 document
+
 .querySelectorAll(".page")
+
 .forEach(page=>{
 
 
@@ -165,41 +138,69 @@ page.classList.remove("active");
 
 
 
-document
-.getElementById(id)
-.classList.add("active");
+
+
+let target =
+
+document.getElementById(pageId);
 
 
 
-if(id==="medical"){
 
-renderMedical();
+if(target){
+
+
+target.classList.add("active");
+
 
 }
 
 
-if(id==="emergency"){
-
-renderEmergency();
-
-}
 
 
-if(id==="record"){
+
+
+if(pageId==="record"){
+
 
 renderRecord();
 
-}
-
 
 }
 
 
 
+if(pageId==="medical"){
+
+
+renderMedical();
+
+
+}
 
 
 
+if(pageId==="history"){
 
+
+renderHistory();
+
+
+}
+
+
+
+if(pageId==="emergency"){
+
+
+renderEmergency();
+
+
+}
+
+
+
+}
 // ===============================
 // 發作紀錄畫面
 // ===============================
@@ -208,27 +209,27 @@ renderRecord();
 function renderRecord(){
 
 
-
-let area=
-document.getElementById(
+let area = document.getElementById(
 "recordArea"
 );
 
 
 
-area.innerHTML=`
+area.innerHTML = `
+
 
 <div class="card">
 
 
 <h3>
-發作計時
+⏱ 發作時間
 </h3>
 
 
 <h1 id="timer">
 00:00
 </h1>
+
 
 
 <button onclick="startSeizure()">
@@ -238,17 +239,23 @@ area.innerHTML=`
 </button>
 
 
+
 <button onclick="endSeizure()">
 
 ⏹ 發作結束
 
 </button>
 
+
+
 <button onclick="cancelRecord()">
 
 ❌ 取消本次紀錄
 
 </button>
+
+
+
 </div>
 
 
@@ -260,6 +267,7 @@ area.innerHTML=`
 <h3>
 📍 發作地點
 </h3>
+
 
 <div id="locationOptions"></div>
 
@@ -276,6 +284,7 @@ area.innerHTML=`
 ⚡ 發作型態
 </h3>
 
+
 <div id="typeOptions"></div>
 
 
@@ -290,6 +299,7 @@ area.innerHTML=`
 <h3>
 🧠 意識狀態
 </h3>
+
 
 <div id="awarenessOptions"></div>
 
@@ -306,6 +316,7 @@ area.innerHTML=`
 發作後狀態
 </h3>
 
+
 <div id="afterOptions"></div>
 
 
@@ -319,7 +330,6 @@ area.innerHTML=`
 
 <h3>
 備註
-
 </h3>
 
 
@@ -330,23 +340,25 @@ area.innerHTML=`
 
 
 
-
-
-<button onclick="saveRecord()">
-
-📤 儲存紀錄
-
-</button>
-
-
 `;
 
 
 
 renderOptions();
 
-}// ===============================
-// 選項產生
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 建立選項
 // ===============================
 
 
@@ -354,50 +366,34 @@ function renderOptions(){
 
 
 
-createOptionButtons(
-
+createButtons(
 "locationOptions",
-
 locationList,
-
 "location"
-
 );
 
 
 
-createOptionButtons(
-
+createButtons(
 "typeOptions",
-
 seizureTypeList,
-
 "type"
-
 );
 
 
 
-createOptionButtons(
-
+createButtons(
 "awarenessOptions",
-
 awarenessList,
-
 "awareness"
-
 );
 
 
 
-createOptionButtons(
-
+createButtons(
 "afterOptions",
-
 afterStateList,
-
 "afterState"
-
 );
 
 
@@ -410,8 +406,7 @@ afterStateList,
 
 
 
-
-function createOptionButtons(
+function createButtons(
 id,
 list,
 type
@@ -439,7 +434,9 @@ area.innerHTML="";
 list.forEach(item=>{
 
 
-let btn=document.createElement("button");
+let btn =
+document.createElement("button");
+
 
 
 btn.className="option";
@@ -480,10 +477,10 @@ area.appendChild(btn);
 
 
 
-// ===============================
-// 選項選擇
-// ===============================
 
+// ===============================
+// 選擇項目
+// ===============================
 
 
 function selectOption(
@@ -500,6 +497,7 @@ button.classList.toggle(
 
 
 
+
 if(type==="location"){
 
 
@@ -510,12 +508,12 @@ currentRecord.location=value;
 
 
 
-
-
 if(type==="type"){
 
 
-if(currentRecord.type.includes(value)){
+if(
+currentRecord.type.includes(value)
+){
 
 
 currentRecord.type =
@@ -539,9 +537,6 @@ currentRecord.type.push(value);
 
 
 
-
-
-
 if(type==="awareness"){
 
 
@@ -552,21 +547,18 @@ currentRecord.awareness=value;
 
 
 
-
-
-
 if(type==="afterState"){
 
 
-
-if(currentRecord.afterState.includes(value)){
+if(
+currentRecord.afterState.includes(value)
+){
 
 
 currentRecord.afterState =
 currentRecord.afterState.filter(
 x=>x!==value
 );
-
 
 
 }else{
@@ -592,38 +584,42 @@ currentRecord.afterState.push(value);
 
 
 
-
 // ===============================
-// 開始發作
+// 開始計時
 // ===============================
-
 
 
 function startSeizure(){
 
 
+
 if(startTimestamp){
 
-alert("目前已在計時中");
+
+alert(
+"目前已在計時中"
+);
+
 
 return;
 
+
 }
+
 
 
 resetRecord();
 
 
-startTimestamp=new Date();
+
+startTimestamp =
+new Date();
 
 
 
 currentRecord.startTime =
 startTimestamp.toLocaleString();
 
-
-
-clearInterval(timer);
 
 
 
@@ -633,8 +629,7 @@ timer=setInterval(()=>{
 let now=new Date();
 
 
-
-let diff =
+let seconds =
 Math.floor(
 (now-startTimestamp)/1000
 );
@@ -642,31 +637,19 @@ Math.floor(
 
 
 let min =
-Math.floor(diff/60);
+Math.floor(seconds/60);
 
 
 
 let sec =
-diff%60;
-
-let startButton =
-document.querySelector(
-'button[onclick="startSeizure()"]'
-);
+seconds%60;
 
 
-if(startButton){
-
-startButton.innerText =
-"⏱ 發作計時中...";
-
-startButton.disabled=true;
-
-}
 
 document.getElementById(
 "timer"
 ).innerText =
+
 
 String(min).padStart(2,"0")
 
@@ -693,11 +676,9 @@ String(sec).padStart(2,"0");
 
 
 
-
 // ===============================
-// 結束發作
+// 結束計時
 // ===============================
-
 
 
 function endSeizure(){
@@ -707,7 +688,7 @@ function endSeizure(){
 if(!startTimestamp){
 
 alert(
-"請先開始發作計時"
+"請先開始計時"
 );
 
 return;
@@ -725,7 +706,7 @@ clearInterval(timer);
 
 
 
-let diff =
+let seconds =
 Math.floor(
 (end-startTimestamp)/1000
 );
@@ -738,7 +719,7 @@ end.toLocaleString();
 
 
 currentRecord.duration =
-diff+"秒";
+seconds+"秒";
 
 
 
@@ -746,96 +727,20 @@ document.getElementById(
 "timer"
 ).innerText =
 
-"✅ 發作結束\n\n持續時間："
+
+"✅ 發作結束\n"
+
++
+
+"持續時間："
 
 +
 
 currentRecord.duration;
-let startButton =
-document.querySelector(
-'button[onclick="startSeizure()"]'
-);
-
-
-if(startButton){
-
-startButton.innerText =
-"▶ 開始發作";
-
-startButton.disabled=false;
-
-}
-
-
-}// ===============================
-// 醫療資訊卡
-// ===============================
-
-
-function renderMedical(){
-
-
-let area =
-document.getElementById(
-"medicalArea"
-);
-
-
-
-area.innerHTML=`
-
-<div class="info">
-
-
-<h3>
-👦 ${medicalInfo.name}
-</h3>
-
-
-<p>
-疾病：
-${medicalInfo.disease}
-</p>
-
-
-<p>
-就診醫院：
-${medicalInfo.hospital || "尚未設定"}
-</p>
-
-
-<p>
-主治醫師：
-${medicalInfo.doctor || "尚未設定"}
-</p>
-
-
-<p>
-目前藥物：
-${medicalInfo.medicine || "尚未設定"}
-</p>
-
-
-<p>
-緊急藥物：
-${medicalInfo.emergencyMedicine || "尚未設定"}
-</p>
-
-
-<p>
-注意事項：
-${medicalInfo.note || "尚未設定"}
-</p>
-
-
-</div>
-
-`;
 
 
 
 }
-
 
 
 
@@ -845,688 +750,29 @@ ${medicalInfo.note || "尚未設定"}
 
 
 // ===============================
-// 緊急聯絡
+// 取消紀錄
 // ===============================
 
 
+function cancelRecord(){
 
-function renderEmergency(){
 
 
-let area =
-document.getElementById(
-"contactArea"
-);
-
-
-
-let html=`
-
-
-<div class="emergency">
-
-
-<h3>
-🚨 發作超過五分鐘
-</h3>
-
-
-<p>
-
-請依醫師指示：
-
-</p>
-
-
-<p>
-＊給予緊急藥物
-</p>
-
-
-<p>
-＊通知鄰近醫院送醫
-</p>
-
-
-<p>
-＊通知家長
-</p>
-
-
-</div>
-
-
-`;
-
-
-
-
-
-emergencyContacts.forEach(
-person=>{
-
-
-html += `
-
-
-<a
-
-class="call-btn"
-
-href="tel:${person.phone}"
-
->
-
-📞 ${person.name}
-
-<br>
-
-${person.phone}
-
-
-</a>
-
-
-`;
-
-
-});
-
-
-
-
-
-area.innerHTML=html;
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 超過五分鐘判斷
-// ===============================
-
-
-
-function checkEmergency(){
-
-
-
-if(!startTimestamp){
-
-return;
-
-}
-
-
-
-let now=new Date();
-
-
-
-let diff =
-Math.floor(
-(now-startTimestamp)/1000
-);
-
-
-
-
-
-if(diff>=300){
-
-
-
-alert(
-
-"🚨 發作已超過五分鐘\n\n請依醫師指示處理"
-
-);
-
-
-
-clearInterval(timer);
-
-
-
-}
-
-
-
-}// ===============================
-// 五分鐘自動檢查
-// ===============================
-
-
-function startEmergencyMonitor(){
-
-
-setInterval(()=>{
-
-
-if(!startTimestamp){
-
-return;
-
-}
-
-
-
-let now=new Date();
-
-
-let diff =
-Math.floor(
-(now-startTimestamp)/1000
-);
-
-
-
-if(diff===300){
-
-
-showEmergencyAlert();
-
-
-}
-
-
-
-}
-
-
-
-},1000);
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 儲存紀錄
-// ===============================
-
-
-
-function saveRecord(){
-
-
-
-currentRecord.note =
-
-document
-.getElementById("note")
-.value;
-
-
-
-let records =
-
-JSON.parse(
-
-localStorage.getItem(
-"kaiweiRecords"
+if(
+confirm(
+"確定取消本次紀錄？"
 )
 
-)
-
-|| [];
+){
 
 
-
-
-
-records.push({
-
-...currentRecord
-
-});
-
-
-
-
-
-localStorage.setItem(
-
-"kaiweiRecords",
-
-JSON.stringify(records)
-
-);
-
-
-
-
-
-alert(
-"紀錄已保存"
-);
-sendToGoogleSheet();
 resetRecord();
 
-renderHistory();
 
-
-
-showPage("history");
-
+showPage("home");
 
 
 }
-
-
-
-
-
-
-
-
-
-// ===============================
-// 歷史紀錄
-// ===============================
-
-
-
-function renderHistory(){
-
-
-let area =
-document.getElementById(
-"historyArea"
-);
-
-
-
-let records =
-
-JSON.parse(
-
-localStorage.getItem(
-"kaiweiRecords"
-)
-
-)
-
-|| [];
-
-
-
-
-
-if(records.length===0){
-
-
-area.innerHTML=
-
-`
-
-<div class="card">
-
-目前尚無紀錄
-
-</div>
-
-`;
-
-
-return;
-
-
-}
-
-
-
-
-
-let html="";
-
-
-
-
-
-records
-.reverse()
-.forEach(r=>{
-
-
-html += `
-
-
-<div class="card">
-
-
-<p>
-日期時間：
-
-${r.startTime}
-
-</p>
-
-
-
-<p>
-持續：
-
-${r.duration}
-
-</p>
-
-
-
-<p>
-地點：
-
-${r.location}
-
-</p>
-
-
-
-<p>
-型態：
-
-${r.type.join("、")}
-
-</p>
-
-
-
-<p>
-意識：
-
-${r.awareness}
-
-</p>
-
-
-
-<p>
-發作後：
-
-${r.afterState.join("、")}
-
-</p>
-
-
-
-<p>
-備註：
-
-${r.note}
-
-</p>
-
-
-</div>
-
-
-`;
-
-
-
-});
-
-
-
-
-
-area.innerHTML=html;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 啟動
-// ===============================
-
-
-
-window.onload=function(){
-
-
-renderMedical();
-
-
-renderEmergency();
-
-
-renderHistory();
-
-
-startEmergencyMonitor();
-
-
-};
-// ===============================
-// 五分鐘緊急提醒畫面
-// ===============================
-
-
-function showEmergencyAlert(){
-
-
-
-let area = document.getElementById(
-"recordArea"
-);
-
-
-
-if(!area){
-
-return;
-
-}
-
-
-
-
-let html = `
-
-
-<div class="emergency-alert">
-
-
-<h2>
-🚨 緊急提醒
-</h2>
-
-
-
-<p>
-
-愷威發作已超過 5 分鐘
-
-</p>
-
-
-
-<p>
-
-請依醫師指示處理：
-
-<br>
-
-＊給予緊急藥物
-
-<br>
-
-＊通知鄰近醫院送醫
-
-<br>
-
-＊通知家長
-
-</p>
-
-
-</div>
-
-
-
-`;
-
-
-
-
-
-emergencyContacts.forEach(person=>{
-
-
-html += `
-
-
-<a
-
-class="call-btn"
-
-href="tel:${person.phone}"
-
->
-
-📞 ${person.name}
-
-<br>
-
-${person.phone}
-
-</a>
-
-
-`;
-
-
-});
-
-
-
-
-area.insertAdjacentHTML(
-"afterbegin",
-html
-);
-
-
-
-}
-// ===============================
-// 傳送 Google Sheet
-// ===============================
-
-
-function sendToGoogleSheet(){
-
-
-
-fetch(
-GOOGLE_SCRIPT_URL,
-{
-
-method:"POST",
-
-body:JSON.stringify({
-
-
-startTime:
-currentRecord.startTime,
-
-
-endTime:
-currentRecord.endTime,
-
-
-duration:
-currentRecord.duration,
-
-
-location:
-currentRecord.location,
-
-
-type:
-currentRecord.type.join("、"),
-
-
-awareness:
-currentRecord.awareness,
-
-
-afterState:
-currentRecord.afterState.join("、"),
-
-
-note:
-currentRecord.note,
-
-
-person:
-"老師"
-
-
-})
-
-
-}
-
-)
-
-.then(
-response=>response.json()
-)
-
-.then(
-data=>{
-
-
-console.log(
-"Google Sheet:",
-data
-);
-
-
-}
-
-)
-
-.catch(
-error=>{
-
-
-console.log(
-"傳送失敗",
-error
-);
-
-
-}
-
-);
-
 
 
 }

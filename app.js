@@ -1,55 +1,26 @@
 // =================================
-// 愷威癲癇紀錄系統 V1.1
+// 愷威癲癇紀錄系統 V2.0
 // app.js
-// 第一段：基礎架構
+// 第一段：初始化與頁面控制
 // =================================
 
 
 
-// Google Sheet API
-
-const GOOGLE_SCRIPT_URL =
-
-"https://script.google.com/macros/s/AKfycbz7NTKNSgzGET2zkReQTi_nMcWU0LYWz3gD9cwuJkKPfyVG81a_bgzbOa8WUK5e5qv5-w/exec";
-
-
-
-
 // ===============================
-// 發作紀錄資料
+// 全域變數
 // ===============================
 
 
-let currentRecord = {
-
-startTime:"",
-
-endTime:"",
-
-duration:"",
-
-location:"",
-
-type:[],
-
-awareness:"",
-
-afterState:[],
-
-note:""
-
-};
-
-
-
+let currentRecord = null;
 
 
 let timer = null;
 
 
-let startTimestamp = null;
+let startTime = null;
 
 
+let historyRecords = [];
 
 
 
@@ -57,56 +28,77 @@ let startTimestamp = null;
 
 
 // ===============================
-// 初始化新紀錄
+// 初始化
 // ===============================
 
 
-function resetRecord(){
+window.onload = function(){
 
 
+loadHistory();
 
-currentRecord = {
 
-
-startTime:"",
-
-endTime:"",
-
-duration:"",
-
-location:"",
-
-type:[],
-
-awareness:"",
-
-afterState:[],
-
-note:""
+showPage("home");
 
 
 };
 
 
 
-startTimestamp = null;
 
 
 
-if(timer){
+
+// ===============================
+// 建立新的紀錄資料
+// ===============================
 
 
-clearInterval(timer);
+function createNewRecord(){
 
 
-timer=null;
+
+return {
+
+
+id:
+Date.now(),
+
+
+recordTime:
+new Date().toLocaleString(),
+
+
+startTime:"",
+
+
+endTime:"",
+
+
+duration:"",
+
+
+location:"",
+
+
+type:[],
+
+
+awareness:"",
+
+
+afterState:[],
+
+
+note:""
+
+
+
+};
 
 
 }
 
-
-
-}
 
 
 
@@ -125,9 +117,7 @@ function showPage(pageId){
 
 
 document
-
 .querySelectorAll(".page")
-
 .forEach(page=>{
 
 
@@ -140,22 +130,56 @@ page.classList.remove("active");
 
 
 
-let target =
+let page =
 
 document.getElementById(pageId);
 
 
 
 
-if(target){
+if(page){
 
 
-target.classList.add("active");
+page.classList.add("active");
 
 
 }
 
 
+
+
+
+if(pageId==="medical"){
+
+
+renderMedical();
+
+
+}
+
+
+
+
+
+if(pageId==="history"){
+
+
+renderHistory();
+
+
+}
+
+
+
+
+
+if(pageId==="emergency"){
+
+
+renderEmergency();
+
+
+}
 
 
 
@@ -170,43 +194,94 @@ renderRecord();
 
 
 
-if(pageId==="medical"){
-
-
-renderMedical();
-
-
 }
 
 
 
-if(pageId==="history"){
-
-
-renderHistory();
-
-
-}
 
 
 
-if(pageId==="emergency"){
-
-
-renderEmergency();
-
-
-}
 
 
 
-}
 // ===============================
-// 發作紀錄畫面
+// 歷史紀錄讀取
+// ===============================
+
+
+function loadHistory(){
+
+
+
+let data =
+
+localStorage.getItem(
+"kaiweiHistory"
+);
+
+
+
+if(data){
+
+
+historyRecords =
+JSON.parse(data);
+
+
+}else{
+
+
+historyRecords=[];
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// 儲存歷史紀錄
+// ===============================
+
+
+function saveHistory(){
+
+
+
+localStorage.setItem(
+
+"kaiweiHistory",
+
+JSON.stringify(historyRecords)
+
+);
+
+
+
+}
+// =================================
+// V2.0 app.js
+// 第二段：發作紀錄功能
+// =================================
+
+
+
+
+// ===============================
+// 發作紀錄頁面
 // ===============================
 
 
 function renderRecord(){
+
 
 
 let area = document.getElementById(
@@ -218,11 +293,12 @@ let area = document.getElementById(
 area.innerHTML = `
 
 
+
 <div class="card">
 
 
 <h3>
-⏱ 發作時間
+⏱ 發作計時
 </h3>
 
 
@@ -242,7 +318,7 @@ area.innerHTML = `
 
 <button onclick="endSeizure()">
 
-⏹ 發作結束
+⏹ 結束發作
 
 </button>
 
@@ -253,7 +329,6 @@ area.innerHTML = `
 ❌ 取消本次紀錄
 
 </button>
-
 
 
 </div>
@@ -268,8 +343,7 @@ area.innerHTML = `
 📍 發作地點
 </h3>
 
-
-<div id="locationOptions"></div>
+<div id="locationButtons"></div>
 
 
 </div>
@@ -284,8 +358,7 @@ area.innerHTML = `
 ⚡ 發作型態
 </h3>
 
-
-<div id="typeOptions"></div>
+<div id="typeButtons"></div>
 
 
 </div>
@@ -300,8 +373,7 @@ area.innerHTML = `
 🧠 意識狀態
 </h3>
 
-
-<div id="awarenessOptions"></div>
+<div id="awarenessButtons"></div>
 
 
 </div>
@@ -313,11 +385,10 @@ area.innerHTML = `
 <div class="card">
 
 <h3>
-發作後狀態
+📝 發作後狀態
 </h3>
 
-
-<div id="afterOptions"></div>
+<div id="afterButtons"></div>
 
 
 </div>
@@ -332,19 +403,25 @@ area.innerHTML = `
 備註
 </h3>
 
-
-<textarea id="note"></textarea>
+<textarea id="noteInput"></textarea>
 
 
 </div>
-
 
 
 `;
 
 
 
-renderOptions();
+if(!currentRecord){
+
+currentRecord=createNewRecord();
+
+}
+
+
+
+createOptionButtons();
 
 
 }
@@ -358,42 +435,58 @@ renderOptions();
 
 
 // ===============================
-// 建立選項
+// 建立選項按鈕
 // ===============================
 
 
-function renderOptions(){
+function createOptionButtons(){
 
 
 
-createButtons(
-"locationOptions",
+createOptionGroup(
+
+"locationButtons",
+
 locationList,
+
 "location"
+
 );
 
 
 
-createButtons(
-"typeOptions",
+createOptionGroup(
+
+"typeButtons",
+
 seizureTypeList,
+
 "type"
+
 );
 
 
 
-createButtons(
-"awarenessOptions",
+createOptionGroup(
+
+"awarenessButtons",
+
 awarenessList,
+
 "awareness"
+
 );
 
 
 
-createButtons(
-"afterOptions",
+createOptionGroup(
+
+"afterButtons",
+
 afterStateList,
+
 "afterState"
+
 );
 
 
@@ -406,7 +499,8 @@ afterStateList,
 
 
 
-function createButtons(
+
+function createOptionGroup(
 id,
 list,
 type
@@ -414,16 +508,11 @@ type
 
 
 
-let area =
-document.getElementById(id);
+let area=document.getElementById(id);
 
 
 
-if(!area){
-
-return;
-
-}
+if(!area)return;
 
 
 
@@ -434,38 +523,39 @@ area.innerHTML="";
 list.forEach(item=>{
 
 
-let btn =
-document.createElement("button");
+let button=document.createElement(
+"button"
+);
 
 
 
-btn.className="option";
+button.className="option";
 
 
-btn.innerText=item;
+button.innerText=item;
 
 
 
-btn.onclick=function(){
+button.onclick=function(){
 
 
 selectOption(
 type,
 item,
-btn
+button
 );
+
 
 
 };
 
 
 
-area.appendChild(btn);
+area.appendChild(button);
 
 
 
 });
-
 
 
 }
@@ -479,7 +569,7 @@ area.appendChild(btn);
 
 
 // ===============================
-// 選擇項目
+// 選擇紀錄項目
 // ===============================
 
 
@@ -497,7 +587,6 @@ button.classList.toggle(
 
 
 
-
 if(type==="location"){
 
 
@@ -508,31 +597,19 @@ currentRecord.location=value;
 
 
 
+
+
 if(type==="type"){
 
 
-if(
-currentRecord.type.includes(value)
-){
-
-
-currentRecord.type =
-currentRecord.type.filter(
-x=>x!==value
+toggleArray(
+currentRecord.type,
+value
 );
 
 
-}else{
-
-
-currentRecord.type.push(value);
-
-
 }
 
-
-
-}
 
 
 
@@ -547,35 +624,57 @@ currentRecord.awareness=value;
 
 
 
+
+
 if(type==="afterState"){
 
 
-if(
-currentRecord.afterState.includes(value)
+toggleArray(
+currentRecord.afterState,
+value
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+function toggleArray(
+array,
+value
 ){
 
 
-currentRecord.afterState =
-currentRecord.afterState.filter(
-x=>x!==value
-);
+
+let index=array.indexOf(value);
+
+
+
+if(index>-1){
+
+
+array.splice(index,1);
 
 
 }else{
 
 
-currentRecord.afterState.push(value);
+array.push(value);
 
 
 }
 
 
-
 }
 
-
-
-}
 
 
 
@@ -585,7 +684,7 @@ currentRecord.afterState.push(value);
 
 
 // ===============================
-// 開始計時
+// 開始發作
 // ===============================
 
 
@@ -593,12 +692,7 @@ function startSeizure(){
 
 
 
-if(startTimestamp){
-
-
-alert(
-"目前已在計時中"
-);
+if(timer){
 
 
 return;
@@ -608,48 +702,50 @@ return;
 
 
 
-resetRecord();
+
+currentRecord=createNewRecord();
 
 
 
-startTimestamp =
-new Date();
+startTime=new Date();
 
 
 
-currentRecord.startTime =
-startTimestamp.toLocaleString();
+currentRecord.startTime=
+
+startTime.toLocaleString();
 
 
 
 
-timer=setInterval(()=>{
+let seconds=0;
 
 
-let now=new Date();
+
+timer=setInterval(function(){
 
 
-let seconds =
-Math.floor(
-(now-startTimestamp)/1000
+seconds++;
+
+
+
+let min=Math.floor(seconds/60);
+
+
+let sec=seconds%60;
+
+
+
+let display=document.getElementById(
+"timer"
 );
 
 
 
-let min =
-Math.floor(seconds/60);
+if(display){
 
 
-
-let sec =
-seconds%60;
-
-
-
-document.getElementById(
-"timer"
-).innerText =
-
+display.innerText=
 
 String(min).padStart(2,"0")
 
@@ -660,6 +756,26 @@ String(min).padStart(2,"0")
 +
 
 String(sec).padStart(2,"0");
+
+
+}
+
+
+
+
+
+
+// 五分鐘提醒
+
+if(seconds===300){
+
+
+showFiveMinuteWarning();
+
+
+}
+
+
 
 
 
@@ -676,8 +792,9 @@ String(sec).padStart(2,"0");
 
 
 
+
 // ===============================
-// 結束計時
+// 結束發作
 // ===============================
 
 
@@ -685,20 +802,22 @@ function endSeizure(){
 
 
 
-if(!startTimestamp){
+if(!timer){
+
 
 alert(
-"請先開始計時"
+"尚未開始計時"
 );
 
+
 return;
+
 
 }
 
 
 
-let end =
-new Date();
+let endTime=new Date();
 
 
 
@@ -706,41 +825,42 @@ clearInterval(timer);
 
 
 
-let seconds =
+timer=null;
+
+
+
+currentRecord.endTime=
+
+endTime.toLocaleString();
+
+
+
+let duration=
+
 Math.floor(
-(end-startTimestamp)/1000
+(endTime-startTime)/1000
 );
 
 
 
-currentRecord.endTime =
-end.toLocaleString();
+currentRecord.duration=
+
+duration+"秒";
 
 
 
-currentRecord.duration =
-seconds+"秒";
+alert(
 
+"發作結束\n持續時間："+
 
+currentRecord.duration
 
-document.getElementById(
-"timer"
-).innerText =
-
-
-"✅ 發作結束\n"
-
-+
-
-"持續時間："
-
-+
-
-currentRecord.duration;
+);
 
 
 
 }
+
 
 
 
@@ -758,21 +878,35 @@ function cancelRecord(){
 
 
 
-if(
-confirm(
+if(confirm(
 "確定取消本次紀錄？"
-)
-
-){
+)){
 
 
-resetRecord();
+
+if(timer){
+
+
+clearInterval(timer);
+
+
+timer=null;
+
+
+}
+
+
+
+currentRecord=null;
+
 
 
 showPage("home");
 
 
+
 }
+
 
 
 }

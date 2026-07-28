@@ -8,7 +8,244 @@
 /* ===============================
    基本設定
 =============================== */
+// ==========================================
+// V3.0 Clean
+// seizure.js
+// 第二段：結束發作與紀錄建立
+// ==========================================
 
+
+
+// ===============================
+// 結束發作
+// ===============================
+
+
+function endSeizure(){
+
+
+    if(!seizureActive ||
+       !seizureStartTime){
+
+
+        return;
+
+
+    }
+
+
+
+
+    // 取得結束時間
+
+    const endTime =
+    Date.now();
+
+
+
+
+    // 計算持續秒數
+
+    const duration =
+    Math.floor(
+        (endTime - seizureStartTime)
+        / 1000
+    );
+
+
+
+
+    // 停止計時
+
+    clearInterval(seizureTimer);
+
+
+
+    seizureTimer = null;
+
+
+
+    seizureActive = false;
+
+
+
+
+
+    // 建立紀錄
+
+
+    const record = {
+
+
+        startTime:
+        formatDateTime(
+            seizureStartTime
+        ),
+
+
+        endTime:
+        formatDateTime(
+            endTime
+        ),
+
+
+        duration:
+        duration
+
+
+    };
+
+
+
+
+    // 加入紀錄陣列
+
+
+    if(
+        typeof seizureRecords !== "undefined"
+    ){
+
+
+        seizureRecords.push(record);
+
+
+    }
+
+
+
+
+    console.log(
+        "完成發作紀錄:",
+        record
+    );
+
+
+
+    alert(
+
+        "發作結束\n\n" +
+
+        "持續時間：" +
+
+        duration +
+
+        " 秒"
+
+    );
+
+
+
+}
+
+
+
+
+
+// ===============================
+// 日期格式化
+// ===============================
+
+
+function formatDateTime(timestamp){
+
+
+
+    const date =
+    new Date(timestamp);
+
+
+
+    const year =
+    date.getFullYear();
+
+
+
+    const month =
+    String(
+        date.getMonth()+1
+    )
+    .padStart(2,"0");
+
+
+
+    const day =
+    String(
+        date.getDate()
+    )
+    .padStart(2,"0");
+
+
+
+    const hour =
+    String(
+        date.getHours()
+    )
+    .padStart(2,"0");
+
+
+
+    const minute =
+    String(
+        date.getMinutes()
+    )
+    .padStart(2,"0");
+
+
+
+    const second =
+    String(
+        date.getSeconds()
+    )
+    .padStart(2,"0");
+
+
+
+    return (
+
+        `${year}-${month}-${day} `+
+        `${hour}:${minute}:${second}`
+
+    );
+
+
+}
+
+
+
+
+
+// ===============================
+// 結束按鈕綁定
+// ===============================
+
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+
+
+    const endBtn =
+    document.getElementById(
+        "endSeizureBtn"
+    );
+
+
+
+    if(endBtn){
+
+
+        endBtn.addEventListener(
+            "click",
+            endSeizure
+        );
+
+
+    }
+
+
+
+});
 * {
 
     box-sizing: border-box;

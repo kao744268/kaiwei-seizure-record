@@ -1,84 +1,208 @@
-/* =================================
-愷威癲癇紀錄系統 V2.1 Stable
-style.css
-================================= */
+/* ==========================================
+   愷威癲癇紀錄系統
+   V3.0 Clean
+   style.css
+========================================== */
 
 
+/* ===============================
+   基本設定
+=============================== */
 
-*{
+* {
 
-box-sizing:border-box;
+    box-sizing: border-box;
 
-font-family:
-"Microsoft JhengHei",
-Arial,
-sans-serif;
+}
+
+
+body {
+
+    margin: 0;
+
+    padding: 0;
+
+    font-family:
+
+    "Noto Sans TC",
+    Arial,
+    sans-serif;
+
+    background: #f5f6f8;
+
+    color: #333;
 
 }
 
 
 
-body{
+.app-container {
 
-margin:0;
+    width: 100%;
 
-background:#f2f4f7;
+    max-width: 480px;
 
-color:#333;
+    margin: 0 auto;
 
-}
+    min-height: 100vh;
 
-
-
-
-
-header{
-
-background:#34495e;
-
-color:white;
-
-text-align:center;
-
-padding:22px 15px;
-
-}
-
-
-
-
-
-header h1{
-
-margin:0;
-
-font-size:26px;
+    padding: 20px;
 
 }
 
 
 
 
+/* ===============================
+   頁面控制
+=============================== */
 
-header p{
 
-margin:10px 0 0;
+.page {
 
-font-size:15px;
+    display: none;
+
+}
+
+
+
+.page.active {
+
+    display: block;
 
 }
 
 
 
 
+/* ===============================
+   標題
+=============================== */
 
-main{
 
-padding:20px;
+h1 {
 
-max-width:600px;
+    text-align: center;
 
-margin:auto;
+    font-size: 28px;
+
+    margin-top: 40px;
+
+}
+
+
+
+h2 {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+.version {
+
+    text-align: center;
+
+    color: #777;
+
+    margin-bottom: 40px;
+
+}
+
+
+
+
+/* ===============================
+   首頁按鈕
+=============================== */
+
+
+.menu {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+
+}
+
+
+
+button {
+
+
+    width: 100%;
+
+    padding: 18px;
+
+    border: none;
+
+    border-radius: 16px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    background: white;
+
+    box-shadow:
+
+    0 4px 12px rgba(0,0,0,0.08);
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+
+button:active {
+
+
+    transform: scale(0.97);
+
+
+}
+
+
+
+
+/* ===============================
+   發作頁
+=============================== */
+
+
+#timerBox {
+
+
+    margin: 40px auto;
+
+    width: 220px;
+
+    height: 220px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: white;
+
+    font-size: 38px;
+
+    font-weight: bold;
+
+    box-shadow:
+
+    0 8px 25px rgba(0,0,0,0.1);
 
 }
 
@@ -87,24 +211,19 @@ margin:auto;
 
 
 /* ===============================
-頁面切換
+   返回按鈕
 =============================== */
 
 
-.page{
-
-display:none;
-
-}
+.backBtn {
 
 
+    margin-top: 25px;
 
-.page.active{
+    background: #eeeeee;
 
-display:block;
 
 }
-
 
 
 
@@ -112,56 +231,27 @@ display:block;
 
 
 /* ===============================
-按鈕
+   資訊卡片
 =============================== */
 
 
-button{
+#medicalCard,
 
-width:100%;
+#emergencyList,
 
-padding:18px;
-
-margin:10px 0;
-
-border:none;
-
-border-radius:16px;
-
-font-size:20px;
-
-font-weight:bold;
-
-background:#3498db;
-
-color:white;
-
-cursor:pointer;
-
-}
+#recordList {
 
 
+    background: white;
 
+    border-radius: 18px;
 
-button:active{
+    padding: 20px;
 
-transform:scale(0.98);
+    box-shadow:
 
-}
+    0 4px 15px rgba(0,0,0,0.08);
 
-
-
-
-
-
-
-.back-btn{
-
-background:#7f8c8d;
-
-font-size:16px;
-
-padding:14px;
 
 }
 
@@ -170,36 +260,47 @@ padding:14px;
 
 
 /* ===============================
-卡片
+   緊急聯絡卡
 =============================== */
 
 
-.card{
+.contact-card {
 
-background:white;
 
-padding:20px;
+    padding: 15px;
 
-margin:15px 0;
+    margin-bottom: 12px;
 
-border-radius:18px;
+    border-radius: 12px;
 
-box-shadow:
+    background: #f8f8f8;
 
-0 3px 10px rgba(0,0,0,0.1);
 
 }
 
 
 
+.contact-name {
 
 
-.card h3{
+    font-size: 20px;
 
-margin-top:0;
+    font-weight: bold;
+
 
 }
 
+
+
+.contact-phone {
+
+
+    margin-top: 8px;
+
+    font-size: 18px;
+
+
+}
 
 
 
@@ -207,324 +308,48 @@ margin-top:0;
 
 
 /* ===============================
-計時器
+   發作紀錄
 =============================== */
 
 
-.timer{
+.record-item {
 
-font-size:50px;
 
-font-weight:bold;
+    padding: 15px;
 
-text-align:center;
+    border-bottom:
 
-color:#2c3e50;
+    1px solid #ddd;
 
-margin:20px 0;
 
 }
 
 
 
+.record-item:last-child {
+
+
+    border-bottom:none;
+
+
+}
 
 
 
 
 /* ===============================
-選項按鈕
+   平板 / 電腦
 =============================== */
 
 
-.option-btn{
+@media(min-width:768px){
 
-background:white;
 
-color:#333;
+.app-container{
 
-border:
 
-2px solid #ddd;
+    margin-top:40px;
 
-font-size:18px;
-
-padding:14px;
-
-}
-
-
-
-
-
-.option-btn.active{
-
-background:#27ae60;
-
-color:white;
-
-border-color:#27ae60;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-輸入框
-=============================== */
-
-
-textarea{
-
-width:100%;
-
-height:120px;
-
-padding:15px;
-
-font-size:18px;
-
-border-radius:12px;
-
-border:2px solid #ddd;
-
-resize:none;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-儲存按鈕
-=============================== */
-
-
-.save-btn{
-
-background:#27ae60;
-
-}
-
-
-
-
-
-.cancel-btn{
-
-background:#e74c3c;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-醫療資訊
-=============================== */
-
-
-.info-card{
-
-background:white;
-
-padding:18px;
-
-border-radius:15px;
-
-margin:12px 0;
-
-font-size:18px;
-
-line-height:1.8;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-歷史紀錄
-=============================== */
-
-
-.history-item{
-
-background:white;
-
-padding:18px;
-
-border-radius:15px;
-
-margin:12px 0;
-
-box-shadow:
-
-0 2px 8px rgba(0,0,0,0.1);
-
-}
-
-
-
-
-
-.history-item h3{
-
-margin-top:0;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-緊急區塊
-=============================== */
-
-
-.emergency-box{
-
-background:#ffe6e6;
-
-border:
-
-4px solid #e74c3c;
-
-border-radius:20px;
-
-padding:20px;
-
-margin-bottom:20px;
-
-}
-
-
-
-
-
-.emergency-box h2{
-
-color:#c0392b;
-
-text-align:center;
-
-}
-
-
-
-
-
-.emergency-box li{
-
-font-size:18px;
-
-margin:10px 0;
-
-}
-
-
-
-
-
-
-
-/* ===============================
-電話按鈕
-=============================== */
-
-
-.phone-btn{
-
-display:block;
-
-background:#27ae60;
-
-color:white;
-
-text-decoration:none;
-
-text-align:center;
-
-padding:18px;
-
-margin:12px 0;
-
-border-radius:15px;
-
-font-size:20px;
-
-font-weight:bold;
-
-}
-
-
-
-
-
-/* ===============================
-警告
-=============================== */
-
-
-.warning{
-
-color:#e67e22;
-
-font-weight:bold;
-
-}
-
-
-
-
-
-.danger{
-
-color:#c0392b;
-
-font-weight:bold;
-
-}
-
-
-
-
-
-.success{
-
-color:#27ae60;
-
-font-weight:bold;
-
-}
-
-
-
-
-
-
-
-@media(min-width:700px){
-
-
-main{
-
-padding-top:30px;
 
 }
 

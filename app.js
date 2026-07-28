@@ -8,7 +8,8 @@
 // ===============================
 // 全域資料
 // ===============================
-
+const API_URL =
+"https://script.google.com/macros/s/AKfycbzvctBKMPkg4oilJ0ZfqGyUCLMslIHNSe3T1gnJUYrkOFp2X9BjUg_shAO1BVAAiz0OFQ/exec";
 
 let currentRecord = null;
 
@@ -1410,3 +1411,48 @@ String(date.getSeconds()).padStart(2,"0");
 
 
 }
+// =================================
+// V2.2-1
+// 讀取 Google Sheet 緊急聯絡人
+// =================================
+
+function loadEmergencyContacts(){
+
+
+fetch(API_URL + "?type=emergency")
+
+
+.then(response => response.json())
+
+
+.then(data => {
+
+
+    console.log(
+      "雲端緊急聯絡人:",
+      data
+    );
+
+
+    if(Array.isArray(data)){
+
+
+      emergencyContacts = data;
+
+
+      renderEmergencyContacts();
+
+
+    }
+
+
+})
+
+
+.catch(error=>{
+
+
+    console.error(
+      "讀取緊急聯絡失敗",
+      error
+    )

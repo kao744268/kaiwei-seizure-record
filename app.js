@@ -240,7 +240,11 @@ area.innerHTML=`
 
 </button>
 
+<button onclick="cancelRecord()">
 
+❌ 取消本次紀錄
+
+</button>
 </div>
 
 

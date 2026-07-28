@@ -280,3 +280,71 @@ border-radius:15px;
 line-height:2;
 
 }
+/* =================================
+V1.0.1 緊急提醒
+================================= */
+
+
+.emergency-alert{
+
+
+background:#ffdddd;
+
+border:4px solid #d00000;
+
+border-radius:20px;
+
+padding:20px;
+
+margin:20px 0;
+
+color:#900;
+
+font-size:18px;
+
+box-shadow:
+
+0 4px 10px rgba(0,0,0,0.2);
+
+
+}
+
+
+
+
+.emergency-alert h2{
+
+
+text-align:center;
+
+color:#d00000;
+
+}
+
+
+
+
+
+.emergency-alert p{
+
+
+line-height:1.8;
+
+
+}
+
+
+
+
+
+.emergency-alert .call-btn{
+
+
+background:#d00000;
+
+color:white;
+
+font-weight:bold;
+
+
+}

@@ -1,8 +1,11 @@
 /* ==========================================
-   愷威癲癇紀錄系統
-   V3.0 Clean Stable-1
+   愷威 Care V1.0
    style.css
+   Mobile Care UI
 ========================================== */
+
+
+/* ===== 基礎 ===== */
 
 
 * {
@@ -19,24 +22,33 @@ body {
 
     padding: 0;
 
-    font-family:
-    "Noto Sans TC",
-    Arial,
-    sans-serif;
-
-    background: #f5f5f5;
+    background: #f3f5f7;
 
     color: #333;
+
+    font-family:
+
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    Arial,
+    sans-serif;
 
 }
 
 
 
-.app-container {
+
+
+/* ===== App 容器 ===== */
+
+
+.app {
 
     width: 100%;
 
-    max-width: 500px;
+    max-width: 480px;
+
+    min-height: 100vh;
 
     margin: auto;
 
@@ -44,6 +56,11 @@ body {
 
 }
 
+
+
+
+
+/* ===== 頁面切換 ===== */
 
 
 .page {
@@ -64,15 +81,12 @@ body {
 
 
 
-h1 {
+/* ===== 標題 ===== */
+
+
+.header {
 
     text-align: center;
-
-}
-
-
-
-h2 {
 
     margin-bottom: 20px;
 
@@ -80,21 +94,120 @@ h2 {
 
 
 
+.header h1 {
+
+    margin: 0;
+
+    font-size: 32px;
+
+}
+
+
+
+.header p {
+
+    margin-top: 8px;
+
+    color: #777;
+
+}
+
+
+
+
+
+h2 {
+
+    margin-top: 10px;
+
+    margin-bottom: 25px;
+
+}
+
+
+
+
+
+
+/* ===== 卡片 ===== */
+
+
+.status-card,
+
+.latest-card,
+
+.timer-card,
+
+.record-card,
+
+.medical-card,
+
+.contact-card {
+
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+
+    box-shadow:
+
+    0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+
+
+
+
+/* ===== 首頁狀態 ===== */
+
+
+.status-card h3,
+
+.latest-card h3 {
+
+    margin-top: 0;
+
+}
+
+
+
+
+#todayStatus {
+
+    font-size: 18px;
+
+}
+
+
+
+
+
+
+
+/* ===== 按鈕 ===== */
 
 
 button {
 
     width: 100%;
 
-    padding: 15px;
-
-    margin: 10px 0;
-
     border: none;
 
-    border-radius: 12px;
+    border-radius: 18px;
+
+    padding: 18px 15px;
+
+    margin: 8px 0;
 
     font-size: 18px;
+
+    font-weight: bold;
 
     background: #4a90e2;
 
@@ -102,35 +215,115 @@ button {
 
     cursor: pointer;
 
+    transition: 0.15s;
+
 }
 
 
 
 button:active {
 
-    transform: scale(0.98);
+    transform: scale(0.97);
 
 }
 
 
+
+
+
+/* ===== 發作按鈕 ===== */
+
+
+.danger-btn {
+
+
+    background:
+
+    #e74c3c;
+
+
+    font-size: 22px;
+
+    padding: 22px;
+
+
+}
+
+
+
+
+
+/* ===== 首頁功能格 ===== */
+
+
+.menu-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 12px;
+
+    margin: 20px 0;
+
+}
+
+
+
+.menu-grid button {
+
+
+    background: white;
+
+    color: #333;
+
+    min-height: 100px;
+
+    font-size: 20px;
+
+
+    box-shadow:
+
+    0 4px 12px rgba(0,0,0,0.08);
+
+}
+
+
+
+
+
+/* ===== 計時器 ===== */
+
+
+.timer-card {
+
+    text-align: center;
+
+}
 
 
 
 #timerBox {
 
-    margin: 30px 0;
 
-    padding: 30px;
-
-    text-align: center;
-
-    font-size: 42px;
+    font-size: 52px;
 
     font-weight: bold;
 
-    background: white;
+    letter-spacing: 2px;
 
-    border-radius: 15px;
+    color: #e74c3c;
+
+}
+
+
+
+#seizureStatus {
+
+
+    font-size: 18px;
+
+    color: #666;
 
 }
 
@@ -138,21 +331,92 @@ button:active {
 
 
 
-.record-card,
-.medical-card,
+
+/* ===== 發作資訊 ===== */
+
+
+#seizureInfo {
+
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+
+/* ===== 歷史紀錄 ===== */
+
+
+.record-card h3 {
+
+
+    margin-top:0;
+
+
+}
+
+
+
+.record-card p {
+
+
+    margin:8px 0;
+
+
+}
+
+
+
+
+
+
+
+/* ===== 醫療卡 ===== */
+
+
+.medical-card {
+
+
+    border-left:
+
+    6px solid #3498db;
+
+
+}
+
+
+
+
+
+/* ===== 緊急聯絡 ===== */
+
+
 .contact-card {
 
 
-    background: white;
+    border-left:
 
-    padding: 15px;
+    6px solid #e74c3c;
 
-    margin: 15px 0;
 
-    border-radius: 12px;
+}
 
-    box-shadow:
-    0 2px 8px rgba(0,0,0,0.1);
+
+
+.contact-card button {
+
+
+    background:#e74c3c;
 
 }
 
@@ -160,12 +424,67 @@ button:active {
 
 
 
-a {
+/* ===== 設定頁 ===== */
 
-    color: #1976d2;
 
-    text-decoration: none;
+.settings-list button {
 
-    font-weight: bold;
+
+    background:white;
+
+    color:#333;
+
+    text-align:left;
+
+}
+
+
+
+
+
+
+/* ===== 返回按鈕 ===== */
+
+
+.backBtn {
+
+
+    background:#777;
+
+
+}
+
+
+
+
+
+
+/* ===== 小螢幕調整 ===== */
+
+
+@media(max-width:360px){
+
+
+    .app{
+
+        padding:15px;
+
+    }
+
+
+    .header h1{
+
+        font-size:26px;
+
+    }
+
+
+
+    #timerBox{
+
+        font-size:40px;
+
+    }
+
 
 }

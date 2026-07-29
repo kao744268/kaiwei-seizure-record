@@ -8,26 +8,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-愷威 Care｜癲癇守護紀錄系統
+愷威 Care V2.2
 </title>
+
 
 <link rel="stylesheet" href="style.css">
 
+
 </head>
+
 
 
 <body>
 
 
-<!-- =========================
-首頁
-========================= -->
+
+<!-- =================================
+主畫面：現場照護模式
+================================= -->
 
 
 <section id="homePage" class="page active">
 
 
-<header class="hero">
+<header class="main-header">
 
 
 <h1>
@@ -40,184 +44,19 @@
 </p>
 
 
-<p class="small-text">
-今天也一起守護愷威
-</p>
-
-
 </header>
 
 
 
 
 
-<div class="menu-grid">
 
 
+<!-- 發作核心區 -->
 
-<button 
-class="menu-card medical"
-id="medicalPageBtn">
 
-<div class="icon">
-🏥
-</div>
+<section class="seizure-panel">
 
-<div>
-
-<h3>
-孩子醫療資訊
-</h3>
-
-<p>
-快速查看醫療資訊卡
-</p>
-
-</div>
-
-</button>
-
-
-
-
-
-
-<button 
-class="menu-card seizure"
-id="seizurePageBtn">
-
-<div class="icon">
-🚨
-</div>
-
-<div>
-
-<h3>
-發作紀錄
-</h3>
-
-<p>
-記錄發作時間與狀況
-</p>
-
-</div>
-
-</button>
-
-
-
-
-
-
-<button 
-class="menu-card emergency"
-id="emergencyPageBtn">
-
-<div class="icon">
-⚠️
-</div>
-
-<div>
-
-<h3>
-緊急模式
-</h3>
-
-<p>
-超過5分鐘快速處理資訊
-</p>
-
-</div>
-
-</button>
-
-
-
-
-
-
-<button 
-class="menu-card history"
-id="historyPageBtn">
-
-<div class="icon">
-📋
-</div>
-
-<div>
-
-<h3>
-歷史紀錄
-</h3>
-
-<p>
-查看過往發作資料
-</p>
-
-</div>
-
-</button>
-
-
-
-
-
-
-<button 
-class="menu-card setting"
-id="settingsPageBtn">
-
-<div class="icon">
-⚙️
-</div>
-
-<div>
-
-<h3>
-家長設定
-</h3>
-
-<p>
-資料管理與備份
-</p>
-
-</div>
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-<div id="latestBox">
-
-尚無近期紀錄
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =========================
-發作紀錄頁
-========================= -->
-
-
-<section id="seizurePage" class="page">
 
 
 <h2>
@@ -227,10 +66,10 @@ id="settingsPageBtn">
 
 
 
-<div class="record-tip">
 
-請於發作開始時按下開始，
-結束後確認儲存紀錄。
+<div id="statusBox">
+
+等待開始紀錄
 
 </div>
 
@@ -252,7 +91,21 @@ id="settingsPageBtn">
 
 
 
-<button id="startBtn" class="start-button">
+<div id="startTimeBox">
+
+尚未開始
+
+</div>
+
+
+
+
+
+
+
+<button 
+id="startBtn"
+class="start-button">
 
 ▶️ 開始發作
 
@@ -262,7 +115,9 @@ id="settingsPageBtn">
 
 
 
-<button id="stopBtn" class="stop-button">
+<button 
+id="stopBtn"
+class="stop-button">
 
 ⏹ 結束發作
 
@@ -272,13 +127,7 @@ id="settingsPageBtn">
 
 
 
-
-
-<div id="statusBox">
-
-等待紀錄
-
-</div>
+</section>
 
 
 
@@ -290,12 +139,17 @@ id="settingsPageBtn">
 
 <!-- 發作場合 -->
 
+
+<section class="record-section">
+
+
 <h3>
 📍 發作場合
 </h3>
 
 
 <div class="option-card">
+
 
 
 <label>
@@ -329,9 +183,9 @@ value="家中">
 <input
 type="radio"
 name="situation"
-value="外出途中">
+value="睡眠中">
 
-🚗 外出途中
+😴 睡眠中
 
 </label>
 
@@ -342,9 +196,9 @@ value="外出途中">
 <input
 type="radio"
 name="situation"
-value="公共場所">
+value="外出">
 
-🛒 公共場所
+🚗 外出途中
 
 </label>
 
@@ -368,20 +222,7 @@ value="醫院">
 <input
 type="radio"
 name="situation"
-value="睡眠中">
-
-😴 睡眠中
-
-</label>
-
-
-
-<label>
-
-<input
-type="radio"
-name="situation"
-value="戶外活動">
+value="戶外">
 
 🌳 戶外活動
 
@@ -405,6 +246,9 @@ value="其他">
 </div>
 
 
+</section>
+
+
 
 
 
@@ -413,6 +257,9 @@ value="其他">
 
 
 <!-- 發作型態 -->
+
+
+<section class="record-section">
 
 
 <h3>
@@ -493,6 +340,7 @@ value="其他">
 </div>
 
 
+</section>
 
 
 
@@ -500,12 +348,18 @@ value="其他">
 
 
 
-<!-- 發作狀況 -->
+
+
+<!-- 意識狀態 -->
+
+
+<section class="record-section">
 
 
 <h3>
-👀 發作狀況
+👀 意識狀態
 </h3>
+
 
 
 <div class="option-card">
@@ -519,10 +373,22 @@ type="checkbox"
 name="condition"
 value="有意識">
 
-有意識
+🙂 有意識
 
 </label>
 
+
+
+<label>
+
+<input
+type="checkbox"
+name="condition"
+value="意識模糊">
+
+😵 意識模糊
+
+</label>
 
 
 
@@ -533,10 +399,9 @@ type="checkbox"
 name="condition"
 value="無意識">
 
-無意識
+😴 無意識
 
 </label>
-
 
 
 
@@ -547,21 +412,7 @@ type="checkbox"
 name="condition"
 value="呼吸異常">
 
-呼吸異常
-
-</label>
-
-
-
-
-<label>
-
-<input
-type="checkbox"
-name="condition"
-value="嘴唇發紫">
-
-嘴唇發紫
+⚠️ 呼吸異常
 
 </label>
 
@@ -570,10 +421,20 @@ value="嘴唇發紫">
 </div>
 
 
+</section>
 
 
 
 
+
+
+
+
+
+<!-- 備註 -->
+
+
+<section class="record-section">
 
 
 <h3>
@@ -581,21 +442,106 @@ value="嘴唇發紫">
 </h3>
 
 
-
 <textarea
 id="note"
-placeholder="記錄發作前後狀況、特殊情形">
+placeholder="記錄發作前後狀況、特殊反應">
 </textarea>
 
 
 
+</section>
 
+
+
+
+
+
+
+
+
+<!-- =================================
+功能按鈕
+================================= -->
+
+
+<section class="quick-menu">
+
+
+
+<button
+id="medicalPageBtn"
+class="small-menu">
+
+🏥 醫療卡
+
+</button>
+
+
+
+
+
+<button
+id="historyPageBtn"
+class="small-menu">
+
+📋 歷史紀錄
+
+</button>
+
+
+
+
+
+<button
+id="emergencyPageBtn"
+class="small-menu emergency-small">
+
+⚠️ 緊急模式
+
+</button>
+
+
+
+</section>
+
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =================================
+醫療資訊
+================================= -->
+
+
+<section id="medicalPage" class="page">
+
+
+<h2>
+🏥 醫療資訊卡
+</h2>
+
+
+
+<div id="medicalCard">
+
+</div>
 
 
 
 <button class="backBtn">
 
-返回首頁
+返回紀錄
 
 </button>
 
@@ -611,9 +557,48 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 
-<!-- =========================
+<!-- =================================
+歷史紀錄
+================================= -->
+
+
+<section id="historyPage" class="page">
+
+
+<h2>
+📋 歷史紀錄
+</h2>
+
+
+
+<div id="historyList">
+
+</div>
+
+
+
+
+<button class="backBtn">
+
+返回紀錄
+
+</button>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =================================
 緊急模式
-========================= -->
+================================= -->
 
 
 <section id="emergencyPage" class="page">
@@ -625,11 +610,13 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 
+
 <div id="emergencyAlert">
 
-⚠️ 緊急資訊模式
+發作超過5分鐘時將自動提醒
 
 </div>
+
 
 
 
@@ -649,12 +636,12 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 <p>
-② 通知鄰近醫院送醫
+② 通知鄰近醫院
 </p>
 
 
 <p>
-③ 通知家長
+③ 聯絡家長
 </p>
 
 
@@ -664,10 +651,6 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 
-
-<h3>
-📞 緊急聯絡
-</h3>
 
 
 <div id="contactList">
@@ -677,10 +660,9 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 
-
 <button class="backBtn">
 
-返回首頁
+返回紀錄
 
 </button>
 
@@ -696,162 +678,9 @@ placeholder="記錄發作前後狀況、特殊情形">
 
 
 
-<!-- =========================
-醫療資訊卡
-========================= -->
-
-
-<section id="medicalPage" class="page">
-
-
-<h2>
-🏥 醫療資訊卡
-</h2>
-
-
-
-<div id="medicalCard">
-
-</div>
-
-
-
-
-<button class="backBtn">
-
-返回首頁
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =========================
-歷史紀錄
-========================= -->
-
-
-<section id="historyPage" class="page">
-
-
-<h2>
-📋 歷史紀錄
-</h2>
-
-
-
-
-<div id="historyList">
-
-</div>
-
-
-
-
-<button class="backBtn">
-
-返回首頁
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =========================
-設定
-========================= -->
-
-
-<section id="settingsPage" class="page">
-
-
-<h2>
-⚙️ 家長設定
-</h2>
-
-
-
-<div class="info-card">
-
-
-<p>
-🔒 家長管理模式
-</p>
-
-
-<p>
-老師與學校人員：查看模式</p>
-
-
-<p>
-家長：資料管理模式</p>
-
-
-</div>
-
-
-
-
-
-<button id="backupBtn">
-
-備份資料
-
-</button>
-
-
-
-
-
-<button id="exportBtn">
-
-匯出紀錄
-
-</button>
-
-
-
-
-
-<button class="backBtn">
-
-返回首頁
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =========================
+<!-- =================================
 JS
-========================= -->
+================================= -->
 
 
 <script src="data.js"></script>
@@ -867,6 +696,7 @@ JS
 <script src="history.js"></script>
 
 <script src="settings.js"></script>
+
 
 
 </body>

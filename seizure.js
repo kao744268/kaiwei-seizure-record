@@ -177,7 +177,27 @@ function endSeizure(){
         }
     );
 
+const record = {
 
+    startTime:
+    new Date(seizureStartTimestamp)
+    .toLocaleString(),
+
+    endTime:
+    new Date(endTimestamp)
+    .toLocaleString(),
+
+    duration:
+    duration
+
+};
+
+
+if(typeof addSeizureRecord === "function"){
+
+    addSeizureRecord(record);
+
+}
 
     alert(
         "發作結束\n\n" +

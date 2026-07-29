@@ -7,8 +7,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 <title>
-愷威 Care V2.0
+愷威 Care 癲癇紀錄
 </title>
 
 
@@ -21,9 +22,11 @@
 <body>
 
 
-<!-- ======================
+
+<!-- =========================
 首頁
-====================== -->
+========================= -->
+
 
 <section id="homePage" class="page active">
 
@@ -33,8 +36,8 @@
 </h1>
 
 
-<p>
-V2.0 Clean Offline
+<p class="subtitle">
+癲癇發作紀錄照護工具
 </p>
 
 
@@ -42,7 +45,7 @@ V2.0 Clean Offline
 <div class="menu">
 
 
-<button id="goSeizureBtn">
+<button id="seizurePageBtn">
 
 🚨 發作紀錄
 
@@ -50,7 +53,7 @@ V2.0 Clean Offline
 
 
 
-<button id="goHistoryBtn">
+<button id="historyPageBtn">
 
 📋 歷史紀錄
 
@@ -58,28 +61,36 @@ V2.0 Clean Offline
 
 
 
-<button id="goMedicalBtn">
+<button id="medicalPageBtn">
 
-🏥 醫療資訊
-
-</button>
-
-
-
-<button id="goEmergencyBtn">
-
-📞 緊急聯絡
+🏥 醫療資料
 
 </button>
 
 
 
-<button id="goSettingsBtn">
+<button id="emergencyPageBtn">
+
+📞 緊急資訊
+
+</button>
+
+
+
+<button id="settingsPageBtn">
 
 ⚙️ 設定
 
 </button>
 
+
+</div>
+
+
+
+<div id="latestBox">
+
+尚無近期紀錄
 
 </div>
 
@@ -92,9 +103,12 @@ V2.0 Clean Offline
 
 
 
-<!-- ======================
+
+
+<!-- =========================
 發作紀錄
-====================== -->
+========================= -->
+
 
 <section id="seizurePage" class="page">
 
@@ -113,7 +127,7 @@ V2.0 Clean Offline
 
 
 
-<button id="startSeizureBtn">
+<button id="startBtn">
 
 開始發作
 
@@ -121,7 +135,7 @@ V2.0 Clean Offline
 
 
 
-<button id="stopSeizureBtn">
+<button id="stopBtn">
 
 結束發作
 
@@ -129,15 +143,203 @@ V2.0 Clean Offline
 
 
 
-<p id="seizureStatus">
+<div id="statusBox">
 
 尚未開始
 
-</p>
+</div>
 
 
 
-<button class="backHomeBtn">
+
+
+
+
+<h3>
+發作型態
+</h3>
+
+
+<div class="optionGroup">
+
+
+<label>
+<input type="checkbox" name="type" value="全身抽搐">
+全身抽搐
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="局部抽搐">
+局部抽搐
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="眼神呆滯">
+眼神呆滯
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="失去意識">
+失去意識
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="僵直">
+僵直
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="顫抖">
+顫抖
+</label>
+
+
+<label>
+<input type="checkbox" name="type" value="其他">
+其他
+</label>
+
+
+</div>
+
+
+
+
+
+
+
+<h3>
+發作前狀況
+</h3>
+
+
+<div class="optionGroup">
+
+
+<label>
+<input type="checkbox" name="before" value="睡眠不足">
+睡眠不足
+</label>
+
+
+<label>
+<input type="checkbox" name="before" value="發燒">
+發燒
+</label>
+
+
+<label>
+<input type="checkbox" name="before" value="壓力">
+壓力
+</label>
+
+
+<label>
+<input type="checkbox" name="before" value="忘記服藥">
+忘記服藥
+</label>
+
+
+<label>
+<input type="checkbox" name="before" value="無明顯原因">
+無明顯原因
+</label>
+
+
+</div>
+
+
+
+
+
+
+
+<h3>
+發作中觀察
+</h3>
+
+
+<div class="optionGroup">
+
+
+<label>
+<input type="checkbox" name="during" value="哭喊">
+哭喊
+</label>
+
+
+<label>
+<input type="checkbox" name="during" value="嘴唇發紫">
+嘴唇發紫
+</label>
+
+
+<label>
+<input type="checkbox" name="during" value="口吐白沫">
+口吐白沫
+</label>
+
+
+<label>
+<input type="checkbox" name="during" value="眼睛上吊">
+眼睛上吊
+</label>
+
+
+<label>
+<input type="checkbox" name="during" value="四肢僵硬">
+四肢僵硬
+</label>
+
+
+</div>
+
+
+
+
+
+
+
+
+<h3>
+發作後
+</h3>
+
+
+<label>
+
+恢復時間：
+
+<input 
+type="number"
+id="recoveryTime"
+placeholder="分鐘">
+
+分鐘
+
+</label>
+
+
+
+
+<br><br>
+
+
+<textarea
+id="note"
+placeholder="其他備註">
+</textarea>
+
+
+
+
+
+<button class="backBtn">
 
 返回首頁
 
@@ -154,9 +356,10 @@ V2.0 Clean Offline
 
 
 
-<!-- ======================
+<!-- =========================
 歷史紀錄
-====================== -->
+========================= -->
+
 
 <section id="historyPage" class="page">
 
@@ -166,14 +369,12 @@ V2.0 Clean Offline
 </h2>
 
 
-
 <div id="historyList">
 
 </div>
 
 
-
-<button class="backHomeBtn">
+<button class="backBtn">
 
 返回首頁
 
@@ -190,17 +391,17 @@ V2.0 Clean Offline
 
 
 
-<!-- ======================
-醫療資訊
-====================== -->
+<!-- =========================
+醫療資料
+========================= -->
+
 
 <section id="medicalPage" class="page">
 
 
 <h2>
-🏥 醫療資訊
+🏥 醫療資料
 </h2>
-
 
 
 <div id="medicalContent">
@@ -208,8 +409,7 @@ V2.0 Clean Offline
 </div>
 
 
-
-<button class="backHomeBtn">
+<button class="backBtn">
 
 返回首頁
 
@@ -226,17 +426,17 @@ V2.0 Clean Offline
 
 
 
-<!-- ======================
-緊急聯絡
-====================== -->
+<!-- =========================
+緊急資訊
+========================= -->
+
 
 <section id="emergencyPage" class="page">
 
 
 <h2>
-📞 緊急聯絡
+📞 緊急資訊
 </h2>
-
 
 
 <div id="emergencyContent">
@@ -244,8 +444,7 @@ V2.0 Clean Offline
 </div>
 
 
-
-<button class="backHomeBtn">
+<button class="backBtn">
 
 返回首頁
 
@@ -262,9 +461,10 @@ V2.0 Clean Offline
 
 
 
-<!-- ======================
+<!-- =========================
 設定
-====================== -->
+========================= -->
+
 
 <section id="settingsPage" class="page">
 
@@ -272,7 +472,6 @@ V2.0 Clean Offline
 <h2>
 ⚙️ 設定
 </h2>
-
 
 
 <button id="backupBtn">
@@ -291,16 +490,21 @@ V2.0 Clean Offline
 
 
 
+<button id="clearBtn">
+
+🗑️ 清除資料
+
+</button>
+
+
+
 <p>
-
-版本：
-Care V2.0 Clean
-
+版本：愷威 Care V1.0
 </p>
 
 
 
-<button class="backHomeBtn">
+<button class="backBtn">
 
 返回首頁
 
@@ -317,16 +521,12 @@ Care V2.0 Clean
 
 
 
-<!-- ======================
-JS 載入
-====================== -->
-
-
 <script src="data.js"></script>
 
 <script src="app.js"></script>
 
 
 </body>
+
 
 </html>

@@ -7,8 +7,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 <title>
-愷威 Care
+愷威 Care V1.0
 </title>
 
 
@@ -18,24 +19,15 @@
 </head>
 
 
-
 <body>
 
 
-<div class="app">
+<!-- =========================
+首頁
+========================= -->
 
 
-<!-- ======================
-首頁 Dashboard
-====================== -->
-
-
-<section 
-id="homePage"
-class="page active">
-
-
-<header class="header">
+<section id="homePage" class="page active">
 
 
 <h1>
@@ -43,147 +35,65 @@ class="page active">
 </h1>
 
 
-<p>
-癲癇紀錄與照護系統
+<p class="version">
+V1.0 Stable Offline
 </p>
 
 
-</header>
+
+<div class="menu">
+
+
+<button onclick="showPage('seizurePage')">
+
+🚨 發作紀錄
+
+</button>
 
 
 
-<div class="status-card">
+<button onclick="showPage('recordPage')">
 
+📋 歷史紀錄
 
-<h3>
-今日狀態
-</h3>
-
-
-<p id="todayStatus">
-
-🟢 今日尚無紀錄
-
-</p>
-
-
-</div>
+</button>
 
 
 
+<button onclick="showPage('medicalPage')">
+
+🏥 醫療資訊
+
+</button>
 
 
-<!-- 主要功能 -->
+
+<button onclick="showPage('emergencyPage')">
+
+📞 緊急聯絡
+
+</button>
 
 
-<div class="main-action">
 
+<button onclick="showPage('settingPage')">
 
-<button 
-id="startSeizureBtn"
-class="danger-btn">
-
-
-🚨 開始發作
-
+⚙️ 設定
 
 </button>
 
 
 </div>
-
-
-
-
-
-<div class="menu-grid">
-
-
-
-<button id="historyBtn">
-
-
-📋
-
-<br>
-
-歷史紀錄
-
-
-</button>
-
-
-
-<button id="medicalBtn">
-
-
-🏥
-
-<br>
-
-醫療資訊卡
-
-
-</button>
-
-
-
-
-<button id="emergencyBtn">
-
-
-📞
-
-<br>
-
-緊急聯絡
-
-
-</button>
-
-
-
-<button id="settingsBtn">
-
-
-⚙️
-
-<br>
-
-設定
-
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-<div class="latest-card">
-
-
-<h3>
-
-最近一次發作
-
-</h3>
 
 
 
 <div id="latestRecord">
 
-尚無紀錄
 
-</div>
-
+尚無近期紀錄
 
 
 </div>
-
 
 
 
@@ -194,14 +104,15 @@ class="danger-btn">
 
 
 
-<!-- ======================
-發作紀錄頁
-====================== -->
 
 
-<section
-id="seizurePage"
-class="page">
+
+<!-- =========================
+發作頁
+========================= -->
+
+
+<section id="seizurePage" class="page">
 
 
 <h2>
@@ -210,74 +121,45 @@ class="page">
 
 
 
-<div class="timer-card">
+<div id="timer">
 
-
-<div id="timerBox">
-
-00:00:00
+00:00
 
 </div>
 
 
 
-<p id="seizureStatus">
+<button id="startBtn">
 
-尚未開始
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-<div id="seizureInfo">
-
-
-<p>
-
-開始時間：
-
-<span id="startTimeText">
---
-
-</span>
-
-</p>
-
-
-
-</div>
-
-
-
-
-
-
-<button
-id="endSeizureBtn"
-class="danger-btn">
-
-
-結束發作
-
+開始發作
 
 </button>
 
 
 
+<button id="stopBtn">
+
+結束發作
+
+</button>
 
 
-<button class="backBtn">
 
+<div id="seizureStatus">
+
+尚未開始
+
+</div>
+
+
+
+<br>
+
+
+<button class="backBtn"
+onclick="showPage('homePage')">
 
 返回首頁
-
 
 </button>
 
@@ -291,14 +173,14 @@ class="danger-btn">
 
 
 
-<!-- ======================
+
+
+<!-- =========================
 歷史紀錄
-====================== -->
+========================= -->
 
 
-<section
-id="historyPage"
-class="page">
+<section id="recordPage" class="page">
 
 
 <h2>
@@ -307,15 +189,15 @@ class="page">
 
 
 
-<div
-id="recordList">
+<div id="recordList">
 
 
 </div>
 
 
 
-<button class="backBtn">
+<button class="backBtn"
+onclick="showPage('homePage')">
 
 返回首頁
 
@@ -331,36 +213,36 @@ id="recordList">
 
 
 
-<!-- ======================
-醫療資訊卡
-====================== -->
 
 
-<section
-id="medicalPage"
-class="page">
+<!-- =========================
+醫療資訊
+========================= -->
+
+
+<section id="medicalPage" class="page">
 
 
 <h2>
-🏥 醫療資訊卡
+🏥 醫療資訊
 </h2>
 
 
 
-<div
-id="medicalCard">
+<div id="medicalCard">
 
 
 </div>
 
 
 
-
-<button class="backBtn">
+<button class="backBtn"
+onclick="showPage('homePage')">
 
 返回首頁
 
 </button>
+
 
 
 </section>
@@ -371,14 +253,14 @@ id="medicalCard">
 
 
 
-<!-- ======================
+
+
+<!-- =========================
 緊急聯絡
-====================== -->
+========================= -->
 
 
-<section
-id="emergencyPage"
-class="page">
+<section id="emergencyPage" class="page">
 
 
 <h2>
@@ -387,21 +269,20 @@ class="page">
 
 
 
-
-<div
-id="emergencyList">
+<div id="emergencyList">
 
 
 </div>
 
 
 
-
-<button class="backBtn">
+<button class="backBtn"
+onclick="showPage('homePage')">
 
 返回首頁
 
 </button>
+
 
 
 </section>
@@ -412,33 +293,19 @@ id="emergencyList">
 
 
 
-<!-- ======================
+
+
+<!-- =========================
 設定
-====================== -->
+========================= -->
 
 
-<section
-id="settingsPage"
-class="page">
+<section id="settingPage" class="page">
 
 
 <h2>
 ⚙️ 設定
 </h2>
-
-
-
-
-<div class="settings-list">
-
-
-
-<button id="syncBtn">
-
-☁️ Google 同步
-
-</button>
-
 
 
 
@@ -450,7 +317,6 @@ class="page">
 
 
 
-
 <button id="exportBtn">
 
 📄 匯出紀錄
@@ -459,14 +325,27 @@ class="page">
 
 
 
+<div class="info">
+
+
+<p>
+版本：
+Care V1.0 Stable
+</p>
+
+
+<p>
+模式：
+Offline
+</p>
+
 
 </div>
 
 
 
-
-
-<button class="backBtn">
+<button class="backBtn"
+onclick="showPage('homePage')">
 
 返回首頁
 
@@ -480,27 +359,30 @@ class="page">
 
 
 
-</div>
 
 
 
 
-
-
-
-<!-- ======================
-Javascript 載入順序
-====================== -->
+<!-- =========================
+Scripts
+========================= -->
 
 
 <script src="data.js"></script>
-<script src="cloud.js"></script>
+
 <script src="app.js"></script>
+
 <script src="seizure.js"></script>
+
 <script src="history.js"></script>
+
 <script src="medical.js"></script>
+
 <script src="emergency.js"></script>
+
 <script src="settings.js"></script>
+
+
 
 </body>
 

@@ -1,7 +1,7 @@
 // ==========================================
 // 愷威 Care V2.0 守護版
 // seizure.js
-// Seizure Record System
+// Seizure Record System 修正版
 // ==========================================
 
 
@@ -38,6 +38,7 @@ function startSeizure(){
 
 
 
+
     seizureRunning = true;
 
 
@@ -45,6 +46,8 @@ function startSeizure(){
 
 
     seizureStartTime = new Date();
+
+
 
 
 
@@ -61,8 +64,10 @@ function startSeizure(){
 
     if(status){
 
+
         status.innerHTML =
-        "🚨 發作中";
+        "🚨 發作進行中";
+
 
     }
 
@@ -70,7 +75,9 @@ function startSeizure(){
 
 
 
+
     seizureTimer = setInterval(
+
         function(){
 
 
@@ -81,12 +88,24 @@ function startSeizure(){
 
 
 
+
+
             // 超過5分鐘
 
-            if(seizureSeconds >= 300){
+            if(
+                seizureSeconds >= 300
+            ){
 
 
-                triggerEmergency();
+                if(
+                    typeof showEmergencyAlert === "function"
+                ){
+
+
+                    showEmergencyAlert();
+
+
+                }
 
 
             }
@@ -94,16 +113,19 @@ function startSeizure(){
 
 
         },
+
         1000
+
     );
+
+
 
 
 
     console.log(
-        "開始發作:",
+        "開始發作",
         seizureStartTime
     );
-
 
 
 }
@@ -117,7 +139,7 @@ function startSeizure(){
 
 
 // ===============================
-// 計時顯示
+// 顯示計時
 // ===============================
 
 
@@ -140,6 +162,8 @@ function updateTimer(){
 
 
 
+
+
     let min =
     Math.floor(
         seizureSeconds / 60
@@ -149,6 +173,8 @@ function updateTimer(){
 
     let sec =
     seizureSeconds % 60;
+
+
 
 
 
@@ -177,7 +203,7 @@ function updateTimer(){
 
 
 // ===============================
-// 結束發作
+// 點擊結束
 // ===============================
 
 
@@ -194,13 +220,66 @@ function stopSeizure(){
 
 
 
+
+
+    let confirmEnd = confirm(
+
+        "⚠️ 確認結束發作？\n\n" +
+
+        "目前持續時間：" +
+
+        seizureSeconds +
+
+        " 秒\n\n" +
+
+        "是否儲存此次紀錄？"
+
+    );
+
+
+
+
+
+    if(!confirmEnd){
+
+        return;
+
+    }
+
+
+
+
+
+    finishSeizure();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 完成紀錄
+// ===============================
+
+
+function finishSeizure(){
+
+
+
     clearInterval(
         seizureTimer
     );
 
 
-
     seizureTimer = null;
+
 
 
     seizureRunning = false;
@@ -209,14 +288,14 @@ function stopSeizure(){
 
 
 
-    let endTime =
+    const endTime =
     new Date();
 
 
 
 
 
-    let record =
+    const record =
     createRecord(
         endTime
     );
@@ -244,17 +323,21 @@ function stopSeizure(){
 
 
         status.innerHTML =
-        "✅ 發作紀錄完成";
+        "✅ 發作紀錄已儲存";
 
 
     }
 
 
 
+
+
     console.log(
-        "完成紀錄:",
+        "完成紀錄",
         record
     );
+
+
 
 
 
@@ -262,7 +345,9 @@ function stopSeizure(){
         typeof renderHistory === "function"
     ){
 
+
         renderHistory();
+
 
     }
 
@@ -279,7 +364,7 @@ function stopSeizure(){
 
 
 // ===============================
-// 建立資料
+// 建立紀錄
 // ===============================
 
 
@@ -291,58 +376,73 @@ function createRecord(endTime){
 
 
         id:
+
         Date.now(),
 
 
 
+
+
         date:
+
         formatDate(
             seizureStartTime
         ),
 
 
 
+
+
         startTime:
+
         formatTime(
             seizureStartTime
         ),
 
 
 
+
+
         endTime:
+
         formatTime(
             endTime
         ),
 
 
 
+
+
         duration:
+
         seizureSeconds,
 
 
 
+
+
         type:
+
         getCheckedValues(
             "type"
         ),
 
 
 
+
+
         condition:
+
         getCheckedValues(
             "condition"
         ),
 
 
 
-        recovery:
-        getValue(
-            "recoveryTime"
-        ),
-
 
 
         note:
+
         getValue(
             "note"
         )
@@ -363,7 +463,7 @@ function createRecord(endTime){
 
 
 // ===============================
-// 儲存資料
+// 儲存
 // ===============================
 
 
@@ -401,10 +501,11 @@ function saveRecord(record){
 
         "care_seizure_records",
 
-        JSON.stringify(records)
+        JSON.stringify(
+            records
+        )
 
     );
-
 
 
 }
@@ -418,7 +519,7 @@ function saveRecord(record){
 
 
 // ===============================
-// 取得勾選
+// 取得勾選資料
 // ===============================
 
 
@@ -426,7 +527,7 @@ function getCheckedValues(name){
 
 
 
-    let result = [];
+    let values = [];
 
 
 
@@ -439,20 +540,22 @@ function getCheckedValues(name){
     )
 
     .forEach(
+
         function(item){
 
 
-            result.push(
+            values.push(
                 item.value
             );
 
 
         }
+
     );
 
 
 
-    return result;
+    return values;
 
 
 }
@@ -474,7 +577,7 @@ function getValue(id){
 
 
 
-    let element =
+    const element =
     document.getElementById(
         id
     );
@@ -491,40 +594,6 @@ function getValue(id){
 
     return "";
 
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 5分鐘緊急提醒
-// ===============================
-
-
-function triggerEmergency(){
-
-
-
-    console.log(
-        "🚨 發作超過5分鐘"
-    );
-
-
-
-    if(
-        typeof showEmergencyAlert === "function"
-    ){
-
-        showEmergencyAlert();
-
-    }
-
-
 
 }
 
@@ -537,7 +606,7 @@ function triggerEmergency(){
 
 
 // ===============================
-// 日期
+// 日期格式
 // ===============================
 
 
@@ -582,7 +651,7 @@ function formatDate(date){
 
 
 // ===============================
-// 時間
+// 時間格式
 // ===============================
 
 
@@ -704,6 +773,7 @@ function(){
 
 
 
+
     if(stopBtn){
 
 
@@ -720,11 +790,12 @@ function(){
 
 
 
+
+
     console.log(
-        "🚨 seizure.js 初始化完成"
+        "🚨 seizure.js 修正版啟動完成"
     );
 
 
-}
 
-);
+});

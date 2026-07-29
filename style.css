@@ -1,13 +1,12 @@
 /* ==========================================
-   愷威 Care V2.0 Clean
+   愷威 Care 癲癇紀錄版 V1.0
    style.css
-   Offline Edition
 ========================================== */
 
 
 
 /* =========================
-   全域設定
+   基礎設定
 ========================= */
 
 
@@ -21,13 +20,17 @@
 
 body{
 
+
     margin:0;
 
     padding:0;
 
+
     background:#f4f6f8;
 
+
     color:#333;
+
 
     font-family:
 
@@ -37,8 +40,8 @@ body{
     Arial,
     sans-serif;
 
-}
 
+}
 
 
 
@@ -51,11 +54,15 @@ body{
 
 .page{
 
+
     display:none;
+
 
     min-height:100vh;
 
+
     padding:25px 20px;
+
 
 }
 
@@ -63,9 +70,12 @@ body{
 
 .page.active{
 
+
     display:block;
 
+
 }
+
 
 
 
@@ -79,13 +89,18 @@ body{
 
 h1{
 
+
     text-align:center;
+
 
     font-size:34px;
 
+
     margin-top:45px;
 
+
     margin-bottom:10px;
+
 
 }
 
@@ -93,21 +108,52 @@ h1{
 
 h2{
 
+
     text-align:center;
 
-    font-size:26px;
+
+    font-size:28px;
+
 
     margin-bottom:30px;
 
+
 }
 
 
 
-p{
+h3{
+
+
+    margin-top:30px;
+
+
+    font-size:20px;
+
+
+    color:#444;
+
+
+}
+
+
+
+
+
+.subtitle{
+
 
     text-align:center;
 
+
+    color:#777;
+
+
+    font-size:16px;
+
+
 }
+
 
 
 
@@ -121,13 +167,18 @@ p{
 
 .menu{
 
+
     display:flex;
+
 
     flex-direction:column;
 
+
     gap:16px;
 
+
     margin-top:40px;
+
 
 }
 
@@ -138,27 +189,36 @@ p{
 
 
 /* =========================
-   按鈕
+   通用按鈕
 ========================= */
 
 
 button{
 
+
     width:100%;
 
-    padding:18px 15px;
+
+    padding:18px;
+
 
     border:none;
 
+
     border-radius:18px;
+
 
     background:#ffffff;
 
+
     font-size:20px;
+
 
     font-weight:bold;
 
+
     color:#333;
+
 
     box-shadow:
 
@@ -167,16 +227,18 @@ button{
 
     cursor:pointer;
 
+
 }
 
 
 
 button:active{
 
+
     transform:scale(.97);
 
-}
 
+}
 
 
 
@@ -185,7 +247,43 @@ button:active{
 
 
 /* =========================
-   計時器
+   首頁最新紀錄
+========================= */
+
+
+#latestBox{
+
+
+    margin-top:35px;
+
+
+    padding:20px;
+
+
+    background:white;
+
+
+    border-radius:18px;
+
+
+    text-align:center;
+
+
+    box-shadow:
+
+    0 5px 15px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   發作頁
 ========================= */
 
 
@@ -194,15 +292,17 @@ button:active{
 
     width:220px;
 
+
     height:220px;
 
-    margin:35px auto;
+
+    margin:30px auto;
 
 
     border-radius:50%;
 
 
-    background:#ffffff;
+    background:white;
 
 
     display:flex;
@@ -222,7 +322,7 @@ button:active{
 
     box-shadow:
 
-    0 8px 20px rgba(0,0,0,.1);
+    0 8px 20px rgba(0,0,0,.12);
 
 
 }
@@ -233,26 +333,30 @@ button:active{
 
 
 
-/* =========================
-   發作按鈕
-========================= */
+#startBtn{
 
 
-#startSeizureBtn{
+    background:#43a047;
 
-    background:#4caf50;
 
     color:white;
 
+
+    margin-bottom:15px;
+
+
 }
 
 
 
-#stopSeizureBtn{
+#stopBtn{
+
 
     background:#e53935;
 
+
     color:white;
+
 
 }
 
@@ -261,15 +365,11 @@ button:active{
 
 
 
-/* =========================
-   狀態文字
-========================= */
+
+#statusBox{
 
 
-#seizureStatus{
-
-
-    margin-top:25px;
+    margin-top:20px;
 
 
     padding:15px;
@@ -281,6 +381,9 @@ button:active{
     border-radius:15px;
 
 
+    text-align:center;
+
+
 }
 
 
@@ -288,24 +391,183 @@ button:active{
 
 
 
+
 /* =========================
-   內容卡片
+   選項區
 ========================= */
 
 
-#historyList,
-#medicalContent,
-#emergencyContent{
+.optionGroup{
 
 
     background:white;
 
+
     border-radius:18px;
+
+
+    padding:18px;
+
+
+    box-shadow:
+
+    0 5px 15px rgba(0,0,0,.06);
+
+
+}
+
+
+
+
+
+.optionGroup label{
+
+
+    display:block;
+
+
+    padding:12px 5px;
+
+
+    font-size:17px;
+
+
+}
+
+
+
+
+
+.optionGroup input{
+
+
+    width:20px;
+
+
+    height:20px;
+
+
+    margin-right:10px;
+
+
+    vertical-align:middle;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   輸入欄位
+========================= */
+
+
+input[type="number"],
+
+
+textarea{
+
+
+    width:100%;
+
+
+    margin-top:10px;
+
+
+    padding:14px;
+
+
+    border-radius:12px;
+
+
+    border:1px solid #ddd;
+
+
+    font-size:16px;
+
+
+}
+
+
+
+textarea{
+
+
+    height:120px;
+
+
+    resize:none;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   返回按鈕
+========================= */
+
+
+.backBtn{
+
+
+    margin-top:35px;
+
+
+    background:#555;
+
+
+    color:white;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   歷史紀錄
+========================= */
+
+
+#historyList{
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    gap:15px;
+
+
+}
+
+
+
+
+.history-card{
+
+
+    background:white;
+
 
     padding:20px;
 
 
-    min-height:80px;
+    border-radius:18px;
 
 
     box-shadow:
@@ -320,46 +582,33 @@ button:active{
 
 
 
+
 /* =========================
-   歷史紀錄卡
+   資料頁面
 ========================= */
 
 
-.history-card{
+#medicalContent,
 
 
-    background:#f9fafb;
+#emergencyContent{
 
 
-    border-radius:15px;
+    background:white;
 
 
-    padding:15px;
+    padding:20px;
 
 
-    margin-bottom:15px;
+    border-radius:18px;
 
 
-}
+    min-height:100px;
 
 
+    box-shadow:
 
-
-
-
-/* =========================
-   返回首頁
-========================= */
-
-
-.backHomeBtn{
-
-
-    margin-top:35px;
-
-    background:#555;
-
-    color:white;
+    0 5px 15px rgba(0,0,0,.08);
 
 
 }
@@ -388,8 +637,9 @@ button:active{
 
 
 
+
 /* =========================
-   桌面版限制
+   平板以上
 ========================= */
 
 
@@ -400,6 +650,7 @@ button:active{
 
 
         max-width:500px;
+
 
         margin:auto;
 

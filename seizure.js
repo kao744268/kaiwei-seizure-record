@@ -501,73 +501,60 @@ function saveFallbackRecord(record){
 // ===============================
 
 
-document.addEventListener(
-
-"DOMContentLoaded",
-
+window.addEventListener(
+"load",
 function(){
 
 
-
     const startBtn =
-
     document.getElementById(
-
         "startBtn"
-
     );
-
 
 
     const stopBtn =
-
     document.getElementById(
-
         "stopBtn"
-
     );
 
 
 
-
+    console.log(
+        "檢查按鈕",
+        startBtn,
+        stopBtn
+    );
 
 
 
     if(startBtn){
 
 
-
-        startBtn.addEventListener(
-
-            "click",
-
-            startSeizure
-
-        );
+        startBtn.onclick =
+        startSeizure;
 
 
     }
-
-
-
-
 
 
 
     if(stopBtn){
 
 
-
-        stopBtn.addEventListener(
-
-            "click",
-
-            stopSeizure
-
-        );
+        stopBtn.onclick =
+        stopSeizure;
 
 
     }
+
+
+
+    console.log(
+        "🚨 seizure.js Stable 已連接"
+    );
+
+
+});
 
 
 

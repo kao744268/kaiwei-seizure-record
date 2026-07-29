@@ -1,18 +1,19 @@
 // ==========================================
 // 愷威 Care 癲癇紀錄版 V1.0
 // seizure.js
-// Seizure Record Core
+// Seizure Core System
 // ==========================================
 
 
 
-var seizureRunning = false;
-
-var seizureInterval = null;
+var seizureTimer = null;
 
 var seizureSeconds = 0;
 
+var seizureRunning = false;
+
 var seizureStartTime = null;
+
 
 
 
@@ -27,6 +28,7 @@ var seizureStartTime = null;
 
 
 function startSeizure(){
+
 
 
     if(seizureRunning){
@@ -47,11 +49,7 @@ function startSeizure(){
 
 
 
-
-    var timer =
-    document.getElementById(
-        "timer"
-    );
+    updateTimer();
 
 
 
@@ -59,14 +57,6 @@ function startSeizure(){
     document.getElementById(
         "statusBox"
     );
-
-
-
-    if(timer){
-
-        timer.innerHTML = "00:00";
-
-    }
 
 
 
@@ -81,7 +71,8 @@ function startSeizure(){
 
 
 
-    seizureInterval = setInterval(
+
+    seizureTimer = setInterval(
 
         function(){
 
@@ -90,6 +81,7 @@ function startSeizure(){
 
 
             updateTimer();
+
 
 
         },
@@ -117,11 +109,12 @@ function startSeizure(){
 
 
 // ===============================
-// 更新計時
+// 更新秒數
 // ===============================
 
 
 function updateTimer(){
+
 
 
     var timer =
@@ -139,21 +132,21 @@ function updateTimer(){
 
 
 
-    var minutes =
+    var min =
     Math.floor(
         seizureSeconds / 60
     );
 
 
 
-    var seconds =
+    var sec =
     seizureSeconds % 60;
 
 
 
     timer.innerHTML =
 
-    formatNumber(minutes)
+    pad(min)
 
     +
 
@@ -161,7 +154,7 @@ function updateTimer(){
 
     +
 
-    formatNumber(seconds);
+    pad(sec);
 
 
 
@@ -183,6 +176,7 @@ function updateTimer(){
 function stopSeizure(){
 
 
+
     if(!seizureRunning){
 
         return;
@@ -191,14 +185,13 @@ function stopSeizure(){
 
 
 
-
     clearInterval(
-        seizureInterval
+        seizureTimer
     );
 
 
 
-    seizureInterval = null;
+    seizureTimer = null;
 
 
     seizureRunning = false;
@@ -211,14 +204,17 @@ function stopSeizure(){
 
 
 
-    var record = createRecord(
+
+    var record =
+    createSeizureRecord(
         endTime
     );
 
 
 
 
-    saveSeizureRecord(
+
+    saveRecord(
         record
     );
 
@@ -244,10 +240,22 @@ function stopSeizure(){
 
 
 
+
+
     console.log(
         "完成紀錄",
         record
     );
+
+
+
+    if(
+        typeof renderHistory === "function"
+    ){
+
+        renderHistory();
+
+    }
 
 
 
@@ -266,11 +274,12 @@ function stopSeizure(){
 // ===============================
 
 
-function createRecord(endTime){
+function createSeizureRecord(endTime){
 
 
 
     return {
+
 
 
         id:
@@ -285,14 +294,14 @@ function createRecord(endTime){
 
 
 
-        startTime:
+        start:
         formatTime(
             seizureStartTime
         ),
 
 
 
-        endTime:
+        end:
         formatTime(
             endTime
         ),
@@ -305,37 +314,37 @@ function createRecord(endTime){
 
 
         type:
-        getCheckedValues(
+        getChecked(
             "type"
         ),
 
 
 
         before:
-        getCheckedValues(
+        getChecked(
             "before"
         ),
 
 
 
         during:
-        getCheckedValues(
+        getChecked(
             "during"
         ),
 
 
 
         recovery:
-        document.getElementById(
+        getValue(
             "recoveryTime"
-        )?.value || "",
+        ),
 
 
 
         note:
-        document.getElementById(
+        getValue(
             "note"
-        )?.value || ""
+        )
 
 
 
@@ -353,18 +362,74 @@ function createRecord(endTime){
 
 
 // ===============================
-// 取得勾選資料
+// 儲存紀錄
 // ===============================
 
 
-function getCheckedValues(name){
+function saveRecord(record){
+
+
+
+    var records =
+
+    JSON.parse(
+
+        localStorage.getItem(
+            "care_records"
+        )
+
+        ||
+
+        "[]"
+
+    );
+
+
+
+
+
+    records.push(
+        record
+    );
+
+
+
+
+
+    localStorage.setItem(
+
+        "care_records",
+
+        JSON.stringify(records)
+
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 取得勾選
+// ===============================
+
+
+function getChecked(name){
+
 
 
     var result = [];
 
 
 
-    var items =
+    var list =
     document.querySelectorAll(
 
         'input[name="' + name + '"]:checked'
@@ -375,13 +440,13 @@ function getCheckedValues(name){
 
     for(
         var i = 0;
-        i < items.length;
+        i < list.length;
         i++
     ){
 
 
         result.push(
-            items[i].value
+            list[i].value
         );
 
 
@@ -403,46 +468,30 @@ function getCheckedValues(name){
 
 
 // ===============================
-// 儲存紀錄
+// 取得輸入
 // ===============================
 
 
-function saveSeizureRecord(record){
+function getValue(id){
 
 
 
-    var records =
-
-    JSON.parse(
-
-        localStorage.getItem(
-            "care_seizure_records"
-        )
-
-        ||
-
-        "[]"
-
+    var el =
+    document.getElementById(
+        id
     );
 
 
 
+    if(el){
 
-    records.push(
-        record
-    );
+        return el.value;
+
+    }
 
 
 
-
-    localStorage.setItem(
-
-        "care_seizure_records",
-
-        JSON.stringify(records)
-
-    );
-
+    return "";
 
 }
 
@@ -455,7 +504,7 @@ function saveSeizureRecord(record){
 
 
 // ===============================
-// 日期格式
+// 日期
 // ===============================
 
 
@@ -473,7 +522,7 @@ function formatDate(date){
 
         +
 
-        formatNumber(
+        pad(
             date.getMonth()+1
         )
 
@@ -483,7 +532,7 @@ function formatDate(date){
 
         +
 
-        formatNumber(
+        pad(
             date.getDate()
         )
 
@@ -501,7 +550,7 @@ function formatDate(date){
 
 
 // ===============================
-// 時間格式
+// 時間
 // ===============================
 
 
@@ -511,7 +560,7 @@ function formatTime(date){
 
     return (
 
-        formatNumber(
+        pad(
             date.getHours()
         )
 
@@ -521,7 +570,7 @@ function formatTime(date){
 
         +
 
-        formatNumber(
+        pad(
             date.getMinutes()
         )
 
@@ -531,7 +580,7 @@ function formatTime(date){
 
         +
 
-        formatNumber(
+        pad(
             date.getSeconds()
         )
 
@@ -553,7 +602,7 @@ function formatTime(date){
 // ===============================
 
 
-function formatNumber(num){
+function pad(num){
 
 
     return num < 10
@@ -578,19 +627,23 @@ function formatNumber(num){
 
 
 // ===============================
-// 按鈕連接
+// 綁定按鈕
 // ===============================
 
 
 document.addEventListener(
+
 "DOMContentLoaded",
+
 function(){
+
 
 
     var startBtn =
     document.getElementById(
         "startBtn"
     );
+
 
 
     var stopBtn =
@@ -600,27 +653,48 @@ function(){
 
 
 
+
+
     if(startBtn){
 
-        startBtn.onclick =
-        startSeizure;
+
+        startBtn.addEventListener(
+
+            "click",
+
+            startSeizure
+
+        );
+
 
     }
+
+
 
 
 
     if(stopBtn){
 
-        stopBtn.onclick =
-        stopSeizure;
+
+        stopBtn.addEventListener(
+
+            "click",
+
+            stopSeizure
+
+        );
+
 
     }
 
 
 
+
+
     console.log(
-        "🚨 seizure.js 已連接"
+        "🚨 seizure.js 初始化完成"
     );
+
 
 
 });

@@ -1,8 +1,7 @@
 // ==========================================
-// 愷威癲癇紀錄系統
-// V3.0 Clean
+// 愷威 Care V1.0
 // cloud.js
-// 功能：Google Sheet 同步
+// 功能：Google Cloud 同步
 // ==========================================
 
 
@@ -11,103 +10,161 @@
 // Google Apps Script API網址
 // ===============================
 
-const API_URL = 
-https://script.google.com/macros/s/AKfycbx7yCLIBqzccaiQR-rgI-g0xPL36NQ9KqWnd_hxatJOfdrM0U7dlxa3cNAiDlogFYEs4w/exec
+
+const CARE_API_URL =
+
+"請填入你的Apps Script exec網址";
+
+
 
 
 
 
 
 // ===============================
-// 傳送發作紀錄
+// 基礎同步函式
 // ===============================
 
-async function sendSeizureRecord(record){
+
+async function cloudSync(type,data){
 
 
 
-    if(!record){
+    if(
+        !CARE_API_URL ||
+        CARE_API_URL.includes(
+            "請填入"
+        )
+    ){
+
 
         console.warn(
-            "沒有發作資料"
+            "尚未設定Google API"
         );
 
-        return;
+
+        return false;
+
 
     }
 
 
 
-    const data = {
 
 
-        type:
-        "seizure",
+
+    const payload = {
 
 
-        startTime:
-        record.startTime,
+        type:type,
 
 
-        endTime:
-        record.endTime,
+        data:data,
 
 
-        duration:
-        record.duration
+        timestamp:
+        new Date()
+        .toISOString()
+
 
 
     };
 
 
 
+
+
+
+
     try{
 
 
+
         const response =
+
         await fetch(
-            API_URL,
+
+            CARE_API_URL,
+
             {
+
 
                 method:"POST",
 
 
                 headers:{
 
+
                     "Content-Type":
                     "application/json"
+
 
                 },
 
 
                 body:
-                JSON.stringify(data)
+
+                JSON.stringify(
+                    payload
+                )
+
+
 
             }
+
         );
+
+
+
+
 
 
 
         const result =
+
         await response.json();
 
 
 
+
+
+
         console.log(
-            "雲端同步成功:",
+
+            "同步結果",
+
             result
+
         );
+
+
+
+
+
+        return result;
+
+
 
 
 
     }
+
     catch(error){
 
 
+
         console.error(
-            "雲端同步失敗:",
+
+            "同步失敗",
+
             error
+
         );
+
+
+
+        return false;
+
 
 
     }
@@ -115,3 +172,172 @@ async function sendSeizureRecord(record){
 
 
 }
+
+
+
+
+
+
+
+
+
+// ===============================
+// 同步發作紀錄
+// ===============================
+
+
+function syncSeizure(record){
+
+
+
+    return cloudSync(
+
+        "seizure",
+
+        record
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 同步醫療資料
+// ===============================
+
+
+function syncMedical(){
+
+
+
+    return cloudSync(
+
+        "medical",
+
+        window.medicalData || {}
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 同步緊急聯絡
+// ===============================
+
+
+function syncEmergency(){
+
+
+
+    return cloudSync(
+
+        "emergency",
+
+        window.emergencyContacts || []
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 全部同步
+// ===============================
+
+
+async function syncAll(){
+
+
+
+    const result = await Promise.all([
+
+
+        syncMedical(),
+
+
+        syncEmergency(),
+
+
+        cloudSync(
+
+            "seizure",
+
+            window.seizureRecords || []
+
+        )
+
+
+
+    ]);
+
+
+
+
+
+    alert(
+
+        "☁️ 同步完成"
+
+    );
+
+
+
+    return result;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 啟動
+// ===============================
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+
+    console.log(
+
+        "☁️ cloud.js 啟動"
+
+    );
+
+
+});

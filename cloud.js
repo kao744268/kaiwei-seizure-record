@@ -12,7 +12,7 @@
 // ===============================
 
 const API_URL = 
-"https://你的AppsScript網址/exec";
+https://script.google.com/macros/s/AKfycbx7yCLIBqzccaiQR-rgI-g0xPL36NQ9KqWnd_hxatJOfdrM0U7dlxa3cNAiDlogFYEs4w/exec
 
 
 

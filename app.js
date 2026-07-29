@@ -1,10 +1,8 @@
-//
 // ==========================================
-// 愷威 Care 癲癇紀錄版 V1.0
+// 愷威 Care V2.0 守護版
 // app.js
-// Core Controller
+// Core Navigation System
 // ==========================================
-//
 
 
 
@@ -16,33 +14,26 @@
 function showPage(pageId){
 
 
-    var pages = 
-    document.querySelectorAll(
+    const pages = document.querySelectorAll(
         ".page"
     );
 
 
+    pages.forEach(function(page){
 
-    for(
-        var i = 0;
-        i < pages.length;
-        i++
-    ){
 
-        pages[i].classList.remove(
+        page.classList.remove(
             "active"
         );
 
-    }
+
+    });
 
 
 
-
-    var target =
-    document.getElementById(
+    const target = document.getElementById(
         pageId
     );
-
 
 
     if(target){
@@ -54,7 +45,7 @@ function showPage(pageId){
 
 
         console.log(
-            "切換頁面:",
+            "目前頁面:",
             pageId
         );
 
@@ -73,7 +64,7 @@ function showPage(pageId){
 
 
 // ===============================
-// 回首頁
+// 返回首頁
 // ===============================
 
 
@@ -105,8 +96,50 @@ function initApp(){
 
 
     console.log(
-        "👦 愷威 Care V1.0 啟動"
+        "👦 愷威 Care V2.0 啟動"
     );
+
+
+
+
+
+    // 醫療資訊
+
+
+    const medicalBtn =
+    document.getElementById(
+        "medicalPageBtn"
+    );
+
+
+    if(medicalBtn){
+
+
+        medicalBtn.addEventListener(
+            "click",
+            function(){
+
+
+                showPage(
+                    "medicalPage"
+                );
+
+
+                if(
+                    typeof renderMedical === "function"
+                ){
+
+                    renderMedical();
+
+                }
+
+
+            }
+        );
+
+
+    }
+
 
 
 
@@ -116,20 +149,17 @@ function initApp(){
     // 發作紀錄
 
 
-    var seizureBtn =
+    const seizureBtn =
     document.getElementById(
         "seizurePageBtn"
     );
-
 
 
     if(seizureBtn){
 
 
         seizureBtn.addEventListener(
-
             "click",
-
             function(){
 
 
@@ -139,7 +169,49 @@ function initApp(){
 
 
             }
+        );
 
+
+    }
+
+
+
+
+
+
+
+    // 緊急模式
+
+
+    const emergencyBtn =
+    document.getElementById(
+        "emergencyPageBtn"
+    );
+
+
+    if(emergencyBtn){
+
+
+        emergencyBtn.addEventListener(
+            "click",
+            function(){
+
+
+                showPage(
+                    "emergencyPage"
+                );
+
+
+                if(
+                    typeof renderEmergency === "function"
+                ){
+
+                    renderEmergency();
+
+                }
+
+
+            }
         );
 
 
@@ -154,26 +226,24 @@ function initApp(){
     // 歷史紀錄
 
 
-    var historyBtn =
+    const historyBtn =
     document.getElementById(
         "historyPageBtn"
     );
-
 
 
     if(historyBtn){
 
 
         historyBtn.addEventListener(
-
             "click",
-
             function(){
 
 
                 showPage(
                     "historyPage"
                 );
+
 
 
                 if(
@@ -185,85 +255,7 @@ function initApp(){
                 }
 
 
-
             }
-
-        );
-
-
-    }
-
-
-
-
-
-
-
-    // 醫療資料
-
-
-    var medicalBtn =
-    document.getElementById(
-        "medicalPageBtn"
-    );
-
-
-
-    if(medicalBtn){
-
-
-        medicalBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "medicalPage"
-                );
-
-
-            }
-
-        );
-
-
-    }
-
-
-
-
-
-
-
-    // 緊急資訊
-
-
-    var emergencyBtn =
-    document.getElementById(
-        "emergencyPageBtn"
-    );
-
-
-
-    if(emergencyBtn){
-
-
-        emergencyBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "emergencyPage"
-                );
-
-
-            }
-
         );
 
 
@@ -278,20 +270,17 @@ function initApp(){
     // 設定
 
 
-    var settingsBtn =
+    const settingsBtn =
     document.getElementById(
         "settingsPageBtn"
     );
-
 
 
     if(settingsBtn){
 
 
         settingsBtn.addEventListener(
-
             "click",
-
             function(){
 
 
@@ -301,7 +290,6 @@ function initApp(){
 
 
             }
-
         );
 
 
@@ -314,27 +302,21 @@ function initApp(){
 
 
 
-    // 返回首頁按鈕
+    // 所有返回首頁
 
 
-    var backButtons =
+    const backButtons =
     document.querySelectorAll(
         ".backBtn"
     );
 
 
 
-    for(
-        var j = 0;
-        j < backButtons.length;
-        j++
-    ){
+    backButtons.forEach(function(btn){
 
 
-        backButtons[j].addEventListener(
-
+        btn.addEventListener(
             "click",
-
             function(){
 
 
@@ -342,11 +324,11 @@ function initApp(){
 
 
             }
-
         );
 
 
-    }
+    });
+
 
 
 
@@ -369,7 +351,7 @@ function initApp(){
 
 
 // ===============================
-// 啟動
+// DOM完成後啟動
 // ===============================
 
 

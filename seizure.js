@@ -1,7 +1,7 @@
 // ==========================================
-// 愷威 Care V2.2
-// 現場照護版
+// 愷威 Care V2.3
 // seizure.js
+// 發作紀錄核心
 // ==========================================
 
 
@@ -14,10 +14,6 @@ let seizureTimer = null;
 let seizureStartTime = null;
 
 let emergencyTriggered = false;
-
-
-
-
 
 
 
@@ -41,12 +37,9 @@ function startSeizure(){
 
     seizureRunning = true;
 
-
     seizureSeconds = 0;
 
-
     emergencyTriggered = false;
-
 
 
     seizureStartTime = new Date();
@@ -58,9 +51,7 @@ function startSeizure(){
     );
 
 
-
     updateStartTime();
-
 
 
     updateTimer();
@@ -77,9 +68,6 @@ function startSeizure(){
         updateTimer();
 
 
-
-
-        // 五分鐘提醒
 
         if(
             seizureSeconds >= 300 &&
@@ -136,18 +124,17 @@ function stopSeizure(){
 
 
 
-
-
     let confirmStop = confirm(
 
         "⏹ 確認結束發作？\n\n" +
 
         "持續時間：" +
 
-        formatDuration(seizureSeconds)
+        formatDuration(
+            seizureSeconds
+        )
 
     );
-
 
 
 
@@ -162,9 +149,7 @@ function stopSeizure(){
         resetSeizure();
 
 
-
     }
-
 
 
 
@@ -192,7 +177,6 @@ function saveRecord(){
 
         id:
         Date.now(),
-
 
 
 
@@ -233,7 +217,7 @@ function saveRecord(){
 
 
         type:
-        getChecked(
+        getCheckedValues(
             "type"
         ),
 
@@ -241,8 +225,18 @@ function saveRecord(){
 
 
         condition:
-        getChecked(
+        getCheckedValues(
             "condition"
+        ),
+
+
+
+
+        // 新增：發作後狀態
+
+        afterState:
+        getCheckedValues(
+            "afterState"
         ),
 
 
@@ -280,6 +274,7 @@ function saveRecord(){
 
 
 
+
     localStorage.setItem(
 
         "care_seizure_records",
@@ -294,6 +289,41 @@ function saveRecord(){
 
     alert(
         "✅ 發作紀錄已儲存"
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 五分鐘提醒
+// ===============================
+
+
+function showFiveMinuteAlert(){
+
+
+
+    alert(
+
+        "🚨 發作超過 5 分鐘\n\n" +
+
+        "請依醫囑處理：\n\n" +
+
+        "① 給予緊急藥物\n\n" +
+
+        "② 通知鄰近醫院送醫\n\n" +
+
+        "③ 聯絡家長"
+
     );
 
 
@@ -344,21 +374,24 @@ function resetSeizure(){
     );
 
 
-    const box =
+
+    let box =
     document.getElementById(
         "startTimeBox"
     );
 
 
+
     if(box){
+
 
         box.innerHTML =
         "尚未開始";
 
+
     }
 
 
-
 }
 
 
@@ -370,42 +403,7 @@ function resetSeizure(){
 
 
 // ===============================
-// 五分鐘提醒
-// ===============================
-
-
-function showFiveMinuteAlert(){
-
-
-
-    alert(
-
-        "🚨 發作超過 5 分鐘\n\n" +
-
-        "請依醫囑處理：\n\n" +
-
-        "① 給予緊急藥物\n\n" +
-
-        "② 通知鄰近醫院送醫\n\n" +
-
-        "③ 聯絡家長"
-
-    );
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 更新計時
+// 更新畫面
 // ===============================
 
 
@@ -433,20 +431,11 @@ function updateTimer(){
     }
 
 
-
 }
 
 
 
 
-
-
-
-
-
-// ===============================
-// 開始時間
-// ===============================
 
 
 function updateStartTime(){
@@ -485,14 +474,6 @@ function updateStartTime(){
 
 
 
-
-
-
-// ===============================
-// 狀態
-// ===============================
-
-
 function updateStatus(text){
 
 
@@ -506,7 +487,9 @@ function updateStatus(text){
 
     if(box){
 
+
         box.innerHTML = text;
+
 
     }
 
@@ -522,7 +505,7 @@ function updateStatus(text){
 
 
 // ===============================
-// 取得場合
+// 取得資料
 // ===============================
 
 
@@ -561,12 +544,7 @@ function getSituation(){
 
 
 
-// ===============================
-// 取得勾選
-// ===============================
-
-
-function getChecked(name){
+function getCheckedValues(name){
 
 
 
@@ -607,17 +585,11 @@ function getChecked(name){
 
 
 
-// ===============================
-// 備註
-// ===============================
-
-
 function getNote(){
 
 
 
     let note =
-
     document.getElementById(
         "note"
     );
@@ -628,7 +600,7 @@ function getNote(){
 
     ?
 
-    note.value
+    note.value.trim()
 
     :
 
@@ -654,16 +626,23 @@ function getNote(){
 function formatDuration(sec){
 
 
-    let min = Math.floor(sec / 60);
+
+    let min =
+    Math.floor(
+        sec / 60
+    );
 
 
-    let second = sec % 60;
+
+    let second =
+    sec % 60;
 
 
 
     return (
 
-        String(min).padStart(2,"0")
+        String(min)
+        .padStart(2,"0")
 
         +
 
@@ -671,12 +650,16 @@ function formatDuration(sec){
 
         +
 
-        String(second).padStart(2,"0")
+        String(second)
+        .padStart(2,"0")
 
     );
 
 
 }
+
+
+
 
 
 
@@ -686,11 +669,13 @@ function formatDuration(sec){
 function formatTime(date){
 
 
+
     return (
 
         String(
             date.getHours()
-        ).padStart(2,"0")
+        )
+        .padStart(2,"0")
 
         +
 
@@ -700,7 +685,8 @@ function formatTime(date){
 
         String(
             date.getMinutes()
-        ).padStart(2,"0")
+        )
+        .padStart(2,"0")
 
         +
 
@@ -710,7 +696,8 @@ function formatTime(date){
 
         String(
             date.getSeconds()
-        ).padStart(2,"0")
+        )
+        .padStart(2,"0")
 
     );
 
@@ -721,7 +708,12 @@ function formatTime(date){
 
 
 
+
+
+
+
 function formatDate(date){
+
 
 
     return (
@@ -736,7 +728,8 @@ function formatDate(date){
 
         String(
             date.getMonth()+1
-        ).padStart(2,"0")
+        )
+        .padStart(2,"0")
 
         +
 
@@ -746,7 +739,8 @@ function formatDate(date){
 
         String(
             date.getDate()
-        ).padStart(2,"0")
+        )
+        .padStart(2,"0")
 
     );
 
@@ -762,7 +756,7 @@ function formatDate(date){
 
 
 // ===============================
-// 啟動
+// 初始化
 // ===============================
 
 
@@ -774,14 +768,14 @@ function(){
 
 
 
-    let start =
+    const startBtn =
     document.getElementById(
         "startBtn"
     );
 
 
 
-    let stop =
+    const stopBtn =
     document.getElementById(
         "stopBtn"
     );
@@ -789,10 +783,13 @@ function(){
 
 
 
-    if(start){
 
-        start.onclick =
+    if(startBtn){
+
+
+        startBtn.onclick =
         startSeizure;
+
 
     }
 
@@ -800,10 +797,12 @@ function(){
 
 
 
-    if(stop){
+    if(stopBtn){
 
-        stop.onclick =
+
+        stopBtn.onclick =
         stopSeizure;
+
 
     }
 
@@ -812,7 +811,7 @@ function(){
 
 
     console.log(
-        "🚨 愷威 Care V2.2 seizure.js 啟動完成"
+        "🚨 seizure.js V2.3 loaded"
     );
 
 

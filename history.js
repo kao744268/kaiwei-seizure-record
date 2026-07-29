@@ -1,25 +1,23 @@
 // ==========================================
 // 愷威 Care 癲癇紀錄版 V1.0
 // history.js
-// History Record Display
+// History Display System
 // ==========================================
 
 
 
 // ===============================
-// 讀取歷史紀錄
+// 取得紀錄
 // ===============================
 
 
-function getHistoryRecords(){
+function getRecords(){
 
 
-    var records =
-
-    JSON.parse(
+    return JSON.parse(
 
         localStorage.getItem(
-            "care_seizure_records"
+            "care_records"
         )
 
         ||
@@ -27,10 +25,6 @@ function getHistoryRecords(){
         "[]"
 
     );
-
-
-
-    return records;
 
 
 }
@@ -52,15 +46,14 @@ function renderHistory(){
 
 
 
-    var historyList =
-
+    var box =
     document.getElementById(
         "historyList"
     );
 
 
 
-    if(!historyList){
+    if(!box){
 
         return;
 
@@ -71,7 +64,7 @@ function renderHistory(){
 
 
     var records =
-    getHistoryRecords();
+    getRecords();
 
 
 
@@ -80,10 +73,9 @@ function renderHistory(){
     if(records.length === 0){
 
 
-        historyList.innerHTML =
+        box.innerHTML =
 
         "<p>目前尚無發作紀錄</p>";
-
 
 
         return;
@@ -95,17 +87,13 @@ function renderHistory(){
 
 
 
-
-
-    historyList.innerHTML = "";
-
+    box.innerHTML = "";
 
 
 
 
 
-
-    // 最新在最上面
+    // 最新在前
 
 
     records.reverse();
@@ -121,10 +109,9 @@ function renderHistory(){
     ){
 
 
-        var record =
+
+        var data =
         records[i];
-
-
 
 
 
@@ -144,32 +131,37 @@ function renderHistory(){
 
         card.innerHTML = `
 
+
         <h3>
-        🚨 第 ${records.length - i} 次發作
+        🚨 第 ${records.length-i} 次發作
         </h3>
+
 
 
         <p>
         📅 日期：
-        ${record.date || "-"}
+        ${data.date || "-"}
         </p>
+
 
 
         <p>
         ⏰ 開始：
-        ${record.startTime || "-"}
+        ${data.start || "-"}
         </p>
+
 
 
         <p>
         ⏰ 結束：
-        ${record.endTime || "-"}
+        ${data.end || "-"}
         </p>
 
 
+
         <p>
-        ⏱ 持續：
-        ${record.duration || 0}
+        ⏱ 持續時間：
+        ${data.duration || 0}
         秒
         </p>
 
@@ -178,36 +170,31 @@ function renderHistory(){
         <hr>
 
 
+
         <p>
         🧠 發作型態：
-        ${
-            formatArray(record.type)
-        }
+        ${showArray(data.type)}
         </p>
+
 
 
         <p>
         🌙 發作前：
-        ${
-            formatArray(record.before)
-        }
+        ${showArray(data.before)}
         </p>
+
 
 
         <p>
         👀 發作中：
-        ${
-            formatArray(record.during)
-        }
+        ${showArray(data.during)}
         </p>
 
 
 
         <p>
         💤 恢復時間：
-        ${
-            record.recovery || "-"
-        }
+        ${data.recovery || "-"}
         分鐘
         </p>
 
@@ -215,10 +202,9 @@ function renderHistory(){
 
         <p>
         📝 備註：
-        ${
-            record.note || "-"
-        }
+        ${data.note || "-"}
         </p>
+
 
 
         `;
@@ -226,8 +212,7 @@ function renderHistory(){
 
 
 
-
-        historyList.appendChild(
+        box.appendChild(
             card
         );
 
@@ -247,50 +232,15 @@ function renderHistory(){
 
 
 // ===============================
-// 陣列轉文字
-// ===============================
-
-
-function formatArray(arr){
-
-
-
-    if(!arr || arr.length === 0){
-
-
-        return "-";
-
-
-    }
-
-
-
-    return arr.join(
-        "、"
-    );
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
 // 首頁最新紀錄
 // ===============================
 
 
-function updateLatestRecord(){
+function updateLatest(){
 
 
 
     var box =
-
     document.getElementById(
         "latestBox"
     );
@@ -308,7 +258,7 @@ function updateLatestRecord(){
 
 
     var records =
-    getHistoryRecords();
+    getRecords();
 
 
 
@@ -330,9 +280,9 @@ function updateLatestRecord(){
 
 
 
-    var latest =
+    var last =
     records[
-        records.length - 1
+        records.length-1
     ];
 
 
@@ -341,11 +291,16 @@ function updateLatestRecord(){
 
     box.innerHTML = `
 
+
     最近一次發作<br><br>
 
-    📅 ${latest.date}<br>
 
-    ⏱ ${latest.duration} 秒
+    📅 ${last.date}<br>
+
+
+    ⏱ 持續 ${last.duration} 秒
+
+
 
     `;
 
@@ -362,30 +317,65 @@ function updateLatestRecord(){
 
 
 // ===============================
-// 啟動
+// 格式化陣列
+// ===============================
+
+
+function showArray(arr){
+
+
+
+    if(
+        !arr ||
+        arr.length === 0
+    ){
+
+        return "-";
+
+    }
+
+
+
+    return arr.join(
+        "、"
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 初始化
 // ===============================
 
 
 document.addEventListener(
+
 "DOMContentLoaded",
+
 function(){
+
 
 
     renderHistory();
 
 
-    updateLatestRecord();
+    updateLatest();
 
 
 
     console.log(
-        "📋 history.js 已連接"
+        "📋 history.js 初始化完成"
     );
 
 
-});
+}
 
-
-
-
-};
+);

@@ -8,24 +8,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-愷威 Care V2.2
+愷威 Care V2.3
 </title>
-
 
 <link rel="stylesheet" href="style.css">
 
-
 </head>
-
 
 
 <body>
 
 
 
-<!-- =================================
-主畫面：現場照護模式
-================================= -->
+<!-- ===============================
+主畫面
+=============================== -->
 
 
 <section id="homePage" class="page active">
@@ -40,7 +37,7 @@
 
 
 <p>
-癲癇守護紀錄系統
+癲癇紀錄系統
 </p>
 
 
@@ -50,13 +47,7 @@
 
 
 
-
-
-<!-- 發作核心區 -->
-
-
 <section class="seizure-panel">
-
 
 
 <h2>
@@ -64,17 +55,11 @@
 </h2>
 
 
-
-
-
 <div id="statusBox">
 
 等待開始紀錄
 
 </div>
-
-
-
 
 
 
@@ -88,16 +73,11 @@
 
 
 
-
-
-
 <div id="startTimeBox">
 
 尚未開始
 
 </div>
-
-
 
 
 
@@ -113,8 +93,6 @@ class="start-button">
 
 
 
-
-
 <button 
 id="stopBtn"
 class="stop-button">
@@ -122,8 +100,6 @@ class="stop-button">
 ⏹ 結束發作
 
 </button>
-
-
 
 
 
@@ -137,7 +113,9 @@ class="stop-button">
 
 
 
-<!-- 發作場合 -->
+<!-- ===============================
+發作場合
+=============================== -->
 
 
 <section class="record-section">
@@ -165,6 +143,7 @@ value="學校">
 
 
 
+
 <label>
 
 <input
@@ -175,6 +154,7 @@ value="家中">
 🏠 家中
 
 </label>
+
 
 
 
@@ -191,12 +171,13 @@ value="睡眠中">
 
 
 
+
 <label>
 
 <input
 type="radio"
 name="situation"
-value="外出">
+value="外出途中">
 
 🚗 外出途中
 
@@ -204,29 +185,18 @@ value="外出">
 
 
 
-<label>
-
-<input
-type="radio"
-name="situation"
-value="醫院">
-
-🏥 醫院
-
-</label>
-
-
 
 <label>
 
 <input
 type="radio"
 name="situation"
-value="戶外">
+value="戶外活動">
 
 🌳 戶外活動
 
 </label>
+
 
 
 
@@ -256,7 +226,9 @@ value="其他">
 
 
 
-<!-- 發作型態 -->
+<!-- ===============================
+發作型態
+=============================== -->
 
 
 <section class="record-section">
@@ -285,6 +257,7 @@ value="全身抽搐">
 
 
 
+
 <label>
 
 <input
@@ -295,6 +268,7 @@ value="局部抽搐">
 局部抽搐
 
 </label>
+
 
 
 
@@ -311,6 +285,7 @@ value="失神">
 
 
 
+
 <label>
 
 <input
@@ -321,6 +296,7 @@ value="僵直">
 僵直
 
 </label>
+
 
 
 
@@ -350,7 +326,9 @@ value="其他">
 
 
 
-<!-- 意識狀態 -->
+<!-- ===============================
+意識狀態
+=============================== -->
 
 
 <section class="record-section">
@@ -379,6 +357,7 @@ value="有意識">
 
 
 
+
 <label>
 
 <input
@@ -392,6 +371,7 @@ value="意識模糊">
 
 
 
+
 <label>
 
 <input
@@ -402,6 +382,7 @@ value="無意識">
 😴 無意識
 
 </label>
+
 
 
 
@@ -431,7 +412,123 @@ value="呼吸異常">
 
 
 
-<!-- 備註 -->
+<!-- ===============================
+發作後狀態 新增
+=============================== -->
+
+
+<section class="record-section">
+
+
+<h3>
+🌱 發作後狀態
+</h3>
+
+
+
+<div class="option-card">
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="恢復正常">
+
+😊 恢復正常
+
+</label>
+
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="疲倦想睡">
+
+😴 疲倦想睡
+
+</label>
+
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="意識混亂">
+
+😵 意識混亂
+
+</label>
+
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="情緒不穩">
+
+😢 情緒不穩
+
+</label>
+
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="肌肉無力">
+
+💤 肌肉無力
+
+</label>
+
+
+
+
+<label>
+
+<input
+type="checkbox"
+name="afterState"
+value="其他">
+
+其他
+
+</label>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- ===============================
+備註
+=============================== -->
 
 
 <section class="record-section">
@@ -440,6 +537,7 @@ value="呼吸異常">
 <h3>
 📝 備註
 </h3>
+
 
 
 <textarea
@@ -459,13 +557,12 @@ placeholder="記錄發作前後狀況、特殊反應">
 
 
 
-<!-- =================================
-功能按鈕
-================================= -->
+<!-- ===============================
+快速功能
+=============================== -->
 
 
 <section class="quick-menu">
-
 
 
 <button
@@ -475,7 +572,6 @@ class="small-menu">
 🏥 醫療卡
 
 </button>
-
 
 
 
@@ -491,7 +587,6 @@ class="small-menu">
 
 
 
-
 <button
 id="emergencyPageBtn"
 class="small-menu emergency-small">
@@ -501,6 +596,9 @@ class="small-menu emergency-small">
 </button>
 
 
+</section>
+
+
 
 </section>
 
@@ -509,19 +607,12 @@ class="small-menu emergency-small">
 
 
 
-</section>
 
 
 
-
-
-
-
-
-
-<!-- =================================
-醫療資訊
-================================= -->
+<!-- ===============================
+醫療卡
+=============================== -->
 
 
 <section id="medicalPage" class="page">
@@ -546,7 +637,6 @@ class="small-menu emergency-small">
 </button>
 
 
-
 </section>
 
 
@@ -557,9 +647,9 @@ class="small-menu emergency-small">
 
 
 
-<!-- =================================
+<!-- ===============================
 歷史紀錄
-================================= -->
+=============================== -->
 
 
 <section id="historyPage" class="page">
@@ -577,13 +667,11 @@ class="small-menu emergency-small">
 
 
 
-
 <button class="backBtn">
 
 返回紀錄
 
 </button>
-
 
 
 </section>
@@ -596,9 +684,9 @@ class="small-menu emergency-small">
 
 
 
-<!-- =================================
+<!-- ===============================
 緊急模式
-================================= -->
+=============================== -->
 
 
 <section id="emergencyPage" class="page">
@@ -636,7 +724,7 @@ class="small-menu emergency-small">
 
 
 <p>
-② 通知鄰近醫院
+② 通知鄰近醫院送醫
 </p>
 
 
@@ -652,7 +740,6 @@ class="small-menu emergency-small">
 
 
 
-
 <div id="contactList">
 
 </div>
@@ -660,7 +747,11 @@ class="small-menu emergency-small">
 
 
 
-<button class="backBtn">
+
+
+<button
+id="emergencyBackBtn"
+class="backBtn">
 
 返回紀錄
 
@@ -676,11 +767,6 @@ class="small-menu emergency-small">
 
 
 
-
-
-<!-- =================================
-JS
-================================= -->
 
 
 <script src="data.js"></script>

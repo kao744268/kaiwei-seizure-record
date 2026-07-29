@@ -582,16 +582,15 @@ function formatNumber(num){
 // ===============================
 
 
-window.onload =
+document.addEventListener(
+"DOMContentLoaded",
 function(){
-
 
 
     var startBtn =
     document.getElementById(
         "startBtn"
     );
-
 
 
     var stopBtn =
@@ -601,14 +600,10 @@ function(){
 
 
 
-
-
     if(startBtn){
-
 
         startBtn.onclick =
         startSeizure;
-
 
     }
 
@@ -616,21 +611,16 @@ function(){
 
     if(stopBtn){
 
-
         stopBtn.onclick =
         stopSeizure;
-
 
     }
 
 
 
-
-
     console.log(
-        "🚨 seizure.js 載入完成"
+        "🚨 seizure.js 已連接"
     );
 
 
-
-};
+});

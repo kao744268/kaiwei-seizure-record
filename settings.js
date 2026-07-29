@@ -1,91 +1,152 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V2.0 守護版
 // settings.js
-// cloud串接修正版
+// Parent Control System
 // ==========================================
 
 
-function initSettings(){
+
+// ===============================
+// 預設設定
+// ===============================
 
 
-    const syncBtn =
-    document.getElementById(
-        "syncBtn"
+const defaultSettings = {
+
+
+    parentMode:false,
+
+
+    pin:"1234"
+
+
+};
+
+
+
+
+
+
+
+
+
+// ===============================
+// 取得設定
+// ===============================
+
+
+function getSettings(){
+
+
+    const data =
+
+    localStorage.getItem(
+        "care_settings"
     );
 
 
-    const backupBtn =
-    document.getElementById(
-        "backupBtn"
+
+    if(data){
+
+
+        return JSON.parse(data);
+
+
+    }
+
+
+
+    return defaultSettings;
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 儲存設定
+// ===============================
+
+
+function saveSettings(data){
+
+
+
+    localStorage.setItem(
+
+        "care_settings",
+
+        JSON.stringify(data)
+
     );
 
 
-    const exportBtn =
-    document.getElementById(
-        "exportBtn"
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 開啟家長模式
+// ===============================
+
+
+function enableParentMode(){
+
+
+
+    const settings =
+    getSettings();
+
+
+
+    let input =
+    prompt(
+        "請輸入家長PIN碼"
     );
 
 
 
-
-    // Google同步
-
-    if(syncBtn){
-
-
-        syncBtn.addEventListener(
-
-            "click",
-
-            async function(){
-
-
-                if(
-                    typeof syncAll === "function"
-                ){
-
-
-                    syncBtn.innerHTML =
-                    "☁️ 同步中...";
-
-
-                    const result =
-                    await syncAll();
+    if(
+        input === settings.pin
+    ){
 
 
 
-                    syncBtn.innerHTML =
-                    "☁️ Google同步";
+        settings.parentMode = true;
 
 
 
-                    if(result){
-
-
-                        alert(
-                            "✅ Google同步完成"
-                        );
-
-
-                    }
+        saveSettings(
+            settings
+        );
 
 
 
-                }
-
-                else{
-
-
-                    alert(
-                        "cloud.js 尚未載入"
-                    );
+        alert(
+            "🔓 已進入家長管理模式"
+        );
 
 
-                }
+
+    }
+
+    else{
 
 
-            }
-
+        alert(
+            "❌ PIN錯誤"
         );
 
 
@@ -93,7 +154,368 @@ function initSettings(){
 
 
 
+}
 
+
+
+
+
+
+
+
+
+// ===============================
+// 關閉家長模式
+// ===============================
+
+
+function disableParentMode(){
+
+
+
+    const settings =
+    getSettings();
+
+
+
+    settings.parentMode = false;
+
+
+
+    saveSettings(
+        settings
+    );
+
+
+
+    alert(
+        "🔒 已回到查看模式"
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 檢查權限
+// ===============================
+
+
+function isParentMode(){
+
+
+
+    const settings =
+    getSettings();
+
+
+
+    return settings.parentMode;
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 備份資料
+// ===============================
+
+
+function backupData(){
+
+
+
+    const backup = {
+
+
+
+        medical:
+
+        JSON.parse(
+
+            localStorage.getItem(
+                "care_medical_info"
+            )
+
+            ||
+
+            "{}"
+
+        ),
+
+
+
+
+        seizures:
+
+        JSON.parse(
+
+            localStorage.getItem(
+                "care_seizure_records"
+            )
+
+            ||
+
+            "[]"
+
+        ),
+
+
+
+
+        settings:
+
+        getSettings()
+
+
+
+    };
+
+
+
+
+
+
+    const blob =
+    new Blob(
+
+        [
+            JSON.stringify(
+                backup,
+                null,
+                2
+            )
+        ],
+
+        {
+            type:
+            "application/json"
+        }
+
+    );
+
+
+
+
+
+    const url =
+    URL.createObjectURL(
+        blob
+    );
+
+
+
+
+
+    const a =
+    document.createElement(
+        "a"
+    );
+
+
+    a.href=url;
+
+
+    a.download=
+    "愷威Care備份資料.json";
+
+
+
+    a.click();
+
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 匯出發作紀錄
+// ===============================
+
+
+function exportRecords(){
+
+
+
+    const records =
+
+    JSON.parse(
+
+        localStorage.getItem(
+            "care_seizure_records"
+        )
+
+        ||
+
+        "[]"
+
+    );
+
+
+
+
+
+    let text =
+    "愷威 Care 發作紀錄\n\n";
+
+
+
+
+
+    records.forEach(
+
+        function(item,index){
+
+
+            text +=
+
+            "第 "
+
+            +
+
+            (index+1)
+
+            +
+
+            " 次發作\n"
+
+            +
+
+            "日期："
+
+            +
+
+            item.date
+
+            +
+
+            "\n"
+
+            +
+
+            "持續："
+
+            +
+
+            item.duration
+
+            +
+
+            " 秒\n\n";
+
+
+
+        }
+
+    );
+
+
+
+
+
+    const blob =
+    new Blob(
+
+        [
+            text
+        ],
+
+        {
+            type:
+            "text/plain"
+        }
+
+    );
+
+
+
+
+
+    const url =
+    URL.createObjectURL(
+        blob
+    );
+
+
+
+    const a =
+    document.createElement(
+        "a"
+    );
+
+
+
+    a.href=url;
+
+
+    a.download=
+    "愷威Care發作紀錄.txt";
+
+
+
+    a.click();
+
+
+
+    URL.revokeObjectURL(
+        url
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 初始化
+// ===============================
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+
+
+    const backupBtn =
+    document.getElementById(
+        "backupBtn"
+    );
 
 
 
@@ -116,6 +538,13 @@ function initSettings(){
 
 
 
+    const exportBtn =
+    document.getElementById(
+        "exportBtn"
+    );
+
+
+
     if(exportBtn){
 
 
@@ -132,153 +561,12 @@ function initSettings(){
 
 
 
-}
-
-
-
-
-
-
-
-
-function backupData(){
-
-
-    const backup = {
-
-
-        version:
-        window.CARE_VERSION || "V1.0",
-
-
-        time:
-        new Date()
-        .toISOString(),
-
-
-        seizureRecords:
-        window.seizureRecords || [],
-
-
-        medicalData:
-        window.medicalData || {},
-
-
-        emergencyContacts:
-        window.emergencyContacts || []
-
-    };
-
-
-
-    downloadJSON(
-
-        backup,
-
-        "愷威_Care_備份.json"
-
-    );
-
-
-}
-
-
-
-
-
-
-
-
-function exportRecords(){
-
-
-    downloadJSON(
-
-        {
-            records:
-            window.seizureRecords || []
-        },
-
-        "愷威_發作紀錄.json"
-
-    );
-
-
-}
-
-
-
-
-
-
-
-
-function downloadJSON(data,filename){
-
-
-    const blob =
-    new Blob(
-
-        [
-            JSON.stringify(
-                data,
-                null,
-                2
-            )
-        ],
-
-        {
-            type:
-            "application/json"
-        }
-
-    );
-
-
-
-    const url =
-    URL.createObjectURL(blob);
-
-
-
-    const a =
-    document.createElement("a");
-
-
-
-    a.href=url;
-
-    a.download=filename;
-
-
-
-    a.click();
-
-
-
-    URL.revokeObjectURL(url);
-
-
-}
-
-
-
-
-
-
-
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-function(){
-
-    initSettings();
 
     console.log(
-        "⚙️ settings cloud版啟動"
+        "⚙️ settings.js 初始化完成"
     );
+
+
 
 }
 

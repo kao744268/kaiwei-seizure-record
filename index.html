@@ -7,9 +7,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
 <title>
-愷威 Care V1.0
+愷威 Care V2.0
 </title>
 
 
@@ -22,10 +21,9 @@
 <body>
 
 
-<!-- =========================
+<!-- ======================
 首頁
-========================= -->
-
+====================== -->
 
 <section id="homePage" class="page active">
 
@@ -35,8 +33,8 @@
 </h1>
 
 
-<p class="version">
-V1.0 Stable Offline
+<p>
+V2.0 Clean Offline
 </p>
 
 
@@ -44,7 +42,7 @@ V1.0 Stable Offline
 <div class="menu">
 
 
-<button onclick="showPage('seizurePage')">
+<button id="goSeizureBtn">
 
 🚨 發作紀錄
 
@@ -52,7 +50,7 @@ V1.0 Stable Offline
 
 
 
-<button onclick="showPage('recordPage')">
+<button id="goHistoryBtn">
 
 📋 歷史紀錄
 
@@ -60,7 +58,7 @@ V1.0 Stable Offline
 
 
 
-<button onclick="showPage('medicalPage')">
+<button id="goMedicalBtn">
 
 🏥 醫療資訊
 
@@ -68,7 +66,7 @@ V1.0 Stable Offline
 
 
 
-<button onclick="showPage('emergencyPage')">
+<button id="goEmergencyBtn">
 
 📞 緊急聯絡
 
@@ -76,7 +74,7 @@ V1.0 Stable Offline
 
 
 
-<button onclick="showPage('settingPage')">
+<button id="goSettingsBtn">
 
 ⚙️ 設定
 
@@ -84,17 +82,6 @@ V1.0 Stable Offline
 
 
 </div>
-
-
-
-<div id="latestRecord">
-
-
-尚無近期紀錄
-
-
-</div>
-
 
 
 </section>
@@ -105,12 +92,9 @@ V1.0 Stable Offline
 
 
 
-
-
-<!-- =========================
-發作頁
-========================= -->
-
+<!-- ======================
+發作紀錄
+====================== -->
 
 <section id="seizurePage" class="page">
 
@@ -129,7 +113,7 @@ V1.0 Stable Offline
 
 
 
-<button id="startBtn">
+<button id="startSeizureBtn">
 
 開始發作
 
@@ -137,7 +121,7 @@ V1.0 Stable Offline
 
 
 
-<button id="stopBtn">
+<button id="stopSeizureBtn">
 
 結束發作
 
@@ -145,24 +129,19 @@ V1.0 Stable Offline
 
 
 
-<div id="seizureStatus">
+<p id="seizureStatus">
 
 尚未開始
 
-</div>
+</p>
 
 
 
-<br>
-
-
-<button class="backBtn"
-onclick="showPage('homePage')">
+<button class="backHomeBtn">
 
 返回首頁
 
 </button>
-
 
 
 </section>
@@ -175,12 +154,11 @@ onclick="showPage('homePage')">
 
 
 
-<!-- =========================
+<!-- ======================
 歷史紀錄
-========================= -->
+====================== -->
 
-
-<section id="recordPage" class="page">
+<section id="historyPage" class="page">
 
 
 <h2>
@@ -189,20 +167,17 @@ onclick="showPage('homePage')">
 
 
 
-<div id="recordList">
-
+<div id="historyList">
 
 </div>
 
 
 
-<button class="backBtn"
-onclick="showPage('homePage')">
+<button class="backHomeBtn">
 
 返回首頁
 
 </button>
-
 
 
 </section>
@@ -215,10 +190,9 @@ onclick="showPage('homePage')">
 
 
 
-<!-- =========================
+<!-- ======================
 醫療資訊
-========================= -->
-
+====================== -->
 
 <section id="medicalPage" class="page">
 
@@ -229,20 +203,17 @@ onclick="showPage('homePage')">
 
 
 
-<div id="medicalCard">
-
+<div id="medicalContent">
 
 </div>
 
 
 
-<button class="backBtn"
-onclick="showPage('homePage')">
+<button class="backHomeBtn">
 
 返回首頁
 
 </button>
-
 
 
 </section>
@@ -255,10 +226,9 @@ onclick="showPage('homePage')">
 
 
 
-<!-- =========================
+<!-- ======================
 緊急聯絡
-========================= -->
-
+====================== -->
 
 <section id="emergencyPage" class="page">
 
@@ -269,20 +239,17 @@ onclick="showPage('homePage')">
 
 
 
-<div id="emergencyList">
-
+<div id="emergencyContent">
 
 </div>
 
 
 
-<button class="backBtn"
-onclick="showPage('homePage')">
+<button class="backHomeBtn">
 
 返回首頁
 
 </button>
-
 
 
 </section>
@@ -295,12 +262,11 @@ onclick="showPage('homePage')">
 
 
 
-<!-- =========================
+<!-- ======================
 設定
-========================= -->
+====================== -->
 
-
-<section id="settingPage" class="page">
+<section id="settingsPage" class="page">
 
 
 <h2>
@@ -325,32 +291,20 @@ onclick="showPage('homePage')">
 
 
 
-<div class="info">
-
-
 <p>
+
 版本：
-Care V1.0 Stable
+Care V2.0 Clean
+
 </p>
 
 
-<p>
-模式：
-Offline
-</p>
 
-
-</div>
-
-
-
-<button class="backBtn"
-onclick="showPage('homePage')">
+<button class="backHomeBtn">
 
 返回首頁
 
 </button>
-
 
 
 </section>
@@ -363,25 +317,14 @@ onclick="showPage('homePage')">
 
 
 
-<!-- =========================
-Scripts
-========================= -->
+<!-- ======================
+JS 載入
+====================== -->
 
 
 <script src="data.js"></script>
 
 <script src="app.js"></script>
-
-<script src="seizure.js"></script>
-
-<script src="history.js"></script>
-
-<script src="medical.js"></script>
-
-<script src="emergency.js"></script>
-
-<script src="settings.js"></script>
-
 
 
 </body>

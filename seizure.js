@@ -196,7 +196,12 @@ const record = {
 if(typeof addSeizureRecord === "function"){
 
     addSeizureRecord(record);
+if(typeof sendSeizureRecord === "function"){
 
+    sendSeizureRecord(record);
+
+}
+}
 }
 
     alert(

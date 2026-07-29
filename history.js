@@ -1,23 +1,24 @@
 // ==========================================
-// 愷威 Care 癲癇紀錄版 V1.0
+// 愷威 Care V2.0 守護版
 // history.js
-// History Display System
+// Seizure History System
 // ==========================================
 
 
 
 // ===============================
-// 取得紀錄
+// 取得發作紀錄
 // ===============================
 
 
-function getRecords(){
+function getSeizureRecords(){
+
 
 
     return JSON.parse(
 
         localStorage.getItem(
-            "care_records"
+            "care_seizure_records"
         )
 
         ||
@@ -46,7 +47,7 @@ function renderHistory(){
 
 
 
-    var box =
+    const box =
     document.getElementById(
         "historyList"
     );
@@ -63,8 +64,8 @@ function renderHistory(){
 
 
 
-    var records =
-    getRecords();
+    let records =
+    getSeizureRecords();
 
 
 
@@ -73,9 +74,18 @@ function renderHistory(){
     if(records.length === 0){
 
 
-        box.innerHTML =
+        box.innerHTML = `
 
-        "<p>目前尚無發作紀錄</p>";
+        <div class="info-card">
+
+        📋 尚無發作紀錄
+
+        </div>
+
+        `;
+
+
+        updateLatest();
 
 
         return;
@@ -87,137 +97,133 @@ function renderHistory(){
 
 
 
-    box.innerHTML = "";
-
-
-
-
-
     // 最新在前
 
 
+    records =
     records.reverse();
 
 
 
 
 
-    for(
-        var i = 0;
-        i < records.length;
-        i++
-    ){
-
-
-
-        var data =
-        records[i];
-
-
-
-        var card =
-        document.createElement(
-            "div"
-        );
-
-
-
-        card.className =
-        "history-card";
+    box.innerHTML = "";
 
 
 
 
 
-        card.innerHTML = `
+    records.forEach(
 
-
-        <h3>
-        🚨 第 ${records.length-i} 次發作
-        </h3>
+        function(record,index){
 
 
 
-        <p>
-        📅 日期：
-        ${data.date || "-"}
-        </p>
+            const card =
+            document.createElement(
+                "div"
+            );
 
 
 
-        <p>
-        ⏰ 開始：
-        ${data.start || "-"}
-        </p>
-
-
-
-        <p>
-        ⏰ 結束：
-        ${data.end || "-"}
-        </p>
-
-
-
-        <p>
-        ⏱ 持續時間：
-        ${data.duration || 0}
-        秒
-        </p>
-
-
-
-        <hr>
-
-
-
-        <p>
-        🧠 發作型態：
-        ${showArray(data.type)}
-        </p>
-
-
-
-        <p>
-        🌙 發作前：
-        ${showArray(data.before)}
-        </p>
-
-
-
-        <p>
-        👀 發作中：
-        ${showArray(data.during)}
-        </p>
-
-
-
-        <p>
-        💤 恢復時間：
-        ${data.recovery || "-"}
-        分鐘
-        </p>
-
-
-
-        <p>
-        📝 備註：
-        ${data.note || "-"}
-        </p>
-
-
-
-        `;
+            card.className =
+            "history-card";
 
 
 
 
-        box.appendChild(
-            card
-        );
+
+            card.innerHTML = `
 
 
-    }
+<h3>
+
+🚨 第 ${records.length-index} 次發作
+
+</h3>
+
+
+
+<p>
+📅 日期：
+${record.date || "-"}
+</p>
+
+
+
+<p>
+⏰ 開始時間：
+${record.startTime || "-"}
+</p>
+
+
+
+<p>
+⏰ 結束時間：
+${record.endTime || "-"}
+</p>
+
+
+
+<p>
+⏱ 持續時間：
+${record.duration || 0}
+秒
+</p>
+
+
+
+<hr>
+
+
+
+<p>
+🧠 發作型態：
+${formatArray(record.type)}
+</p>
+
+
+
+<p>
+👀 發作狀況：
+${formatArray(record.condition)}
+</p>
+
+
+
+<p>
+💤 恢復時間：
+${record.recovery || "-"}
+分鐘
+</p>
+
+
+
+<p>
+📝 備註：
+${record.note || "-"}
+</p>
+
+
+
+`;
+
+
+
+            box.appendChild(
+                card
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+    updateLatest();
 
 
 
@@ -240,7 +246,7 @@ function updateLatest(){
 
 
 
-    var box =
+    const box =
     document.getElementById(
         "latestBox"
     );
@@ -257,8 +263,8 @@ function updateLatest(){
 
 
 
-    var records =
-    getRecords();
+    const records =
+    getSeizureRecords();
 
 
 
@@ -268,6 +274,7 @@ function updateLatest(){
 
 
         box.innerHTML =
+
         "尚無近期紀錄";
 
 
@@ -280,9 +287,9 @@ function updateLatest(){
 
 
 
-    var last =
+    const last =
     records[
-        records.length-1
+        records.length - 1
     ];
 
 
@@ -292,17 +299,27 @@ function updateLatest(){
     box.innerHTML = `
 
 
-    最近一次發作<br><br>
+📋 最近一次發作
 
 
-    📅 ${last.date}<br>
+<br><br>
 
 
-    ⏱ 持續 ${last.duration} 秒
+📅 ${last.date || "-"}
+
+
+<br>
+
+
+⏱ 持續：
+
+${last.duration || 0}
+
+秒
 
 
 
-    `;
+`;
 
 
 
@@ -317,11 +334,11 @@ function updateLatest(){
 
 
 // ===============================
-// 格式化陣列
+// 陣列格式
 // ===============================
 
 
-function showArray(arr){
+function formatArray(arr){
 
 
 
@@ -352,6 +369,50 @@ function showArray(arr){
 
 
 // ===============================
+// 清除紀錄
+// ===============================
+
+
+function clearHistory(){
+
+
+
+    const check =
+    confirm(
+        "確定清除所有發作紀錄？"
+    );
+
+
+
+    if(check){
+
+
+
+        localStorage.removeItem(
+            "care_seizure_records"
+        );
+
+
+
+        renderHistory();
+
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
 // 初始化
 // ===============================
 
@@ -365,6 +426,7 @@ function(){
 
 
     renderHistory();
+
 
 
     updateLatest();

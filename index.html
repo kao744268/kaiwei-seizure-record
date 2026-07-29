@@ -7,14 +7,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-<title>
-愷威 Care 癲癇紀錄
-</title>
-
+<title>愷威 Care 癲癇紀錄</title>
 
 <link rel="stylesheet" href="style.css">
-
 
 </head>
 
@@ -22,11 +17,9 @@
 <body>
 
 
-
-<!-- =========================
+<!-- =====================
 首頁
-========================= -->
-
+===================== -->
 
 <section id="homePage" class="page active">
 
@@ -46,41 +39,27 @@
 
 
 <button id="seizurePageBtn">
-
 🚨 發作紀錄
-
 </button>
-
 
 
 <button id="historyPageBtn">
-
 📋 歷史紀錄
-
 </button>
-
 
 
 <button id="medicalPageBtn">
-
 🏥 醫療資料
-
 </button>
-
 
 
 <button id="emergencyPageBtn">
-
 📞 緊急資訊
-
 </button>
 
 
-
 <button id="settingsPageBtn">
-
 ⚙️ 設定
-
 </button>
 
 
@@ -105,9 +84,9 @@
 
 
 
-<!-- =========================
+<!-- =====================
 發作紀錄
-========================= -->
+===================== -->
 
 
 <section id="seizurePage" class="page">
@@ -143,13 +122,12 @@
 
 
 
+
 <div id="statusBox">
 
 尚未開始
 
 </div>
-
-
 
 
 
@@ -199,13 +177,8 @@
 </label>
 
 
-<label>
-<input type="checkbox" name="type" value="其他">
-其他
-</label>
-
-
 </div>
+
 
 
 
@@ -245,13 +218,8 @@
 </label>
 
 
-<label>
-<input type="checkbox" name="before" value="無明顯原因">
-無明顯原因
-</label>
-
-
 </div>
+
 
 
 
@@ -286,19 +254,12 @@
 
 
 <label>
-<input type="checkbox" name="during" value="眼睛上吊">
-眼睛上吊
-</label>
-
-
-<label>
 <input type="checkbox" name="during" value="四肢僵硬">
 四肢僵硬
 </label>
 
 
 </div>
-
 
 
 
@@ -316,9 +277,8 @@
 恢復時間：
 
 <input 
-type="number"
 id="recoveryTime"
-placeholder="分鐘">
+type="number">
 
 分鐘
 
@@ -327,12 +287,9 @@ placeholder="分鐘">
 
 
 
-<br><br>
-
-
 <textarea
 id="note"
-placeholder="其他備註">
+placeholder="備註">
 </textarea>
 
 
@@ -356,9 +313,9 @@ placeholder="其他備註">
 
 
 
-<!-- =========================
+<!-- =====================
 歷史紀錄
-========================= -->
+===================== -->
 
 
 <section id="historyPage" class="page">
@@ -369,9 +326,11 @@ placeholder="其他備註">
 </h2>
 
 
+
 <div id="historyList">
 
 </div>
+
 
 
 <button class="backBtn">
@@ -391,9 +350,9 @@ placeholder="其他備註">
 
 
 
-<!-- =========================
-醫療資料
-========================= -->
+<!-- =====================
+醫療
+===================== -->
 
 
 <section id="medicalPage" class="page">
@@ -404,9 +363,13 @@ placeholder="其他備註">
 </h2>
 
 
+
 <div id="medicalContent">
 
+尚未設定
+
 </div>
+
 
 
 <button class="backBtn">
@@ -426,9 +389,9 @@ placeholder="其他備註">
 
 
 
-<!-- =========================
-緊急資訊
-========================= -->
+<!-- =====================
+緊急
+===================== -->
 
 
 <section id="emergencyPage" class="page">
@@ -439,9 +402,13 @@ placeholder="其他備註">
 </h2>
 
 
+
 <div id="emergencyContent">
 
+尚未設定
+
 </div>
+
 
 
 <button class="backBtn">
@@ -461,9 +428,9 @@ placeholder="其他備註">
 
 
 
-<!-- =========================
+<!-- =====================
 設定
-========================= -->
+===================== -->
 
 
 <section id="settingsPage" class="page">
@@ -474,23 +441,21 @@ placeholder="其他備註">
 </h2>
 
 
-<button id="backupBtn">
+<button>
 
 💾 備份資料
 
 </button>
 
 
-
-<button id="exportBtn">
+<button>
 
 📄 匯出紀錄
 
 </button>
 
 
-
-<button id="clearBtn">
+<button>
 
 🗑️ 清除資料
 
@@ -499,7 +464,9 @@ placeholder="其他備註">
 
 
 <p>
-版本：愷威 Care V1.0
+
+愷威 Care V1.0
+
 </p>
 
 
@@ -521,6 +488,11 @@ placeholder="其他備註">
 
 
 
+<!-- =====================
+JS 載入順序
+===================== -->
+
+
 <script src="data.js"></script>
 
 <script src="app.js"></script>
@@ -528,6 +500,7 @@ placeholder="其他備註">
 <script src="seizure.js"></script>
 
 <script src="history.js"></script>
+
 
 </body>
 

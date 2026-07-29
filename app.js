@@ -1,22 +1,24 @@
+//
 // ==========================================
 // 愷威 Care 癲癇紀錄版 V1.0
 // app.js
 // Core Controller
 // ==========================================
+//
 
 
 
 // ===============================
-// 切換頁面
+// 頁面切換
 // ===============================
 
 
 function showPage(pageId){
 
 
-    var pages =
-    document.getElementsByClassName(
-        "page"
+    var pages = 
+    document.querySelectorAll(
+        ".page"
     );
 
 
@@ -27,13 +29,12 @@ function showPage(pageId){
         i++
     ){
 
-
         pages[i].classList.remove(
             "active"
         );
 
-
     }
+
 
 
 
@@ -53,13 +54,12 @@ function showPage(pageId){
 
 
         console.log(
-            "切換至:",
+            "切換頁面:",
             pageId
         );
 
 
     }
-
 
 
 }
@@ -73,7 +73,7 @@ function showPage(pageId){
 
 
 // ===============================
-// 返回首頁
+// 回首頁
 // ===============================
 
 
@@ -105,14 +105,15 @@ function initApp(){
 
 
     console.log(
-        "👦 愷威 Care 啟動"
+        "👦 愷威 Care V1.0 啟動"
     );
 
 
 
 
 
-    // 發作紀錄入口
+
+    // 發作紀錄
 
 
     var seizureBtn =
@@ -125,16 +126,21 @@ function initApp(){
     if(seizureBtn){
 
 
-        seizureBtn.onclick =
-        function(){
+        seizureBtn.addEventListener(
+
+            "click",
+
+            function(){
 
 
-            showPage(
-                "seizurePage"
-            );
+                showPage(
+                    "seizurePage"
+                );
 
 
-        };
+            }
+
+        );
 
 
     }
@@ -145,7 +151,7 @@ function initApp(){
 
 
 
-    // 歷史紀錄入口
+    // 歷史紀錄
 
 
     var historyBtn =
@@ -158,16 +164,31 @@ function initApp(){
     if(historyBtn){
 
 
-        historyBtn.onclick =
-        function(){
+        historyBtn.addEventListener(
+
+            "click",
+
+            function(){
 
 
-            showPage(
-                "historyPage"
-            );
+                showPage(
+                    "historyPage"
+                );
 
 
-        };
+                if(
+                    typeof renderHistory === "function"
+                ){
+
+                    renderHistory();
+
+                }
+
+
+
+            }
+
+        );
 
 
     }
@@ -178,7 +199,7 @@ function initApp(){
 
 
 
-    // 醫療資料入口
+    // 醫療資料
 
 
     var medicalBtn =
@@ -191,16 +212,21 @@ function initApp(){
     if(medicalBtn){
 
 
-        medicalBtn.onclick =
-        function(){
+        medicalBtn.addEventListener(
+
+            "click",
+
+            function(){
 
 
-            showPage(
-                "medicalPage"
-            );
+                showPage(
+                    "medicalPage"
+                );
 
 
-        };
+            }
+
+        );
 
 
     }
@@ -211,7 +237,7 @@ function initApp(){
 
 
 
-    // 緊急資訊入口
+    // 緊急資訊
 
 
     var emergencyBtn =
@@ -224,16 +250,21 @@ function initApp(){
     if(emergencyBtn){
 
 
-        emergencyBtn.onclick =
-        function(){
+        emergencyBtn.addEventListener(
+
+            "click",
+
+            function(){
 
 
-            showPage(
-                "emergencyPage"
-            );
+                showPage(
+                    "emergencyPage"
+                );
 
 
-        };
+            }
+
+        );
 
 
     }
@@ -244,7 +275,7 @@ function initApp(){
 
 
 
-    // 設定入口
+    // 設定
 
 
     var settingsBtn =
@@ -257,16 +288,21 @@ function initApp(){
     if(settingsBtn){
 
 
-        settingsBtn.onclick =
-        function(){
+        settingsBtn.addEventListener(
+
+            "click",
+
+            function(){
 
 
-            showPage(
-                "settingsPage"
-            );
+                showPage(
+                    "settingsPage"
+                );
 
 
-        };
+            }
+
+        );
 
 
     }
@@ -277,12 +313,13 @@ function initApp(){
 
 
 
-    // 所有返回首頁按鈕
+
+    // 返回首頁按鈕
 
 
     var backButtons =
-    document.getElementsByClassName(
-        "backBtn"
+    document.querySelectorAll(
+        ".backBtn"
     );
 
 
@@ -294,14 +331,19 @@ function initApp(){
     ){
 
 
-        backButtons[j].onclick =
-        function(){
+        backButtons[j].addEventListener(
+
+            "click",
+
+            function(){
 
 
-            goHome();
+                goHome();
 
 
-        };
+            }
+
+        );
 
 
     }
@@ -310,11 +352,10 @@ function initApp(){
 
 
 
-
-
     console.log(
         "✅ app.js 初始化完成"
     );
+
 
 
 }
@@ -332,11 +373,16 @@ function initApp(){
 // ===============================
 
 
-window.onload =
+document.addEventListener(
+
+"DOMContentLoaded",
+
 function(){
 
 
     initApp();
 
 
-};
+}
+
+);

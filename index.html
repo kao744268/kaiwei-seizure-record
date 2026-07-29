@@ -14,21 +14,24 @@
 
 <link rel="stylesheet" href="style.css">
 
+
 </head>
 
 
+
 <body>
+
 
 
 <!-- =========================
 首頁
 ========================= -->
 
+
 <section id="homePage" class="page active">
 
 
 <div class="header">
-
 
 <h1>
 👦 愷威 Care
@@ -39,8 +42,8 @@
 癲癇守護紀錄系統
 </p>
 
-
 </div>
+
 
 
 
@@ -61,12 +64,13 @@
 </h3>
 
 <p>
-快速查看醫療資料卡
+快速查看醫療資訊卡
 </p>
 
 </div>
 
 </button>
+
 
 
 
@@ -83,12 +87,13 @@
 </h3>
 
 <p>
-開始 / 結束 / 型態紀錄
+記錄發作時間與狀況
 </p>
 
 </div>
 
 </button>
+
 
 
 
@@ -105,12 +110,14 @@
 </h3>
 
 <p>
-超過5分鐘快速處置資訊
+超過5分鐘快速查看處置資訊
 </p>
 
 </div>
 
 </button>
+
+
 
 
 
@@ -138,6 +145,8 @@
 
 
 
+
+
 <button id="settingsPageBtn" class="main-card">
 
 ⚙️
@@ -149,13 +158,12 @@
 </h3>
 
 <p>
-資料管理與安全設定
+資料管理與備份
 </p>
 
 </div>
 
 </button>
-
 
 
 
@@ -168,9 +176,7 @@
 
 <div id="latestBox">
 
-
 尚無近期紀錄
-
 
 </div>
 
@@ -195,9 +201,34 @@
 <section id="seizurePage" class="page">
 
 
+
 <h2>
 🚨 發作紀錄
 </h2>
+
+
+
+
+
+<div class="info-card">
+
+
+<p>
+請在發作開始時按下「開始發作」
+</p>
+
+
+<p>
+結束後按「結束發作」並確認儲存
+</p>
+
+
+</div>
+
+
+
+
+
 
 
 
@@ -209,19 +240,27 @@
 
 
 
+
+
+
 <button id="startBtn">
 
-開始發作
+▶️ 開始發作
 
 </button>
+
+
 
 
 
 <button id="stopBtn">
 
-結束發作
+⏹ 結束發作
 
 </button>
+
+
+
 
 
 
@@ -238,9 +277,12 @@
 
 
 
+
+
 <h3>
-發作型態
+🧠 發作型態
 </h3>
+
 
 
 
@@ -248,33 +290,70 @@
 
 
 <label>
-<input type="checkbox" name="type" value="全身抽搐">
+
+<input 
+type="checkbox"
+name="type"
+value="全身抽搐">
+
 全身抽搐
+
 </label>
 
 
+
 <label>
-<input type="checkbox" name="type" value="局部抽搐">
+
+<input 
+type="checkbox"
+name="type"
+value="局部抽搐">
+
 局部抽搐
+
 </label>
 
 
+
+
 <label>
-<input type="checkbox" name="type" value="失神">
+
+<input 
+type="checkbox"
+name="type"
+value="失神">
+
 失神
+
 </label>
 
 
+
+
 <label>
-<input type="checkbox" name="type" value="僵直">
+
+<input 
+type="checkbox"
+name="type"
+value="僵直">
+
 僵直
+
 </label>
+
 
 
 <label>
-<input type="checkbox" name="type" value="其他">
+
+<input 
+type="checkbox"
+name="type"
+value="其他">
+
 其他
+
 </label>
+
 
 
 </div>
@@ -285,37 +364,74 @@
 
 
 
+
+
 <h3>
-發作狀況
+👀 發作狀況
 </h3>
+
 
 
 
 <div class="optionGroup">
 
 
+
 <label>
-<input type="checkbox" name="condition" value="有意識">
+
+<input
+type="checkbox"
+name="condition"
+value="有意識">
+
 有意識
+
 </label>
 
 
+
+
 <label>
-<input type="checkbox" name="condition" value="無意識">
+
+<input
+type="checkbox"
+name="condition"
+value="無意識">
+
 無意識
+
 </label>
 
 
+
+
+
 <label>
-<input type="checkbox" name="condition" value="呼吸異常">
+
+<input
+type="checkbox"
+name="condition"
+value="呼吸異常">
+
 呼吸異常
+
 </label>
+
+
+
 
 
 <label>
-<input type="checkbox" name="condition" value="嘴唇發紫">
+
+<input
+type="checkbox"
+name="condition"
+value="嘴唇發紫">
+
 嘴唇發紫
+
 </label>
+
 
 
 </div>
@@ -327,29 +443,23 @@
 
 
 
+
 <h3>
-發作後
+📝 備註
 </h3>
-
-
-
-<label>
-
-恢復時間：
-
-<input id="recoveryTime" type="number">
-
-分鐘
-
-</label>
-
 
 
 
 <textarea
+
 id="note"
-placeholder="備註">
+
+placeholder="例如：發作前狀況、發作後反應、其他觀察">
+
 </textarea>
+
+
+
 
 
 
@@ -361,6 +471,8 @@ placeholder="備註">
 返回首頁
 
 </button>
+
+
 
 
 </section>
@@ -381,13 +493,18 @@ placeholder="備註">
 <section id="emergencyPage" class="page">
 
 
+
 <h2>
 ⚠️ 緊急模式
 </h2>
 
 
 
+
+
 <div id="emergencyAlert">
+
+⚠️ 緊急資訊模式
 
 </div>
 
@@ -395,12 +512,15 @@ placeholder="備註">
 
 
 
-<h3>
-請依醫囑處理：
-</h3>
+
 
 
 <div class="info-card">
+
+
+<h3>
+請依醫囑處理：
+</h3>
 
 
 <p>
@@ -425,6 +545,7 @@ placeholder="備註">
 
 
 
+
 <h3>
 📞 緊急聯絡
 </h3>
@@ -438,11 +559,14 @@ placeholder="備註">
 
 
 
+
+
 <button class="backBtn">
 
 返回首頁
 
 </button>
+
 
 
 </section>
@@ -463,6 +587,7 @@ placeholder="備註">
 <section id="medicalPage" class="page">
 
 
+
 <h2>
 🏥 醫療資訊卡
 </h2>
@@ -472,9 +597,7 @@ placeholder="備註">
 
 <div id="medicalCard">
 
-
 尚未設定醫療資料
-
 
 </div>
 
@@ -487,6 +610,7 @@ placeholder="備註">
 返回首頁
 
 </button>
+
 
 
 </section>
@@ -507,9 +631,11 @@ placeholder="備註">
 <section id="historyPage" class="page">
 
 
+
 <h2>
 📋 歷史紀錄
 </h2>
+
 
 
 
@@ -520,11 +646,15 @@ placeholder="備註">
 
 
 
+
+
 <button class="backBtn">
 
 返回首頁
 
 </button>
+
+
 
 
 </section>
@@ -545,9 +675,12 @@ placeholder="備註">
 <section id="settingsPage" class="page">
 
 
+
 <h2>
 ⚙️ 家長設定
 </h2>
+
+
 
 
 
@@ -561,7 +694,7 @@ placeholder="備註">
 
 
 <p>
-老師 / 醫護：
+老師 / 學校人員：
 只能查看
 </p>
 
@@ -577,11 +710,16 @@ placeholder="備註">
 
 
 
+
+
 <button id="backupBtn">
 
 備份資料
 
 </button>
+
+
+
 
 
 
@@ -594,11 +732,15 @@ placeholder="備註">
 
 
 
+
+
+
 <button class="backBtn">
 
 返回首頁
 
 </button>
+
 
 
 </section>
@@ -612,7 +754,7 @@ placeholder="備註">
 
 
 <!-- =========================
-JS 載入
+JS
 ========================= -->
 
 
@@ -629,6 +771,7 @@ JS 載入
 <script src="history.js"></script>
 
 <script src="settings.js"></script>
+
 
 
 </body>

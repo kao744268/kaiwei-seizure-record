@@ -1,46 +1,10 @@
 // ==========================================
-// 愷威 Care V2.0 守護版
+// 愷威 Care V2.3
 // history.js
-// Seizure History System
+// 歷史紀錄顯示
 // ==========================================
 
 
-
-// ===============================
-// 取得發作紀錄
-// ===============================
-
-
-function getSeizureRecords(){
-
-
-
-    return JSON.parse(
-
-        localStorage.getItem(
-            "care_seizure_records"
-        )
-
-        ||
-
-        "[]"
-
-    );
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 顯示歷史紀錄
-// ===============================
 
 
 function renderHistory(){
@@ -48,6 +12,7 @@ function renderHistory(){
 
 
     const box =
+
     document.getElementById(
         "historyList"
     );
@@ -64,8 +29,24 @@ function renderHistory(){
 
 
 
-    let records =
-    getSeizureRecords();
+
+    let records = JSON.parse(
+
+
+        localStorage.getItem(
+
+            "care_seizure_records"
+
+        )
+
+        ||
+
+        "[]"
+
+
+    );
+
+
 
 
 
@@ -74,18 +55,20 @@ function renderHistory(){
     if(records.length === 0){
 
 
+
         box.innerHTML = `
+
 
         <div class="info-card">
 
-        📋 尚無發作紀錄
+
+        目前沒有發作紀錄
+
 
         </div>
 
+
         `;
-
-
-        updateLatest();
 
 
         return;
@@ -97,11 +80,14 @@ function renderHistory(){
 
 
 
+
+
     // 最新在前
 
 
-    records =
     records.reverse();
+
+
 
 
 
@@ -113,292 +99,212 @@ function renderHistory(){
 
 
 
-    records.forEach(
 
-        function(record,index){
 
+    records.forEach(function(record){
 
 
-            const card =
-            document.createElement(
-                "div"
-            );
 
+        let typeText =
 
+        record.type && record.type.length
 
-            card.className =
-            "history-card";
+        ?
 
+        record.type.join("、")
 
+        :
 
+        "未記錄";
 
 
-            card.innerHTML = `
 
 
-<h3>
 
-🚨 第 ${records.length-index} 次發作
+        let conditionText =
 
-</h3>
+        record.condition && record.condition.length
 
+        ?
 
+        record.condition.join("、")
 
-<p>
-📅 日期：
-${record.date || "-"}
-</p>
+        :
 
+        "未記錄";
 
 
-<p>
-⏰ 開始時間：
-${record.startTime || "-"}
-</p>
 
 
 
-<p>
-⏰ 結束時間：
-${record.endTime || "-"}
-</p>
+        let afterText =
 
+        record.afterState && record.afterState.length
 
+        ?
 
-<p>
-⏱ 持續時間：
-${record.duration || 0}
-秒
-</p>
+        record.afterState.join("、")
 
+        :
 
+        "未記錄";
 
-<hr>
 
 
 
-<p>
-🧠 發作型態：
-${formatArray(record.type)}
-</p>
 
 
 
-<p>
-👀 發作狀況：
-${formatArray(record.condition)}
-</p>
-
-
-
-<p>
-💤 恢復時間：
-${record.recovery || "-"}
-分鐘
-</p>
-
-
-
-<p>
-📝 備註：
-${record.note || "-"}
-</p>
-
-
-
-`;
-
-
-
-            box.appendChild(
-                card
-            );
-
-
-        }
-
-    );
-
-
-
-
-
-    updateLatest();
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 首頁最新紀錄
-// ===============================
-
-
-function updateLatest(){
-
-
-
-    const box =
-    document.getElementById(
-        "latestBox"
-    );
-
-
-
-    if(!box){
-
-        return;
-
-    }
-
-
-
-
-
-    const records =
-    getSeizureRecords();
-
-
-
-
-
-    if(records.length === 0){
-
-
-        box.innerHTML =
-
-        "尚無近期紀錄";
-
-
-        return;
-
-
-    }
-
-
-
-
-
-    const last =
-    records[
-        records.length - 1
-    ];
-
-
-
-
-
-    box.innerHTML = `
-
-
-📋 最近一次發作
-
-
-<br><br>
-
-
-📅 ${last.date || "-"}
-
-
-<br>
-
-
-⏱ 持續：
-
-${last.duration || 0}
-
-秒
-
-
-
-`;
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 陣列格式
-// ===============================
-
-
-function formatArray(arr){
-
-
-
-    if(
-        !arr ||
-        arr.length === 0
-    ){
-
-        return "-";
-
-    }
-
-
-
-    return arr.join(
-        "、"
-    );
-
-
-}
-
-
-
-
-
-
-
-
-
-// ===============================
-// 清除紀錄
-// ===============================
-
-
-function clearHistory(){
-
-
-
-    const check =
-    confirm(
-        "確定清除所有發作紀錄？"
-    );
-
-
-
-    if(check){
-
-
-
-        localStorage.removeItem(
-            "care_seizure_records"
+        let card = document.createElement(
+            "div"
         );
 
 
 
-        renderHistory();
+        card.className =
+        "history-card";
 
 
+
+
+
+
+        card.innerHTML = `
+
+
+        <h3>
+        🚨 ${record.date}
+        </h3>
+
+
+        <p>
+        ⏰ 開始：
+        ${record.startTime}
+        </p>
+
+
+        <p>
+        ⏹ 結束：
+        ${record.endTime}
+        </p>
+
+
+        <p>
+        ⌛ 持續：
+        ${formatHistoryDuration(record.duration)}
+        </p>
+
+
+        <hr>
+
+
+        <p>
+        📍 場合：
+        ${record.situation}
+        </p>
+
+
+        <p>
+        🧠 型態：
+        ${typeText}
+        </p>
+
+
+        <p>
+        👀 意識：
+        ${conditionText}
+        </p>
+
+
+        <p>
+        🌱 發作後：
+        ${afterText}
+        </p>
+
+
+        <p>
+        📝 備註：
+        ${record.note || "無"}
+        </p>
+
+
+        `;
+
+
+
+
+
+        box.appendChild(card);
+
+
+
+    });
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 秒數格式
+// ===============================
+
+
+function formatHistoryDuration(sec){
+
+
+
+    if(!sec){
+
+        return "00:00";
 
     }
+
+
+
+
+
+    let min =
+
+    Math.floor(
+        sec / 60
+    );
+
+
+
+
+
+    let second =
+
+    sec % 60;
+
+
+
+
+
+    return (
+
+        String(min)
+        .padStart(2,"0")
+
+        +
+
+        ":"
+
+        +
+
+        String(second)
+        .padStart(2,"0")
+
+    );
 
 
 
@@ -425,19 +331,10 @@ function(){
 
 
 
-    renderHistory();
-
-
-
-    updateLatest();
-
-
-
     console.log(
-        "📋 history.js 初始化完成"
+        "📋 history.js V2.3 loaded"
     );
 
 
-}
 
-);
+});

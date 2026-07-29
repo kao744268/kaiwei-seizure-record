@@ -366,9 +366,9 @@ function updateLatestRecord(){
 // ===============================
 
 
-window.onload =
+document.addEventListener(
+"DOMContentLoaded",
 function(){
-
 
 
     renderHistory();
@@ -379,8 +379,12 @@ function(){
 
 
     console.log(
-        "📋 history.js 載入完成"
+        "📋 history.js 已連接"
     );
+
+
+});
+
 
 
 

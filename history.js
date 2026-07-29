@@ -1,89 +1,36 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care 癲癇紀錄版 V1.0
 // history.js
-// cloud串接修正版
+// History Record Display
 // ==========================================
 
 
-if(
-typeof window.seizureRecords === "undefined"
-){
 
-window.seizureRecords=[];
-
-}
+// ===============================
+// 讀取歷史紀錄
+// ===============================
 
 
+function getHistoryRecords(){
 
 
+    var records =
 
-function addSeizureRecord(record){
+    JSON.parse(
 
-
-
-    window.seizureRecords.push(
-        record
-    );
-
-
-
-    saveLocalRecords();
-
-
-
-    renderHistory();
-
-
-
-    updateLatestRecord();
-
-
-
-
-
-    // 自動同步
-
-    if(
-        typeof syncSeizure === "function"
-    ){
-
-
-        syncSeizure(record);
-
-
-    }
-
-
-
-
-
-    console.log(
-        "新增紀錄",
-        record
-    );
-
-
-}
-
-
-
-
-
-
-
-
-function saveLocalRecords(){
-
-
-    localStorage.setItem(
-
-        "kw_seizure_records",
-
-        JSON.stringify(
-            window.seizureRecords
+        localStorage.getItem(
+            "care_seizure_records"
         )
 
+        ||
+
+        "[]"
+
     );
+
+
+
+    return records;
 
 
 }
@@ -94,124 +41,233 @@ function saveLocalRecords(){
 
 
 
-function loadLocalRecords(){
 
 
-    const data =
-    localStorage.getItem(
-        "kw_seizure_records"
-    );
-
-
-    if(data){
-
-
-        window.seizureRecords =
-        JSON.parse(data);
-
-
-    }
-
-
-}
-
-
-
-
-
-
+// ===============================
+// 顯示歷史紀錄
+// ===============================
 
 
 function renderHistory(){
 
 
 
-const list =
-document.getElementById(
-"recordList"
-);
+    var historyList =
+
+    document.getElementById(
+        "historyList"
+    );
 
 
 
-if(!list)return;
+    if(!historyList){
+
+        return;
+
+    }
 
 
 
 
-if(
-window.seizureRecords.length===0
-){
+
+    var records =
+    getHistoryRecords();
 
 
-list.innerHTML=
-"尚無紀錄";
 
 
-return;
+
+    if(records.length === 0){
+
+
+        historyList.innerHTML =
+
+        "<p>目前尚無發作紀錄</p>";
+
+
+
+        return;
+
+
+    }
+
+
+
+
+
+
+
+    historyList.innerHTML = "";
+
+
+
+
+
+
+
+    // 最新在最上面
+
+
+    records.reverse();
+
+
+
+
+
+    for(
+        var i = 0;
+        i < records.length;
+        i++
+    ){
+
+
+        var record =
+        records[i];
+
+
+
+
+
+        var card =
+        document.createElement(
+            "div"
+        );
+
+
+
+        card.className =
+        "history-card";
+
+
+
+
+
+        card.innerHTML = `
+
+        <h3>
+        🚨 第 ${records.length - i} 次發作
+        </h3>
+
+
+        <p>
+        📅 日期：
+        ${record.date || "-"}
+        </p>
+
+
+        <p>
+        ⏰ 開始：
+        ${record.startTime || "-"}
+        </p>
+
+
+        <p>
+        ⏰ 結束：
+        ${record.endTime || "-"}
+        </p>
+
+
+        <p>
+        ⏱ 持續：
+        ${record.duration || 0}
+        秒
+        </p>
+
+
+
+        <hr>
+
+
+        <p>
+        🧠 發作型態：
+        ${
+            formatArray(record.type)
+        }
+        </p>
+
+
+        <p>
+        🌙 發作前：
+        ${
+            formatArray(record.before)
+        }
+        </p>
+
+
+        <p>
+        👀 發作中：
+        ${
+            formatArray(record.during)
+        }
+        </p>
+
+
+
+        <p>
+        💤 恢復時間：
+        ${
+            record.recovery || "-"
+        }
+        分鐘
+        </p>
+
+
+
+        <p>
+        📝 備註：
+        ${
+            record.note || "-"
+        }
+        </p>
+
+
+        `;
+
+
+
+
+
+        historyList.appendChild(
+            card
+        );
+
+
+    }
+
 
 
 }
 
 
 
-list.innerHTML="";
 
 
 
-[...window.seizureRecords]
-.reverse()
-.forEach(
-
-function(record,index){
 
 
 
-const div =
-document.createElement(
-"div"
-);
+// ===============================
+// 陣列轉文字
+// ===============================
 
 
-div.className=
-"record-card";
-
-
-
-div.innerHTML=
-
-`
-
-<h3>
-🚨 第 ${window.seizureRecords.length-index} 次發作
-</h3>
-
-<p>
-日期：${record.date}
-</p>
-
-<p>
-開始：${record.startTime}
-</p>
-
-<p>
-結束：${record.endTime}
-</p>
-
-<p>
-持續：${record.duration} 秒
-</p>
-
-`;
+function formatArray(arr){
 
 
 
-list.appendChild(div);
+    if(!arr || arr.length === 0){
+
+
+        return "-";
+
+
+    }
 
 
 
-}
-
-);
+    return arr.join(
+        "、"
+    );
 
 
 }
@@ -222,79 +278,110 @@ list.appendChild(div);
 
 
 
+
+
+// ===============================
+// 首頁最新紀錄
+// ===============================
 
 
 function updateLatestRecord(){
 
 
 
-const box =
-document.getElementById(
-"latestRecord"
-);
+    var box =
+
+    document.getElementById(
+        "latestBox"
+    );
 
 
 
-if(!box)return;
+    if(!box){
+
+        return;
+
+    }
 
 
 
-const r =
-window.seizureRecords[
-window.seizureRecords.length-1
-];
+
+
+    var records =
+    getHistoryRecords();
 
 
 
-if(!r){
 
 
-box.innerHTML="尚無紀錄";
+    if(records.length === 0){
 
 
-return;
+        box.innerHTML =
+        "尚無近期紀錄";
+
+
+        return;
+
+
+    }
+
+
+
+
+
+    var latest =
+    records[
+        records.length - 1
+    ];
+
+
+
+
+
+    box.innerHTML = `
+
+    最近一次發作<br><br>
+
+    📅 ${latest.date}<br>
+
+    ⏱ ${latest.duration} 秒
+
+    `;
+
 
 
 }
 
 
 
-box.innerHTML=
-
-`
-
-${r.date}
-
-<br>
-
-⏱ ${r.duration} 秒
-
-`;
-
-
-
-}
 
 
 
 
 
 
+// ===============================
+// 啟動
+// ===============================
 
 
-document.addEventListener(
-
-"DOMContentLoaded",
-
+window.onload =
 function(){
 
-loadLocalRecords();
-
-renderHistory();
-
-updateLatestRecord();
 
 
-}
+    renderHistory();
 
-);
+
+    updateLatestRecord();
+
+
+
+    console.log(
+        "📋 history.js 載入完成"
+    );
+
+
+
+};

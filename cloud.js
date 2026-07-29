@@ -13,7 +13,7 @@
 
 const CARE_API_URL =
 
-"請填入你的Apps Script exec網址";
+"https://script.google.com/macros/s/AKfycbzZY5VQUnvrVxhQw0mo7rdMmGheQOemipNY4kEaBE59FOGjBtuqXl0ycprzY4k_M47QsA/exec;
 
 
 

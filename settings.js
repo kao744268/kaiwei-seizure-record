@@ -1,16 +1,8 @@
 // ==========================================
 // 愷威 Care V1.0
 // settings.js
-// 功能：系統設定 / 備份 / 匯出
+// cloud串接修正版
 // ==========================================
-
-
-
-
-
-// ===============================
-// 初始化設定頁
-// ===============================
 
 
 function initSettings(){
@@ -36,8 +28,7 @@ function initSettings(){
 
 
 
-    // Google 同步入口
-
+    // Google同步
 
     if(syncBtn){
 
@@ -46,12 +37,51 @@ function initSettings(){
 
             "click",
 
-            function(){
+            async function(){
 
 
-                alert(
-                    "☁️ Google 同步功能準備中"
-                );
+                if(
+                    typeof syncAll === "function"
+                ){
+
+
+                    syncBtn.innerHTML =
+                    "☁️ 同步中...";
+
+
+                    const result =
+                    await syncAll();
+
+
+
+                    syncBtn.innerHTML =
+                    "☁️ Google同步";
+
+
+
+                    if(result){
+
+
+                        alert(
+                            "✅ Google同步完成"
+                        );
+
+
+                    }
+
+
+
+                }
+
+                else{
+
+
+                    alert(
+                        "cloud.js 尚未載入"
+                    );
+
+
+                }
 
 
             }
@@ -65,9 +95,6 @@ function initSettings(){
 
 
 
-
-
-    // 備份資料
 
 
     if(backupBtn){
@@ -89,10 +116,6 @@ function initSettings(){
 
 
 
-
-    // 匯出紀錄
-
-
     if(exportBtn){
 
 
@@ -109,8 +132,6 @@ function initSettings(){
 
 
 
-
-
 }
 
 
@@ -120,14 +141,7 @@ function initSettings(){
 
 
 
-
-// ===============================
-// 建立備份
-// ===============================
-
-
 function backupData(){
-
 
 
     const backup = {
@@ -137,30 +151,23 @@ function backupData(){
         window.CARE_VERSION || "V1.0",
 
 
-        backupTime:
+        time:
         new Date()
         .toISOString(),
-
 
 
         seizureRecords:
         window.seizureRecords || [],
 
 
-
         medicalData:
         window.medicalData || {},
-
 
 
         emergencyContacts:
         window.emergencyContacts || []
 
-
-
     };
-
-
 
 
 
@@ -168,10 +175,9 @@ function backupData(){
 
         backup,
 
-        "愷威_Care_備份資料.json"
+        "愷威_Care_備份.json"
 
     );
-
 
 
 }
@@ -183,39 +189,15 @@ function backupData(){
 
 
 
-
-// ===============================
-// 匯出發作紀錄
-// ===============================
-
-
 function exportRecords(){
-
-
-
-    const data = {
-
-
-        exportTime:
-        new Date()
-        .toISOString(),
-
-
-
-        records:
-        window.seizureRecords || []
-
-
-
-    };
-
-
-
 
 
     downloadJSON(
 
-        data,
+        {
+            records:
+            window.seizureRecords || []
+        },
 
         "愷威_發作紀錄.json"
 
@@ -231,37 +213,19 @@ function exportRecords(){
 
 
 
-
-// ===============================
-// JSON下載工具
-// ===============================
-
-
 function downloadJSON(data,filename){
 
 
-
-    const json =
-
-    JSON.stringify(
-
-        data,
-
-        null,
-
-        2
-
-    );
-
-
-
-
-
     const blob =
-
     new Blob(
 
-        [json],
+        [
+            JSON.stringify(
+                data,
+                null,
+                2
+            )
+        ],
 
         {
             type:
@@ -272,34 +236,19 @@ function downloadJSON(data,filename){
 
 
 
-
-
     const url =
-
-    URL.createObjectURL(
-        blob
-    );
-
-
+    URL.createObjectURL(blob);
 
 
 
     const a =
-
-    document.createElement(
-        "a"
-    );
+    document.createElement("a");
 
 
 
-    a.href = url;
+    a.href=url;
 
-
-    a.download = filename;
-
-
-
-    document.body.appendChild(a);
+    a.download=filename;
 
 
 
@@ -307,12 +256,7 @@ function downloadJSON(data,filename){
 
 
 
-    document.body.removeChild(a);
-
-
-
     URL.revokeObjectURL(url);
-
 
 
 }
@@ -324,27 +268,18 @@ function downloadJSON(data,filename){
 
 
 
-
-// ===============================
-// 啟動
-// ===============================
-
-
 document.addEventListener(
 
 "DOMContentLoaded",
 
 function(){
 
-
-
     initSettings();
 
-
-
     console.log(
-        "⚙️ settings.js 啟動"
+        "⚙️ settings cloud版啟動"
     );
 
+}
 
-});
+);

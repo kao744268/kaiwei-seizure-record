@@ -1,13 +1,24 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V1.0 Stable
 // app.js
-// 功能：App導航與頁面控制
+// Offline Edition
 // ==========================================
 
 
 
 // ===============================
-// 顯示頁面
+// 全域版本
+// ===============================
+
+
+window.CARE_VERSION =
+"V1.0 Stable";
+
+
+
+
+// ===============================
+// 頁面切換
 // ===============================
 
 
@@ -23,6 +34,7 @@ function showPage(pageId){
 
 
     pages.forEach(
+
         function(page){
 
             page.classList.remove(
@@ -30,6 +42,7 @@ function showPage(pageId){
             );
 
         }
+
     );
 
 
@@ -53,13 +66,6 @@ function showPage(pageId){
 
 
 
-    window.scrollTo(
-        0,
-        0
-    );
-
-
-
 }
 
 
@@ -67,61 +73,38 @@ function showPage(pageId){
 
 
 
-
 // ===============================
-// 初始化
+// 初始化資料
 // ===============================
 
 
-function initApp(){
+function initCareApp(){
 
 
 
     console.log(
-        "👦 愷威 Care V1.0 啟動"
+        "👦 愷威 Care 啟動"
+    );
+
+
+
+    console.log(
+        "版本:",
+        window.CARE_VERSION
     );
 
 
 
 
 
-    // 開始發作
+    // 初始化發作資料
 
-    const startBtn =
-    document.getElementById(
-        "startSeizureBtn"
-    );
-
+    if(
+        typeof loadLocalRecords === "function"
+    ){
 
 
-    if(startBtn){
-
-
-        startBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "seizurePage"
-                );
-
-
-
-                if(
-                    typeof startSeizure === "function"
-                ){
-
-                    startSeizure();
-
-                }
-
-
-            }
-
-        );
+        loadLocalRecords();
 
 
     }
@@ -130,46 +113,14 @@ function initApp(){
 
 
 
+    // 更新歷史顯示
+
+    if(
+        typeof renderHistory === "function"
+    ){
 
 
-    // 歷史紀錄
-
-
-    const historyBtn =
-    document.getElementById(
-        "historyBtn"
-    );
-
-
-
-    if(historyBtn){
-
-
-        historyBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "historyPage"
-                );
-
-
-
-                if(
-                    typeof renderHistory === "function"
-                ){
-
-                    renderHistory();
-
-                }
-
-
-            }
-
-        );
+        renderHistory();
 
 
     }
@@ -178,47 +129,14 @@ function initApp(){
 
 
 
+    // 更新首頁資訊
+
+    if(
+        typeof updateLatestRecord === "function"
+    ){
 
 
-
-    // 醫療卡
-
-
-    const medicalBtn =
-    document.getElementById(
-        "medicalBtn"
-    );
-
-
-
-    if(medicalBtn){
-
-
-        medicalBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "medicalPage"
-                );
-
-
-
-                if(
-                    typeof renderMedical === "function"
-                ){
-
-                    renderMedical();
-
-                }
-
-
-            }
-
-        );
+        updateLatestRecord();
 
 
     }
@@ -227,46 +145,14 @@ function initApp(){
 
 
 
+    // 醫療資料
+
+    if(
+        typeof loadMedical === "function"
+    ){
 
 
-    // 緊急聯絡
-
-
-    const emergencyBtn =
-    document.getElementById(
-        "emergencyBtn"
-    );
-
-
-
-    if(emergencyBtn){
-
-
-        emergencyBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "emergencyPage"
-                );
-
-
-
-                if(
-                    typeof renderEmergency === "function"
-                ){
-
-                    renderEmergency();
-
-                }
-
-
-            }
-
-        );
+        loadMedical();
 
 
     }
@@ -275,98 +161,19 @@ function initApp(){
 
 
 
+    // 緊急資料
+
+    if(
+        typeof loadEmergency === "function"
+    ){
 
 
-    // 設定
-
-
-    const settingsBtn =
-    document.getElementById(
-        "settingsBtn"
-    );
-
-
-
-    if(settingsBtn){
-
-
-        settingsBtn.addEventListener(
-
-            "click",
-
-            function(){
-
-
-                showPage(
-                    "settingsPage"
-                );
-
-
-            }
-
-        );
+        loadEmergency();
 
 
     }
 
 
-
-
-
-
-
-
-
-    // 返回首頁
-
-
-    const backButtons =
-    document.querySelectorAll(
-        ".backBtn"
-    );
-
-
-
-    backButtons.forEach(
-
-        function(button){
-
-
-
-            button.addEventListener(
-
-                "click",
-
-                function(){
-
-
-                    showPage(
-                        "homePage"
-                    );
-
-
-                }
-
-            );
-
-
-
-        }
-
-    );
-
-
-
-
-
-
-
-    // 預設首頁
-
-
-    showPage(
-        "homePage"
-    );
 
 
 
@@ -378,13 +185,23 @@ function initApp(){
 
 
 
-// 啟動
+
+
+// ===============================
+// DOM完成啟動
+// ===============================
 
 
 document.addEventListener(
 
-    "DOMContentLoaded",
+"DOMContentLoaded",
 
-    initApp
+function(){
+
+
+    initCareApp();
+
+
+}
 
 );

@@ -1,52 +1,19 @@
 // ==========================================
 // 愷威癲癇紀錄系統
-// V3.0 Clean
+// V3.0 Clean Stable-1
 // history.js
-// 功能：發作歷史紀錄
+// 功能：歷史紀錄
 // ==========================================
 
 
-// ===============================
-// 紀錄資料
-// ===============================
-
-let seizureRecords = [];
-
-
 
 
 // ===============================
-// 新增紀錄
-// ===============================
-
-function addSeizureRecord(record){
-
-
-    seizureRecords.push(record);
-
-
-
-    console.log(
-        "新增發作紀錄:",
-        record
-    );
-
-
-
-    renderHistory();
-
-
-}
-
-
-
-
-
-// ===============================
-// 顯示歷史紀錄
+// 顯示紀錄
 // ===============================
 
 function renderHistory(){
+
 
 
     const list =
@@ -64,17 +31,20 @@ function renderHistory(){
 
 
 
-    if(seizureRecords.length === 0){
+    if(
+        seizureRecords.length === 0
+    ){
 
 
         list.innerHTML =
-        "尚無發作紀錄";
+
+        "<p>尚無發作紀錄</p>";
 
 
         return;
 
-
     }
+
 
 
 
@@ -82,24 +52,28 @@ function renderHistory(){
 
 
 
+
+
     seizureRecords.forEach(
-    function(record,index){
+
+        function(record,index){
 
 
 
-        const item =
-        document.createElement(
-            "div"
-        );
+            const card =
+            document.createElement(
+                "div"
+            );
 
 
 
-        item.className =
-        "record-card";
+            card.className =
+            "record-card";
 
 
 
-        item.innerHTML = `
+            card.innerHTML = `
+
 
             <h3>
             第 ${index + 1} 次發作
@@ -124,18 +98,57 @@ function renderHistory(){
             秒
             </p>
 
-        `;
+
+            `;
 
 
 
-        list.appendChild(item);
+            list.appendChild(
+                card
+            );
 
 
+        }
 
-    });
+
+    );
 
 
 }
+
+
+
+
+
+
+
+// ===============================
+// 新增紀錄
+// ===============================
+
+function addSeizureRecord(record){
+
+
+
+    seizureRecords.push(
+        record
+    );
+
+
+
+    renderHistory();
+
+
+
+    console.log(
+        "新增紀錄",
+        record
+    );
+
+
+
+}
+
 
 
 
@@ -150,12 +163,13 @@ document.addEventListener(
 function(){
 
 
+
     renderHistory();
 
 
 
     console.log(
-        "📋 history.js 啟動完成"
+        "📋 history.js Stable-1 啟動"
     );
 
 

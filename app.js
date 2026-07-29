@@ -1,22 +1,24 @@
 // ==========================================
-// 愷威 Care V2.0 Clean
+// 愷威 Care 癲癇紀錄版 V1.0
 // app.js
-// Stable Controller
+// Core Controller
 // ==========================================
 
 
 
 // ===============================
-// 頁面切換
+// 切換頁面
 // ===============================
 
 
-function showPage(id){
+function showPage(pageId){
 
 
-    var pages = document.getElementsByClassName(
+    var pages =
+    document.getElementsByClassName(
         "page"
     );
+
 
 
     for(
@@ -25,20 +27,25 @@ function showPage(id){
         i++
     ){
 
+
         pages[i].classList.remove(
             "active"
         );
+
 
     }
 
 
 
     var target =
-    document.getElementById(id);
+    document.getElementById(
+        pageId
+    );
 
 
 
     if(target){
+
 
         target.classList.add(
             "active"
@@ -46,18 +53,8 @@ function showPage(id){
 
 
         console.log(
-            "切換頁面:",
-            id
-        );
-
-
-    }
-    else{
-
-
-        console.log(
-            "找不到頁面:",
-            id
+            "切換至:",
+            pageId
         );
 
 
@@ -66,6 +63,30 @@ function showPage(id){
 
 
 }
+
+
+
+
+
+
+
+
+
+// ===============================
+// 返回首頁
+// ===============================
+
+
+function goHome(){
+
+
+    showPage(
+        "homePage"
+    );
+
+
+}
+
 
 
 
@@ -84,26 +105,27 @@ function initApp(){
 
 
     console.log(
-        "👦 愷威 Care V2.0 Clean 啟動"
+        "👦 愷威 Care 啟動"
     );
 
 
 
 
 
-    // 發作紀錄按鈕
+    // 發作紀錄入口
 
 
-    var goSeizureBtn =
+    var seizureBtn =
     document.getElementById(
-        "goSeizureBtn"
+        "seizurePageBtn"
     );
 
 
-    if(goSeizureBtn){
+
+    if(seizureBtn){
 
 
-        goSeizureBtn.onclick =
+        seizureBtn.onclick =
         function(){
 
 
@@ -115,11 +137,6 @@ function initApp(){
         };
 
 
-        console.log(
-            "✅ 發作按鈕連線"
-        );
-
-
     }
 
 
@@ -128,20 +145,20 @@ function initApp(){
 
 
 
-    // 歷史紀錄
+    // 歷史紀錄入口
 
 
-    var goHistoryBtn =
+    var historyBtn =
     document.getElementById(
-        "goHistoryBtn"
+        "historyPageBtn"
     );
 
 
 
-    if(goHistoryBtn){
+    if(historyBtn){
 
 
-        goHistoryBtn.onclick =
+        historyBtn.onclick =
         function(){
 
 
@@ -153,11 +170,6 @@ function initApp(){
         };
 
 
-        console.log(
-            "✅ 歷史按鈕連線"
-        );
-
-
     }
 
 
@@ -166,20 +178,20 @@ function initApp(){
 
 
 
-    // 醫療資訊
+    // 醫療資料入口
 
 
-    var goMedicalBtn =
+    var medicalBtn =
     document.getElementById(
-        "goMedicalBtn"
+        "medicalPageBtn"
     );
 
 
 
-    if(goMedicalBtn){
+    if(medicalBtn){
 
 
-        goMedicalBtn.onclick =
+        medicalBtn.onclick =
         function(){
 
 
@@ -191,11 +203,6 @@ function initApp(){
         };
 
 
-        console.log(
-            "✅ 醫療按鈕連線"
-        );
-
-
     }
 
 
@@ -204,20 +211,20 @@ function initApp(){
 
 
 
-    // 緊急聯絡
+    // 緊急資訊入口
 
 
-    var goEmergencyBtn =
+    var emergencyBtn =
     document.getElementById(
-        "goEmergencyBtn"
+        "emergencyPageBtn"
     );
 
 
 
-    if(goEmergencyBtn){
+    if(emergencyBtn){
 
 
-        goEmergencyBtn.onclick =
+        emergencyBtn.onclick =
         function(){
 
 
@@ -229,11 +236,6 @@ function initApp(){
         };
 
 
-        console.log(
-            "✅ 緊急按鈕連線"
-        );
-
-
     }
 
 
@@ -242,20 +244,20 @@ function initApp(){
 
 
 
-    // 設定
+    // 設定入口
 
 
-    var goSettingsBtn =
+    var settingsBtn =
     document.getElementById(
-        "goSettingsBtn"
+        "settingsPageBtn"
     );
 
 
 
-    if(goSettingsBtn){
+    if(settingsBtn){
 
 
-        goSettingsBtn.onclick =
+        settingsBtn.onclick =
         function(){
 
 
@@ -267,11 +269,6 @@ function initApp(){
         };
 
 
-        console.log(
-            "✅ 設定按鈕連線"
-        );
-
-
     }
 
 
@@ -280,12 +277,12 @@ function initApp(){
 
 
 
-    // 返回首頁
+    // 所有返回首頁按鈕
 
 
     var backButtons =
     document.getElementsByClassName(
-        "backHomeBtn"
+        "backBtn"
     );
 
 
@@ -301,9 +298,7 @@ function initApp(){
         function(){
 
 
-            showPage(
-                "homePage"
-            );
+            goHome();
 
 
         };
@@ -313,10 +308,13 @@ function initApp(){
 
 
 
-    console.log(
-        "✅ 所有按鈕初始化完成"
-    );
 
+
+
+
+    console.log(
+        "✅ app.js 初始化完成"
+    );
 
 
 }

@@ -1,27 +1,58 @@
 // ==========================================
-// 愷威癲癇紀錄系統
-// V3.0 Clean
+// 愷威 Care V1.0
 // emergency.js
-// 功能：緊急聯絡資訊
+// 功能：緊急聯絡管理
 // ==========================================
 
 
 
 // ===============================
-// 顯示緊急聯絡人
+// 取得安全文字
 // ===============================
 
-function renderEmergencyContacts(){
+
+function getContactValue(value){
 
 
-    const box =
+    if(
+        value === undefined ||
+        value === null ||
+        value === ""
+    ){
+
+        return "--";
+
+    }
+
+
+    return value;
+
+
+}
+
+
+
+
+
+
+
+// ===============================
+// 顯示緊急聯絡
+// ===============================
+
+
+function renderEmergency(){
+
+
+
+    const list =
     document.getElementById(
         "emergencyList"
     );
 
 
 
-    if(!box){
+    if(!list){
 
         return;
 
@@ -29,94 +60,209 @@ function renderEmergencyContacts(){
 
 
 
-    // 檢查資料
+
+    const contacts =
+    window.emergencyContacts || [];
+
+
+
+
+
 
     if(
-        typeof emergencyContacts === "undefined" ||
-        emergencyContacts.length === 0
+        contacts.length === 0
     ){
 
 
-        box.innerHTML = `
+        list.innerHTML =
 
-            <p>
-            尚無緊急聯絡資料
-            </p>
+        `
+
+        <div class="contact-card">
+
+        尚無緊急聯絡資料
+
+        </div>
 
         `;
 
 
         return;
 
+
     }
 
 
 
-    box.innerHTML = "";
 
 
 
-    emergencyContacts.forEach(
-    function(contact){
+    list.innerHTML = "";
 
 
 
-        const card =
-        document.createElement(
-            "div"
-        );
 
 
 
-        card.className =
-        "contact-card";
+    contacts.forEach(
+
+        function(contact){
 
 
 
-        card.innerHTML = `
+            const card =
+            document.createElement(
+                "div"
+            );
 
+
+
+            card.className =
+            "contact-card";
+
+
+
+
+
+            let phone =
+            getContactValue(
+                contact.phone
+            );
+
+
+
+
+
+            let callButton = "";
+
+
+
+            if(
+                phone !== "--"
+            ){
+
+
+                callButton =
+
+
+                `
+
+                <button
+
+                onclick="callContact('${phone}')"
+
+                >
+
+                📞 立即撥打
+
+                </button>
+
+                `;
+
+
+            }
+
+
+
+
+
+
+
+            card.innerHTML =
+
+
+            `
 
             <h3>
-            👤 ${contact.name || "未設定"}
-            </h3>
 
+            👤 ${getContactValue(contact.name)}
+
+            </h3>
 
 
             <p>
 
             關係：
-            ${contact.relation || "未設定"}
+
+            ${getContactValue(contact.relation)}
 
             </p>
-
-
 
 
             <p>
 
             電話：
 
-            <a href="tel:${contact.phone}">
-
-            ${contact.phone || "未設定"}
-
-            </a>
+            ${phone}
 
             </p>
 
 
-        `;
+            ${callButton}
+
+
+            `;
 
 
 
-        box.appendChild(card);
+            list.appendChild(
+                card
+            );
 
 
 
-    });
+        }
+
+    );
+
 
 
 }
+
+
+
+
+
+
+
+
+
+// ===============================
+// 撥打電話
+// ===============================
+
+
+function callContact(phone){
+
+
+
+    if(
+        !phone ||
+        phone === "--"
+    ){
+
+
+        alert(
+            "沒有電話資料"
+        );
+
+
+        return;
+
+
+    }
+
+
+
+    window.location.href =
+
+    "tel:" + phone;
+
+
+
+}
+
+
 
 
 
@@ -127,17 +273,16 @@ function renderEmergencyContacts(){
 // 初始化
 // ===============================
 
+
 document.addEventListener(
+
 "DOMContentLoaded",
+
 function(){
 
 
-    renderEmergencyContacts();
-
-
-
     console.log(
-        "📞 emergency.js 啟動完成"
+        "📞 emergency.js 啟動"
     );
 
 

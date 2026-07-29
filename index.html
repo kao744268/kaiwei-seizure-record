@@ -7,7 +7,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>愷威 Care 癲癇紀錄</title>
+<title>
+愷威 Care - 癲癇守護紀錄系統
+</title>
+
 
 <link rel="stylesheet" href="style.css">
 
@@ -17,11 +20,14 @@
 <body>
 
 
-<!-- =====================
+<!-- =========================
 首頁
-===================== -->
+========================= -->
 
 <section id="homePage" class="page active">
+
+
+<div class="header">
 
 
 <h1>
@@ -29,49 +35,146 @@
 </h1>
 
 
-<p class="subtitle">
-癲癇發作紀錄照護工具
+<p>
+癲癇守護紀錄系統
 </p>
 
 
+</div>
 
-<div class="menu">
 
 
-<button id="seizurePageBtn">
-🚨 發作紀錄
+
+
+<div class="home-menu">
+
+
+
+<button id="medicalPageBtn" class="main-card">
+
+🏥
+
+<div>
+
+<h3>
+孩子醫療資訊
+</h3>
+
+<p>
+快速查看醫療資料卡
+</p>
+
+</div>
+
 </button>
 
 
-<button id="historyPageBtn">
-📋 歷史紀錄
+
+
+
+<button id="seizurePageBtn" class="main-card emergency-card">
+
+🚨
+
+<div>
+
+<h3>
+發作紀錄
+</h3>
+
+<p>
+開始 / 結束 / 型態紀錄
+</p>
+
+</div>
+
 </button>
 
 
-<button id="medicalPageBtn">
-🏥 醫療資料
+
+
+
+<button id="emergencyPageBtn" class="main-card warning-card">
+
+⚠️
+
+<div>
+
+<h3>
+緊急模式
+</h3>
+
+<p>
+超過5分鐘快速處置資訊
+</p>
+
+</div>
+
 </button>
 
 
-<button id="emergencyPageBtn">
-📞 緊急資訊
+
+
+
+<button id="historyPageBtn" class="main-card">
+
+📋
+
+<div>
+
+<h3>
+歷史紀錄
+</h3>
+
+<p>
+查看過往發作資料
+</p>
+
+</div>
+
 </button>
 
 
-<button id="settingsPageBtn">
-⚙️ 設定
+
+
+
+<button id="settingsPageBtn" class="main-card">
+
+⚙️
+
+<div>
+
+<h3>
+家長設定
+</h3>
+
+<p>
+資料管理與安全設定
+</p>
+
+</div>
+
 </button>
+
+
 
 
 </div>
+
+
+
 
 
 
 <div id="latestBox">
 
+
 尚無近期紀錄
 
+
 </div>
+
+
 
 
 </section>
@@ -84,9 +187,9 @@
 
 
 
-<!-- =====================
+<!-- =========================
 發作紀錄
-===================== -->
+========================= -->
 
 
 <section id="seizurePage" class="page">
@@ -125,9 +228,11 @@
 
 <div id="statusBox">
 
-尚未開始
+等待紀錄
 
 </div>
+
+
 
 
 
@@ -136,6 +241,7 @@
 <h3>
 發作型態
 </h3>
+
 
 
 <div class="optionGroup">
@@ -154,14 +260,8 @@
 
 
 <label>
-<input type="checkbox" name="type" value="眼神呆滯">
-眼神呆滯
-</label>
-
-
-<label>
-<input type="checkbox" name="type" value="失去意識">
-失去意識
+<input type="checkbox" name="type" value="失神">
+失神
 </label>
 
 
@@ -172,8 +272,8 @@
 
 
 <label>
-<input type="checkbox" name="type" value="顫抖">
-顫抖
+<input type="checkbox" name="type" value="其他">
+其他
 </label>
 
 
@@ -185,81 +285,41 @@
 
 
 
-
 <h3>
-發作前狀況
+發作狀況
 </h3>
+
 
 
 <div class="optionGroup">
 
 
 <label>
-<input type="checkbox" name="before" value="睡眠不足">
-睡眠不足
+<input type="checkbox" name="condition" value="有意識">
+有意識
 </label>
 
 
 <label>
-<input type="checkbox" name="before" value="發燒">
-發燒
+<input type="checkbox" name="condition" value="無意識">
+無意識
 </label>
 
 
 <label>
-<input type="checkbox" name="before" value="壓力">
-壓力
+<input type="checkbox" name="condition" value="呼吸異常">
+呼吸異常
 </label>
 
 
 <label>
-<input type="checkbox" name="before" value="忘記服藥">
-忘記服藥
-</label>
-
-
-</div>
-
-
-
-
-
-
-
-
-<h3>
-發作中觀察
-</h3>
-
-
-<div class="optionGroup">
-
-
-<label>
-<input type="checkbox" name="during" value="哭喊">
-哭喊
-</label>
-
-
-<label>
-<input type="checkbox" name="during" value="嘴唇發紫">
+<input type="checkbox" name="condition" value="嘴唇發紫">
 嘴唇發紫
 </label>
 
 
-<label>
-<input type="checkbox" name="during" value="口吐白沫">
-口吐白沫
-</label>
-
-
-<label>
-<input type="checkbox" name="during" value="四肢僵硬">
-四肢僵硬
-</label>
-
-
 </div>
+
 
 
 
@@ -272,13 +332,12 @@
 </h3>
 
 
+
 <label>
 
 恢復時間：
 
-<input 
-id="recoveryTime"
-type="number">
+<input id="recoveryTime" type="number">
 
 分鐘
 
@@ -296,6 +355,7 @@ placeholder="備註">
 
 
 
+
 <button class="backBtn">
 
 返回首頁
@@ -313,9 +373,135 @@ placeholder="備註">
 
 
 
-<!-- =====================
+<!-- =========================
+緊急模式
+========================= -->
+
+
+<section id="emergencyPage" class="page">
+
+
+<h2>
+⚠️ 緊急模式
+</h2>
+
+
+
+<div id="emergencyAlert">
+
+</div>
+
+
+
+
+
+<h3>
+請依醫囑處理：
+</h3>
+
+
+<div class="info-card">
+
+
+<p>
+① 給予緊急藥物
+</p>
+
+
+<p>
+② 通知鄰近醫院送醫
+</p>
+
+
+<p>
+③ 通知家長
+</p>
+
+
+</div>
+
+
+
+
+
+
+<h3>
+📞 緊急聯絡
+</h3>
+
+
+<div id="contactList">
+
+</div>
+
+
+
+
+
+<button class="backBtn">
+
+返回首頁
+
+</button>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =========================
+醫療資訊卡
+========================= -->
+
+
+<section id="medicalPage" class="page">
+
+
+<h2>
+🏥 醫療資訊卡
+</h2>
+
+
+
+
+<div id="medicalCard">
+
+
+尚未設定醫療資料
+
+
+</div>
+
+
+
+
+
+<button class="backBtn">
+
+返回首頁
+
+</button>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- =========================
 歷史紀錄
-===================== -->
+========================= -->
 
 
 <section id="historyPage" class="page">
@@ -333,44 +519,6 @@ placeholder="備註">
 
 
 
-<button class="backBtn">
-
-返回首頁
-
-</button>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =====================
-醫療
-===================== -->
-
-
-<section id="medicalPage" class="page">
-
-
-<h2>
-🏥 醫療資料
-</h2>
-
-
-
-<div id="medicalContent">
-
-尚未設定
-
-</div>
-
-
 
 <button class="backBtn">
 
@@ -389,85 +537,60 @@ placeholder="備註">
 
 
 
-<!-- =====================
-緊急
-===================== -->
-
-
-<section id="emergencyPage" class="page">
-
-
-<h2>
-📞 緊急資訊
-</h2>
-
-
-
-<div id="emergencyContent">
-
-尚未設定
-
-</div>
-
-
-
-<button class="backBtn">
-
-返回首頁
-
-</button>
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- =====================
+<!-- =========================
 設定
-===================== -->
+========================= -->
 
 
 <section id="settingsPage" class="page">
 
 
 <h2>
-⚙️ 設定
+⚙️ 家長設定
 </h2>
 
 
-<button>
-
-💾 備份資料
-
-</button>
 
 
-<button>
-
-📄 匯出紀錄
-
-</button>
-
-
-<button>
-
-🗑️ 清除資料
-
-</button>
-
+<div class="info-card">
 
 
 <p>
-
-愷威 Care V1.0
-
+🔒 家長管理模式
 </p>
+
+
+<p>
+老師 / 醫護：
+只能查看
+</p>
+
+
+<p>
+家長：
+可修改資料
+</p>
+
+
+</div>
+
+
+
+
+<button id="backupBtn">
+
+備份資料
+
+</button>
+
+
+
+<button id="exportBtn">
+
+匯出紀錄
+
+</button>
+
 
 
 
@@ -488,9 +611,9 @@ placeholder="備註">
 
 
 
-<!-- =====================
-JS 載入順序
-===================== -->
+<!-- =========================
+JS 載入
+========================= -->
 
 
 <script src="data.js"></script>
@@ -499,10 +622,15 @@ JS 載入順序
 
 <script src="seizure.js"></script>
 
+<script src="emergency.js"></script>
+
+<script src="medical.js"></script>
+
 <script src="history.js"></script>
+
+<script src="settings.js"></script>
 
 
 </body>
-
 
 </html>

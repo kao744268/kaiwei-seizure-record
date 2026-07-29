@@ -1,59 +1,33 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V2.0 守護版
 // data.js
-// 功能：系統資料中心
+// Central Data Management
 // ==========================================
 
 
 
-// ===============================
-// 發作紀錄資料
-// ===============================
+const CARE_KEYS = {
 
 
-window.seizureRecords = [];
-
+    medical:
+    "care_medical_info",
 
 
 
-// ===============================
-// 醫療資訊
-// ===============================
+    seizures:
+    "care_seizure_records",
 
 
-window.medicalData = {
+
+    settings:
+    "care_settings",
 
 
-    name:
-    "愷威",
+
+    contacts:
+    "care_emergency_contacts"
 
 
-    birthday:
-    "",
-
-
-    diagnosis:
-    "卓飛症候群",
-
-
-    hospital:
-    "",
-
-
-    doctor:
-    "",
-
-
-    medication:
-    "",
-
-
-    allergy:
-    "",
-
-
-    note:
-    ""
 
 };
 
@@ -63,65 +37,43 @@ window.medicalData = {
 
 
 
+
+
 // ===============================
-// 緊急聯絡資料
+// 讀取資料
 // ===============================
 
 
-window.emergencyContacts = [
+function loadData(key){
 
 
-    {
+
+    const data =
+
+    localStorage.getItem(
+        key
+    );
 
 
-        name:
-        "",
+
+    if(data){
 
 
-        relation:
-        "",
-
-
-        phone:
-        ""
+        return JSON.parse(
+            data
+        );
 
 
     }
 
 
-];
+
+    return null;
 
 
+}
 
 
-
-
-
-// ===============================
-// 系統設定
-// ===============================
-
-
-window.appSettings = {
-
-
-    childName:
-    "愷威",
-
-
-    autoSync:
-    false,
-
-
-    googleSheetUrl:
-    "",
-
-
-    notification:
-    false
-
-
-};
 
 
 
@@ -130,18 +82,454 @@ window.appSettings = {
 
 
 // ===============================
-// 資料版本
+// 儲存資料
 // ===============================
 
 
-window.CARE_VERSION =
-"V1.0";
+function saveData(key,data){
+
+
+
+    localStorage.setItem(
+
+        key,
+
+        JSON.stringify(
+            data
+        )
+
+    );
+
+
+}
 
 
 
 
 
-console.log(
-    "🗂️ data.js 載入完成",
-    CARE_VERSION
+
+
+
+
+// ===============================
+// 發作紀錄
+// ===============================
+
+
+function getSeizureData(){
+
+
+
+    return (
+
+        loadData(
+            CARE_KEYS.seizures
+        )
+
+        ||
+
+        []
+
+    );
+
+
+
+}
+
+
+
+
+
+
+function saveSeizureData(records){
+
+
+
+    saveData(
+
+        CARE_KEYS.seizures,
+
+        records
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 醫療資料
+// ===============================
+
+
+function getMedicalData(){
+
+
+
+    return (
+
+        loadData(
+            CARE_KEYS.medical
+        )
+
+        ||
+
+        {}
+
+    );
+
+
+}
+
+
+
+
+function saveMedicalData(data){
+
+
+
+    saveData(
+
+        CARE_KEYS.medical,
+
+        data
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 緊急聯絡
+// ===============================
+
+
+function getEmergencyContacts(){
+
+
+
+    let contacts =
+
+    loadData(
+        CARE_KEYS.contacts
+    );
+
+
+
+    if(contacts){
+
+
+        return contacts;
+
+
+    }
+
+
+
+
+
+    return [
+
+
+        {
+            name:"爸爸",
+            phone:"0916-398-937"
+        },
+
+
+        {
+            name:"奶奶",
+            phone:"0905-083-604"
+        },
+
+
+        {
+            name:"爺爺",
+            phone:"0932-000-929"
+        },
+
+
+        {
+            name:"叔叔",
+            phone:"0975-108-215"
+        }
+
+
+    ];
+
+
+
+}
+
+
+
+
+
+
+
+
+
+function saveEmergencyContacts(data){
+
+
+
+    saveData(
+
+        CARE_KEYS.contacts,
+
+        data
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// APP設定
+// ===============================
+
+
+function getAppSettings(){
+
+
+
+    return (
+
+        loadData(
+            CARE_KEYS.settings
+        )
+
+        ||
+
+        {
+
+            parentMode:false,
+
+            pin:"1234"
+
+        }
+
+    );
+
+
+}
+
+
+
+
+
+
+function saveAppSettings(data){
+
+
+
+    saveData(
+
+        CARE_KEYS.settings,
+
+        data
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 完整備份
+// ===============================
+
+
+function getFullBackup(){
+
+
+
+    return {
+
+
+
+        version:
+        "Care V2.0",
+
+
+
+        exportTime:
+        new Date()
+        .toISOString(),
+
+
+
+        medical:
+        getMedicalData(),
+
+
+
+        seizures:
+        getSeizureData(),
+
+
+
+        contacts:
+        getEmergencyContacts(),
+
+
+
+        settings:
+        getAppSettings()
+
+
+
+    };
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 還原備份
+// ===============================
+
+
+function restoreBackup(data){
+
+
+
+    if(
+        !data
+    ){
+
+        return false;
+
+    }
+
+
+
+
+
+    if(data.medical){
+
+
+        saveMedicalData(
+            data.medical
+        );
+
+
+    }
+
+
+
+
+
+    if(data.seizures){
+
+
+        saveSeizureData(
+            data.seizures
+        );
+
+
+    }
+
+
+
+
+
+    if(data.contacts){
+
+
+        saveEmergencyContacts(
+            data.contacts
+        );
+
+
+    }
+
+
+
+
+
+    if(data.settings){
+
+
+        saveAppSettings(
+            data.settings
+        );
+
+
+    }
+
+
+
+
+
+    return true;
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 初始化
+// ===============================
+
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
+
+
+    console.log(
+        "📦 data.js 資料核心初始化完成"
+    );
+
+
+}
+
 );

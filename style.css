@@ -1,5 +1,5 @@
 /* ==========================================
-   愷威 Care 癲癇紀錄版 V1.0
+   愷威 Care V2.0 守護版
    style.css
 ========================================== */
 
@@ -20,17 +20,13 @@
 
 body{
 
-
     margin:0;
 
     padding:0;
 
-
-    background:#f4f6f8;
-
+    background:#f3f6f8;
 
     color:#333;
-
 
     font-family:
 
@@ -40,8 +36,9 @@ body{
     Arial,
     sans-serif;
 
-
 }
+
+
 
 
 
@@ -54,15 +51,11 @@ body{
 
 .page{
 
-
     display:none;
-
 
     min-height:100vh;
 
-
-    padding:25px 20px;
-
+    padding:20px;
 
 }
 
@@ -70,9 +63,7 @@ body{
 
 .page.active{
 
-
     display:block;
-
 
 }
 
@@ -87,20 +78,33 @@ body{
 ========================= */
 
 
-h1{
-
+.header{
 
     text-align:center;
 
+    padding-top:35px;
 
-    font-size:34px;
+    margin-bottom:35px;
+
+}
 
 
-    margin-top:45px;
+
+.header h1{
+
+    font-size:36px;
+
+    margin:0;
+
+}
 
 
-    margin-bottom:10px;
 
+.header p{
+
+    color:#777;
+
+    font-size:16px;
 
 }
 
@@ -108,15 +112,11 @@ h1{
 
 h2{
 
-
     text-align:center;
-
 
     font-size:28px;
 
-
-    margin-bottom:30px;
-
+    margin:25px 0 30px;
 
 }
 
@@ -124,34 +124,10 @@ h2{
 
 h3{
 
-
     margin-top:30px;
-
 
     font-size:20px;
 
-
-    color:#444;
-
-
-}
-
-
-
-
-
-.subtitle{
-
-
-    text-align:center;
-
-
-    color:#777;
-
-
-    font-size:16px;
-
-
 }
 
 
@@ -161,24 +137,79 @@ h3{
 
 
 /* =========================
-   首頁選單
+   首頁卡片
 ========================= */
 
 
-.menu{
-
+.home-menu{
 
     display:flex;
 
-
     flex-direction:column;
-
 
     gap:16px;
 
+}
 
-    margin-top:40px;
 
+
+
+
+.main-card{
+
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:20px;
+
+
+    border:none;
+
+    border-radius:22px;
+
+
+    background:white;
+
+
+    text-align:left;
+
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.08);
+
+
+}
+
+
+
+.main-card:first-letter{
+
+    font-size:30px;
+
+}
+
+
+
+.main-card h3{
+
+    margin:0 0 5px;
+
+}
+
+
+
+.main-card p{
+
+    margin:0;
+
+    color:#777;
 
 }
 
@@ -189,44 +220,60 @@ h3{
 
 
 /* =========================
-   通用按鈕
+   特殊功能色
+========================= */
+
+
+.emergency-card{
+
+    border-left:
+
+    8px solid #e53935;
+
+}
+
+
+
+.warning-card{
+
+    border-left:
+
+    8px solid #ff9800;
+
+}
+
+
+
+
+
+
+
+/* =========================
+   按鈕
 ========================= */
 
 
 button{
 
-
     width:100%;
-
 
     padding:18px;
 
-
     border:none;
-
 
     border-radius:18px;
 
-
-    background:#ffffff;
-
-
     font-size:20px;
-
 
     font-weight:bold;
 
-
-    color:#333;
-
+    background:white;
 
     box-shadow:
 
-    0 5px 15px rgba(0,0,0,.08);
+    0 6px 16px rgba(0,0,0,.08);
 
-
-    cursor:pointer;
-
+    margin-top:15px;
 
 }
 
@@ -234,9 +281,7 @@ button{
 
 button:active{
 
-
     transform:scale(.97);
-
 
 }
 
@@ -247,32 +292,25 @@ button:active{
 
 
 /* =========================
-   首頁最新紀錄
+   最新紀錄
 ========================= */
 
 
 #latestBox{
 
-
-    margin-top:35px;
-
+    margin-top:30px;
 
     padding:20px;
 
-
     background:white;
 
-
-    border-radius:18px;
-
+    border-radius:20px;
 
     text-align:center;
 
-
     box-shadow:
 
-    0 5px 15px rgba(0,0,0,.08);
-
+    0 6px 16px rgba(0,0,0,.08);
 
 }
 
@@ -283,23 +321,20 @@ button:active{
 
 
 /* =========================
-   發作頁
+   發作紀錄
 ========================= */
 
 
 #timer{
 
-
     width:220px;
-
 
     height:220px;
 
-
-    margin:30px auto;
-
-
     border-radius:50%;
+
+
+    margin:20px auto;
 
 
     background:white;
@@ -307,43 +342,29 @@ button:active{
 
     display:flex;
 
+    justify-content:center;
 
     align-items:center;
 
 
-    justify-content:center;
-
-
-    font-size:48px;
-
+    font-size:52px;
 
     font-weight:bold;
 
 
     box-shadow:
 
-    0 8px 20px rgba(0,0,0,.12);
-
+    0 10px 25px rgba(0,0,0,.12);
 
 }
 
 
 
-
-
-
-
 #startBtn{
-
 
     background:#43a047;
 
-
     color:white;
-
-
-    margin-bottom:15px;
-
 
 }
 
@@ -351,38 +372,25 @@ button:active{
 
 #stopBtn{
 
-
     background:#e53935;
 
-
     color:white;
-
 
 }
 
 
 
-
-
-
-
 #statusBox{
-
 
     margin-top:20px;
 
-
     padding:15px;
-
 
     background:white;
 
-
     border-radius:15px;
 
-
     text-align:center;
-
 
 }
 
@@ -393,7 +401,7 @@ button:active{
 
 
 /* =========================
-   選項區
+   選項
 ========================= */
 
 
@@ -403,10 +411,10 @@ button:active{
     background:white;
 
 
-    border-radius:18px;
-
-
     padding:18px;
+
+
+    border-radius:18px;
 
 
     box-shadow:
@@ -418,15 +426,13 @@ button:active{
 
 
 
-
-
 .optionGroup label{
 
 
     display:block;
 
 
-    padding:12px 5px;
+    padding:12px 0;
 
 
     font-size:17px;
@@ -436,22 +442,16 @@ button:active{
 
 
 
-
-
 .optionGroup input{
 
 
-    width:20px;
+    width:22px;
 
-
-    height:20px;
-
+    height:22px;
 
     margin-right:10px;
 
-
     vertical-align:middle;
-
 
 }
 
@@ -462,11 +462,33 @@ button:active{
 
 
 /* =========================
-   輸入欄位
+   輸入
 ========================= */
 
 
-input[type="number"],
+input[type="number"]{
+
+
+    width:100%;
+
+
+    padding:14px;
+
+
+    margin-top:10px;
+
+
+    border-radius:12px;
+
+
+    border:1px solid #ddd;
+
+
+    font-size:18px;
+
+
+}
+
 
 
 textarea{
@@ -475,13 +497,16 @@ textarea{
     width:100%;
 
 
-    margin-top:10px;
+    height:120px;
 
 
-    padding:14px;
+    margin-top:20px;
 
 
-    border-radius:12px;
+    padding:15px;
+
+
+    border-radius:15px;
 
 
     border:1px solid #ddd;
@@ -494,14 +519,198 @@ textarea{
 
 
 
-textarea{
 
 
-    height:120px;
 
 
-    resize:none;
+/* =========================
+   醫療資訊卡
+========================= */
 
+
+#medicalCard{
+
+
+    background:white;
+
+
+    border-radius:22px;
+
+
+    padding:25px;
+
+
+    line-height:1.8;
+
+
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   緊急模式
+========================= */
+
+
+#emergencyAlert{
+
+
+    background:#ffebee;
+
+
+    color:#c62828;
+
+
+    padding:25px;
+
+
+    border-radius:20px;
+
+
+    text-align:center;
+
+
+    font-size:24px;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+.info-card{
+
+
+    background:white;
+
+
+    padding:20px;
+
+
+    border-radius:20px;
+
+
+    line-height:1.8;
+
+
+    box-shadow:
+
+    0 6px 16px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   聯絡人
+========================= */
+
+
+.contact-card{
+
+
+    background:white;
+
+
+    padding:20px;
+
+
+    margin-top:15px;
+
+
+    border-radius:18px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
+
+
+}
+
+
+
+
+
+
+.contact-card button{
+
+
+    width:auto;
+
+
+    padding:12px 20px;
+
+
+    background:#43a047;
+
+
+    color:white;
+
+
+    margin:0;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   歷史紀錄
+========================= */
+
+
+.history-card{
+
+
+    background:white;
+
+
+    padding:20px;
+
+
+    border-radius:20px;
+
+
+    margin-bottom:15px;
+
+
+    box-shadow:
+
+    0 6px 16px rgba(0,0,0,.08);
+
+
+}
+
+
+
+.history-card h3{
+
+    margin-top:0;
 
 }
 
@@ -537,109 +746,7 @@ textarea{
 
 
 /* =========================
-   歷史紀錄
-========================= */
-
-
-#historyList{
-
-
-    display:flex;
-
-
-    flex-direction:column;
-
-
-    gap:15px;
-
-
-}
-
-
-
-
-.history-card{
-
-
-    background:white;
-
-
-    padding:20px;
-
-
-    border-radius:18px;
-
-
-    box-shadow:
-
-    0 5px 15px rgba(0,0,0,.08);
-
-
-}
-
-
-
-
-
-
-
-/* =========================
-   資料頁面
-========================= */
-
-
-#medicalContent,
-
-
-#emergencyContent{
-
-
-    background:white;
-
-
-    padding:20px;
-
-
-    border-radius:18px;
-
-
-    min-height:100px;
-
-
-    box-shadow:
-
-    0 5px 15px rgba(0,0,0,.08);
-
-
-}
-
-
-
-
-
-
-
-/* =========================
-   設定頁
-========================= */
-
-
-#settingsPage button{
-
-
-    margin-bottom:15px;
-
-
-}
-
-
-
-
-
-
-
-/* =========================
-   平板以上
+   桌面限制
 ========================= */
 
 
@@ -648,12 +755,9 @@ textarea{
 
     .page{
 
-
-        max-width:500px;
-
+        max-width:520px;
 
         margin:auto;
-
 
     }
 

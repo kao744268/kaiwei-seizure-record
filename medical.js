@@ -1,8 +1,61 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V2.0 守護版
 // medical.js
-// 功能：醫療資訊卡
+// Medical Information Card
 // ==========================================
+
+
+
+// ===============================
+// 預設醫療資料
+// ===============================
+
+
+const defaultMedicalInfo = {
+
+
+    name:
+    "愷威",
+
+
+    disease:
+    "卓飛症候群\nDravet syndrome",
+
+
+    symptom:
+    "癲癇發作",
+
+
+    hospital:
+    "尚未設定",
+
+
+    doctor:
+    "尚未設定",
+
+
+    medicine:
+    "尚未設定",
+
+
+    emergencyMedicine:
+    "尚未設定",
+
+
+    usage:
+    "依醫囑使用",
+
+
+    notice:
+    "尚未設定"
+
+
+
+};
+
+
+
+
 
 
 
@@ -13,21 +66,32 @@
 // ===============================
 
 
-function getMedicalValue(value){
+function getMedicalInfo(){
 
 
-    if(
-        value === undefined ||
-        value === null ||
-        value === ""
-    ){
 
-        return "--";
+    const data =
+
+    localStorage.getItem(
+        "care_medical_info"
+    );
+
+
+
+    if(data){
+
+
+        return JSON.parse(
+            data
+        );
+
 
     }
 
 
-    return value;
+
+    return defaultMedicalInfo;
+
 
 
 }
@@ -38,8 +102,38 @@ function getMedicalValue(value){
 
 
 
+
+
 // ===============================
-// 顯示醫療資訊
+// 儲存資料
+// ===============================
+
+
+function saveMedicalInfo(data){
+
+
+
+    localStorage.setItem(
+
+        "care_medical_info",
+
+        JSON.stringify(data)
+
+    );
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 顯示醫療卡
 // ===============================
 
 
@@ -63,95 +157,149 @@ function renderMedical(){
 
 
 
-    const data =
-    window.medicalData || {};
+    const info =
+    getMedicalInfo();
+
+
+
+
+
+    card.innerHTML = `
+
+
+<h3>
+🏥 醫療資訊卡
+</h3>
+
+
+
+<hr>
+
+
+
+<p>
+👦 姓名：
+<br>
+${lineBreak(info.name)}
+</p>
+
+
+
+<p>
+🧬 疾病：
+<br>
+${lineBreak(info.disease)}
+</p>
+
+
+
+<p>
+⚠️ 主要症狀：
+<br>
+${lineBreak(info.symptom)}
+</p>
+
+
+
+<p>
+🏥 就診醫院：
+<br>
+${lineBreak(info.hospital)}
+</p>
+
+
+
+<p>
+👨‍⚕️ 主治醫師：
+<br>
+${lineBreak(info.doctor)}
+</p>
+
+
+
+<p>
+💊 目前使用藥物：
+<br>
+${lineBreak(info.medicine)}
+</p>
+
+
+
+<p>
+🚨 緊急藥物：
+<br>
+${lineBreak(info.emergencyMedicine)}
+</p>
+
+
+
+<p>
+📌 使用方式：
+<br>
+${lineBreak(info.usage)}
+</p>
+
+
+
+<p>
+📝 注意事項：
+<br>
+${lineBreak(info.notice)}
+</p>
+
+
+
+<hr>
+
+
+
+<div class="medical-lock">
+
+🔒 查看模式
+
+<br>
+
+僅家長可修改資料
+
+</div>
+
+
+
+`;
+
+
+
+}
 
 
 
 
 
 
-    card.className =
-    "medical-card";
 
 
 
-
-    card.innerHTML =
-
-
-
-    `
-
-    <h3>
-    👦 基本資料
-    </h3>
+// ===============================
+// 換行處理
+// ===============================
 
 
-    <p>
-    <strong>姓名：</strong>
-    ${getMedicalValue(data.name)}
-    </p>
+function lineBreak(text){
 
 
-    <p>
-    <strong>生日：</strong>
-    ${getMedicalValue(data.birthday)}
-    </p>
+
+    if(!text){
+
+        return "-";
+
+    }
 
 
-    <hr>
 
-
-    <h3>
-    🏥 醫療資訊
-    </h3>
-
-
-    <p>
-    <strong>診斷：</strong>
-    ${getMedicalValue(data.diagnosis)}
-    </p>
-
-
-    <p>
-    <strong>醫院：</strong>
-    ${getMedicalValue(data.hospital)}
-    </p>
-
-
-    <p>
-    <strong>醫師：</strong>
-    ${getMedicalValue(data.doctor)}
-    </p>
-
-
-    <p>
-    <strong>用藥：</strong>
-    ${getMedicalValue(data.medication)}
-    </p>
-
-
-    <p>
-    <strong>過敏：</strong>
-    ${getMedicalValue(data.allergy)}
-    </p>
-
-
-    <hr>
-
-
-    <h3>
-    📝 注意事項
-    </h3>
-
-
-    <p>
-    ${getMedicalValue(data.note)}
-    </p>
-
-
-    `;
+    return text.replace(
+        /\n/g,
+        "<br>"
+    );
 
 
 
@@ -178,9 +326,16 @@ function(){
 
 
 
+    renderMedical();
+
+
+
     console.log(
-        "🏥 medical.js 啟動"
+        "🏥 medical.js 初始化完成"
     );
 
 
-});
+
+}
+
+);

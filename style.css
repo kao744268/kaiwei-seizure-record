@@ -1,12 +1,12 @@
 /* ==========================================
-   愷威 Care V2.0
-   Warm Child Care Style
+   愷威 Care V2.1
+   守護手冊風格
    style.css
 ========================================== */
 
 
 /* =========================
-   全域
+   基礎設定
 ========================= */
 
 
@@ -20,9 +20,11 @@
 
 body{
 
+
     margin:0;
 
     padding:0;
+
 
     min-height:100vh;
 
@@ -31,12 +33,9 @@ body{
 
     linear-gradient(
         160deg,
-        #e8f8ff,
-        #f5fff8
+        #fdf8ed,
+        #e9f7ff
     );
-
-
-    color:#344054;
 
 
     font-family:
@@ -44,8 +43,10 @@ body{
     -apple-system,
     BlinkMacSystemFont,
     "Noto Sans TC",
-    Arial,
     sans-serif;
+
+
+    color:#334155;
 
 
 }
@@ -67,10 +68,10 @@ body{
     display:none;
 
 
-    min-height:100vh;
-
-
     padding:20px;
+
+
+    min-height:100vh;
 
 
 }
@@ -92,75 +93,59 @@ body{
 
 
 /* =========================
-   標題
+   首頁 Hero
 ========================= */
 
 
-.header{
+.hero{
 
 
     text-align:center;
 
 
-    padding-top:35px;
+    padding:35px 0 25px;
 
 
 }
 
 
 
-.header h1{
-
-
-    font-size:38px;
+.hero h1{
 
 
     margin:0;
 
 
-    color:#2563eb;
+    font-size:42px;
+
+
+    color:#38a3d9;
 
 
 }
 
 
 
-.header p{
+.hero p{
 
 
-    margin-top:10px;
+    margin:8px 0;
 
 
-    color:#64748b;
-
-
-    font-size:17px;
+    font-size:18px;
 
 
 }
 
 
 
-h2{
+.small-text{
 
 
-    text-align:center;
+    color:#7c8a9b;
 
 
-    color:#2563eb;
-
-
-    margin:25px 0 30px;
-
-
-}
-
-
-
-h3{
-
-
-    color:#334155;
+    font-size:15px!important;
 
 
 }
@@ -172,11 +157,11 @@ h3{
 
 
 /* =========================
-   首頁卡片
+   首頁選單
 ========================= */
 
 
-.home-menu{
+.menu-grid{
 
 
     display:flex;
@@ -195,7 +180,8 @@ h3{
 
 
 
-.main-card{
+
+.menu-card{
 
 
     display:flex;
@@ -216,10 +202,10 @@ h3{
     border:none;
 
 
-    border-radius:28px;
+    border-radius:30px;
 
 
-    background:white;
+    background:#ffffff;
 
 
     box-shadow:
@@ -230,37 +216,44 @@ h3{
     text-align:left;
 
 
-    transition:.2s;
+}
+
+
+
+.menu-card:active{
+
+
+    transform:scale(.97);
 
 
 }
 
 
 
-.main-card:active{
+.menu-card .icon{
 
 
-    transform:scale(.96);
+    font-size:40px;
 
 
 }
 
 
 
-.main-card h3{
+.menu-card h3{
 
 
     margin:0 0 6px;
 
 
-    font-size:20px;
+    font-size:21px;
 
 
 }
 
 
 
-.main-card p{
+.menu-card p{
 
 
     margin:0;
@@ -277,27 +270,206 @@ h3{
 
 
 
-/* 左側色條 */
+/* 功能卡色彩 */
 
 
-.emergency-card{
+.menu-card.medical{
 
 
-    border-left:
-
-    10px solid #ef4444;
+    border-left:10px solid #34d399;
 
 
 }
 
 
 
-.warning-card{
+.menu-card.seizure{
 
 
-    border-left:
+    border-left:10px solid #60a5fa;
 
-    10px solid #f59e0b;
+
+}
+
+
+
+.menu-card.emergency{
+
+
+    border-left:10px solid #fb7185;
+
+
+}
+
+
+
+.menu-card.history{
+
+
+    border-left:10px solid #fbbf24;
+
+
+}
+
+
+
+.menu-card.setting{
+
+
+    border-left:10px solid #94a3b8;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   標題
+========================= */
+
+
+h2{
+
+
+    text-align:center;
+
+
+    color:#38a3d9;
+
+
+    font-size:30px;
+
+
+    margin:20px 0 30px;
+
+
+}
+
+
+
+h3{
+
+
+    margin-top:28px;
+
+
+    color:#475569;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   一般卡片
+========================= */
+
+
+.info-card,
+.record-tip,
+.option-card,
+#medicalCard,
+.history-card{
+
+
+    background:#ffffff;
+
+
+    border-radius:28px;
+
+
+    padding:22px;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,.07);
+
+
+}
+
+
+
+
+
+
+
+.record-tip{
+
+
+    color:#64748b;
+
+
+    line-height:1.8;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   計時器
+========================= */
+
+
+#timer{
+
+
+    width:240px;
+
+
+    height:240px;
+
+
+    margin:30px auto;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    border-radius:50%;
+
+
+    background:
+
+
+    linear-gradient(
+        135deg,
+        #dbeafe,
+        #dcfce7
+    );
+
+
+    font-size:55px;
+
+
+    font-weight:bold;
+
+
+    color:#2563eb;
+
+
+    box-shadow:
+
+    0 15px 35px rgba(37,99,235,.15);
 
 
 }
@@ -322,19 +494,13 @@ button{
     padding:18px;
 
 
-    margin-top:15px;
+    margin:12px 0;
 
 
     border:none;
 
 
-    border-radius:22px;
-
-
-    background:white;
-
-
-    color:#334155;
+    border-radius:24px;
 
 
     font-size:20px;
@@ -343,9 +509,15 @@ button{
     font-weight:bold;
 
 
+    background:#ffffff;
+
+
+    color:#334155;
+
+
     box-shadow:
 
-    0 10px 20px rgba(0,0,0,.08);
+    0 8px 20px rgba(0,0,0,.08);
 
 
 }
@@ -362,38 +534,44 @@ button:active{
 
 
 
+.start-button{
+
+
+    background:#34d399;
+
+
+    color:white;
+
+
+}
 
 
 
-
-/* =========================
-   最新紀錄
-========================= */
+.stop-button{
 
 
-#latestBox{
+    background:#fb7185;
+
+
+    color:white;
+
+
+}
+
+
+
+.backBtn{
+
+
+    background:#94a3b8;
+
+
+    color:white;
 
 
     margin-top:30px;
 
 
-    padding:22px;
-
-
-    border-radius:24px;
-
-
-    background:#ffffff;
-
-
-    text-align:center;
-
-
-    box-shadow:
-
-    0 10px 20px rgba(0,0,0,.08);
-
-
 }
 
 
@@ -403,88 +581,8 @@ button:active{
 
 
 /* =========================
-   發作頁
+   狀態
 ========================= */
-
-
-#timer{
-
-
-    width:230px;
-
-
-    height:230px;
-
-
-    margin:25px auto;
-
-
-    border-radius:50%;
-
-
-    display:flex;
-
-
-    align-items:center;
-
-
-    justify-content:center;
-
-
-    background:
-
-
-    linear-gradient(
-        135deg,
-        #dbeafe,
-        #dcfce7
-    );
-
-
-    color:#2563eb;
-
-
-    font-size:55px;
-
-
-    font-weight:bold;
-
-
-    box-shadow:
-
-    0 15px 30px rgba(37,99,235,.15);
-
-
-}
-
-
-
-
-
-#startBtn{
-
-
-    background:#22c55e;
-
-
-    color:white;
-
-
-}
-
-
-
-#stopBtn{
-
-
-    background:#ef4444;
-
-
-    color:white;
-
-
-}
-
 
 
 #statusBox{
@@ -499,10 +597,13 @@ button:active{
     border-radius:20px;
 
 
-    background:white;
+    background:#f8fafc;
 
 
     text-align:center;
+
+
+    font-size:18px;
 
 
 }
@@ -514,38 +615,26 @@ button:active{
 
 
 /* =========================
-   選項區
+   選項
 ========================= */
 
 
-.optionGroup{
-
-
-    background:white;
-
-
-    padding:20px;
-
-
-    border-radius:24px;
-
-
-    box-shadow:
-
-    0 8px 18px rgba(0,0,0,.06);
-
-
-}
-
-
-
-.optionGroup label{
+.option-card label{
 
 
     display:block;
 
 
-    padding:14px 0;
+    padding:14px;
+
+
+    border-radius:15px;
+
+
+    margin-bottom:8px;
+
+
+    background:#f8fafc;
 
 
     font-size:17px;
@@ -555,7 +644,7 @@ button:active{
 
 
 
-.optionGroup input{
+.option-card input{
 
 
     width:22px;
@@ -576,19 +665,8 @@ button:active{
 
 
 /* =========================
-   輸入
+   備註
 ========================= */
-
-
-textarea,
-input{
-
-
-    font-family:inherit;
-
-
-}
-
 
 
 textarea{
@@ -600,13 +678,10 @@ textarea{
     height:120px;
 
 
-    margin-top:20px;
+    padding:16px;
 
 
-    padding:15px;
-
-
-    border-radius:18px;
+    border-radius:20px;
 
 
     border:2px solid #e2e8f0;
@@ -615,76 +690,7 @@ textarea{
     font-size:16px;
 
 
-}
-
-
-
-
-
-
-
-/* =========================
-   醫療卡
-========================= */
-
-
-#medicalCard{
-
-
-    background:white;
-
-
-    padding:25px;
-
-
-    border-radius:30px;
-
-
-    line-height:1.8;
-
-
-    box-shadow:
-
-    0 12px 25px rgba(0,0,0,.08);
-
-
-}
-
-
-
-#medicalCard h3{
-
-
-    color:#2563eb;
-
-
-}
-
-
-
-
-
-
-
-.medical-lock{
-
-
-    margin-top:20px;
-
-
-    padding:15px;
-
-
-    border-radius:18px;
-
-
-    background:#eff6ff;
-
-
-    color:#2563eb;
-
-
-    text-align:center;
+    resize:none;
 
 
 }
@@ -706,13 +712,13 @@ textarea{
     padding:25px;
 
 
-    border-radius:25px;
+    border-radius:28px;
 
 
-    background:#fee2e2;
+    background:#ffe4e6;
 
 
-    color:#dc2626;
+    color:#e11d48;
 
 
     text-align:center;
@@ -728,104 +734,41 @@ textarea{
 
 
 
-.info-card{
-
-
-    margin-top:20px;
-
-
-    padding:22px;
-
-
-    border-radius:25px;
-
-
-    background:white;
-
-
-    line-height:1.8;
-
-
-    box-shadow:
-
-    0 10px 20px rgba(0,0,0,.08);
-
-
-}
-
-
-
 
 
 
 
 /* =========================
-   聯絡卡
+   醫療卡
 ========================= */
 
 
-.contact-card{
+#medicalCard{
 
 
-    display:flex;
-
-
-    justify-content:space-between;
-
-
-    align-items:center;
-
-
-    margin-top:15px;
-
-
-    padding:20px;
-
-
-    border-radius:22px;
-
-
-    background:white;
-
-
-    box-shadow:
-
-    0 8px 18px rgba(0,0,0,.08);
+    line-height:1.9;
 
 
 }
 
 
 
-.contact-card h3{
+.medical-lock{
 
 
-    margin:0;
+    background:#e0f2fe;
 
 
-}
+    color:#0284c7;
 
 
-
-.contact-card button{
-
-
-    width:auto;
+    padding:15px;
 
 
-    padding:12px 20px;
+    border-radius:18px;
 
 
-    margin:0;
-
-
-    background:#22c55e;
-
-
-    color:white;
-
-
-    font-size:16px;
+    text-align:center;
 
 
 }
@@ -837,28 +780,14 @@ textarea{
 
 
 /* =========================
-   歷史紀錄
+   歷史
 ========================= */
 
 
 .history-card{
 
 
-    background:white;
-
-
-    padding:22px;
-
-
     margin-bottom:18px;
-
-
-    border-radius:25px;
-
-
-    box-shadow:
-
-    0 10px 20px rgba(0,0,0,.08);
 
 
 }
@@ -871,7 +800,7 @@ textarea{
     margin-top:0;
 
 
-    color:#2563eb;
+    color:#38a3d9;
 
 
 }
@@ -883,20 +812,68 @@ textarea{
 
 
 /* =========================
-   返回
+   最新紀錄
 ========================= */
 
 
-.backBtn{
+#latestBox{
 
 
-    margin-top:35px;
+    margin-top:30px;
 
 
-    background:#64748b;
+    padding:20px;
 
 
-    color:white;
+    border-radius:25px;
+
+
+    background:white;
+
+
+    text-align:center;
+
+
+    box-shadow:
+
+    0 10px 25px rgba(0,0,0,.08);
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   聯絡人
+========================= */
+
+
+.contact-card{
+
+
+    background:white;
+
+
+    padding:20px;
+
+
+    margin-bottom:15px;
+
+
+    border-radius:25px;
+
+
+    display:flex;
+
+
+    justify-content:space-between;
+
+
+    align-items:center;
 
 
 }

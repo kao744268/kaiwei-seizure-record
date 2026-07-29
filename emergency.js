@@ -1,31 +1,92 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V2.0 守護版
 // emergency.js
-// 功能：緊急聯絡管理
+// Emergency Mode System
 // ==========================================
 
 
 
 // ===============================
-// 取得安全文字
+// 緊急聯絡資料
 // ===============================
 
 
-function getContactValue(value){
+const emergencyContacts = [
 
 
-    if(
-        value === undefined ||
-        value === null ||
-        value === ""
-    ){
+    {
+        name:"爸爸",
+        phone:"0916-398-937"
+    },
 
-        return "--";
+
+    {
+        name:"奶奶",
+        phone:"0905-083-604"
+    },
+
+
+    {
+        name:"爺爺",
+        phone:"0932-000-929"
+    },
+
+
+    {
+        name:"叔叔",
+        phone:"0975-108-215"
+    }
+
+
+];
+
+
+
+
+
+
+
+
+
+// ===============================
+// 顯示緊急提醒
+// ===============================
+
+
+function showEmergencyAlert(){
+
+
+    const alertBox =
+    document.getElementById(
+        "emergencyAlert"
+    );
+
+
+
+    if(alertBox){
+
+
+        alertBox.innerHTML = `
+
+
+        🚨 發作超過 5 分鐘
+
+
+        `;
+
 
     }
 
 
-    return value;
+
+
+    showPage(
+        "emergencyPage"
+    );
+
+
+
+    renderEmergency();
 
 
 }
@@ -36,8 +97,10 @@ function getContactValue(value){
 
 
 
+
+
 // ===============================
-// 顯示緊急聯絡
+// 顯示緊急頁
 // ===============================
 
 
@@ -45,49 +108,19 @@ function renderEmergency(){
 
 
 
-    const list =
+    const alertBox =
     document.getElementById(
-        "emergencyList"
+        "emergencyAlert"
     );
 
 
 
-    if(!list){
-
-        return;
-
-    }
+    if(alertBox && alertBox.innerHTML===""){
 
 
+        alertBox.innerHTML =
 
-
-    const contacts =
-    window.emergencyContacts || [];
-
-
-
-
-
-
-    if(
-        contacts.length === 0
-    ){
-
-
-        list.innerHTML =
-
-        `
-
-        <div class="contact-card">
-
-        尚無緊急聯絡資料
-
-        </div>
-
-        `;
-
-
-        return;
+        "⚠️ 緊急資訊模式";
 
 
     }
@@ -97,118 +130,108 @@ function renderEmergency(){
 
 
 
-    list.innerHTML = "";
+
+    renderContacts();
+
+
+
+}
 
 
 
 
 
 
-    contacts.forEach(
+
+
+
+// ===============================
+// 聯絡人列表
+// ===============================
+
+
+function renderContacts(){
+
+
+
+    const box =
+    document.getElementById(
+        "contactList"
+    );
+
+
+
+    if(!box){
+
+        return;
+
+    }
+
+
+
+
+
+    box.innerHTML = "";
+
+
+
+
+
+
+    emergencyContacts.forEach(
 
         function(contact){
 
 
 
-            const card =
+            const div =
             document.createElement(
                 "div"
             );
 
 
 
-            card.className =
+            div.className =
             "contact-card";
 
 
 
 
 
-            let phone =
-            getContactValue(
-                contact.phone
-            );
+            div.innerHTML = `
 
 
+            <div>
 
-
-
-            let callButton = "";
-
-
-
-            if(
-                phone !== "--"
-            ){
-
-
-                callButton =
-
-
-                `
-
-                <button
-
-                onclick="callContact('${phone}')"
-
-                >
-
-                📞 立即撥打
-
-                </button>
-
-                `;
-
-
-            }
-
-
-
-
-
-
-
-            card.innerHTML =
-
-
-            `
 
             <h3>
-
-            👤 ${getContactValue(contact.name)}
-
+            ${contact.name}
             </h3>
 
 
             <p>
-
-            關係：
-
-            ${getContactValue(contact.relation)}
-
+            📞 ${contact.phone}
             </p>
 
 
-            <p>
-
-            電話：
-
-            ${phone}
-
-            </p>
+            </div>
 
 
-            ${callButton}
+
+            <button onclick="callPhone('${contact.phone}')">
+
+            撥打
+
+            </button>
 
 
             `;
 
 
 
-            list.appendChild(
-                card
+            box.appendChild(
+                div
             );
-
 
 
         }
@@ -228,39 +251,25 @@ function renderEmergency(){
 
 
 // ===============================
-// 撥打電話
+// 撥電話
 // ===============================
 
 
-function callContact(phone){
-
-
-
-    if(
-        !phone ||
-        phone === "--"
-    ){
-
-
-        alert(
-            "沒有電話資料"
-        );
-
-
-        return;
-
-
-    }
-
+function callPhone(phone){
 
 
     window.location.href =
 
-    "tel:" + phone;
+    "tel:" +
 
+    phone.replace(
+        /-/g,
+        ""
+    );
 
 
 }
+
 
 
 
@@ -281,9 +290,13 @@ document.addEventListener(
 function(){
 
 
+
     console.log(
-        "📞 emergency.js 啟動"
+        "⚠️ emergency.js 初始化完成"
     );
 
 
-});
+
+}
+
+);

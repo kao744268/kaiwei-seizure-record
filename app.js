@@ -1,29 +1,17 @@
 // ==========================================
-// 愷威 Care V1.0 Stable
+// 愷威 Care V2.0 Clean
 // app.js
-// Offline Edition
+// Core Controller
 // ==========================================
 
 
 
 // ===============================
-// 全域版本
-// ===============================
-
-
-window.CARE_VERSION =
-"V1.0 Stable";
-
-
-
-
-// ===============================
-// 頁面切換
+// 顯示頁面
 // ===============================
 
 
 function showPage(pageId){
-
 
 
     const pages =
@@ -37,9 +25,11 @@ function showPage(pageId){
 
         function(page){
 
+
             page.classList.remove(
                 "active"
             );
+
 
         }
 
@@ -65,7 +55,6 @@ function showPage(pageId){
     }
 
 
-
 }
 
 
@@ -73,108 +62,20 @@ function showPage(pageId){
 
 
 
+
+
+
 // ===============================
-// 初始化資料
+// 返回首頁
 // ===============================
 
 
-function initCareApp(){
+function backHome(){
 
 
-
-    console.log(
-        "👦 愷威 Care 啟動"
+    showPage(
+        "homePage"
     );
-
-
-
-    console.log(
-        "版本:",
-        window.CARE_VERSION
-    );
-
-
-
-
-
-    // 初始化發作資料
-
-    if(
-        typeof loadLocalRecords === "function"
-    ){
-
-
-        loadLocalRecords();
-
-
-    }
-
-
-
-
-
-    // 更新歷史顯示
-
-    if(
-        typeof renderHistory === "function"
-    ){
-
-
-        renderHistory();
-
-
-    }
-
-
-
-
-
-    // 更新首頁資訊
-
-    if(
-        typeof updateLatestRecord === "function"
-    ){
-
-
-        updateLatestRecord();
-
-
-    }
-
-
-
-
-
-    // 醫療資料
-
-    if(
-        typeof loadMedical === "function"
-    ){
-
-
-        loadMedical();
-
-
-    }
-
-
-
-
-
-    // 緊急資料
-
-    if(
-        typeof loadEmergency === "function"
-    ){
-
-
-        loadEmergency();
-
-
-    }
-
-
-
 
 
 }
@@ -188,18 +89,233 @@ function initCareApp(){
 
 
 // ===============================
-// DOM完成啟動
+// 初始化按鈕
 // ===============================
 
 
-document.addEventListener(
+function initApp(){
+
+
+
+    console.log(
+        "👦 愷威 Care V2.0 啟動"
+    );
+
+
+
+
+
+    // 首頁 → 發作
+
+
+    document
+    .getElementById(
+        "goSeizureBtn"
+    )
+    ?.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            showPage(
+                "seizurePage"
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    // 首頁 → 歷史
+
+
+    document
+    .getElementById(
+        "goHistoryBtn"
+    )
+    ?.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            showPage(
+                "historyPage"
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    // 首頁 → 醫療
+
+
+    document
+    .getElementById(
+        "goMedicalBtn"
+    )
+    ?.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            showPage(
+                "medicalPage"
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    // 首頁 → 緊急
+
+
+    document
+    .getElementById(
+        "goEmergencyBtn"
+    )
+    ?.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            showPage(
+                "emergencyPage"
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    // 首頁 → 設定
+
+
+    document
+    .getElementById(
+        "goSettingsBtn"
+    )
+    ?.addEventListener(
+
+        "click",
+
+        function(){
+
+
+            showPage(
+                "settingsPage"
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    // 所有返回首頁按鈕
+
+
+    const backButtons =
+
+    document.querySelectorAll(
+
+        ".backHomeBtn"
+
+    );
+
+
+
+    backButtons.forEach(
+
+        function(btn){
+
+
+            btn.addEventListener(
+
+                "click",
+
+                backHome
+
+            );
+
+
+        }
+
+    );
+
+
+
+
+
+
+
+    console.log(
+        "✅ App 按鈕初始化完成"
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 啟動
+// ===============================
+
+
+window.addEventListener(
 
 "DOMContentLoaded",
 
 function(){
 
 
-    initCareApp();
+    initApp();
 
 
 }

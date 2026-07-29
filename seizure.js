@@ -1,16 +1,21 @@
 // ==========================================
-// 愷威 Care V1.0
+// 愷威 Care V1.0 Stable
 // seizure.js
-// 功能：癲癇發作計時核心
+// Offline Edition
 // ==========================================
 
 
 
-let seizureStartTime = null;
-
 let seizureTimer = null;
 
+let seizureSeconds = 0;
+
+let seizureStartTime = null;
+
 let isSeizing = false;
+
+
+
 
 
 
@@ -27,7 +32,9 @@ function startSeizure(){
 
     if(isSeizing){
 
+
         return;
+
 
     }
 
@@ -37,31 +44,22 @@ function startSeizure(){
 
 
 
-    seizureStartTime = new Date();
+    seizureSeconds = 0;
+
+
+
+    seizureStartTime =
+    new Date();
 
 
 
 
-    const startText =
+
+
+    const timer =
     document.getElementById(
-        "startTimeText"
+        "timer"
     );
-
-
-
-    if(startText){
-
-
-        startText.textContent =
-        formatDateTime(
-            seizureStartTime
-        );
-
-
-    }
-
-
-
 
 
     const status =
@@ -71,11 +69,14 @@ function startSeizure(){
 
 
 
+
+
+
     if(status){
 
 
-        status.textContent =
-        "🚨 發作進行中";
+        status.innerHTML =
+        "🚨 發作中";
 
 
     }
@@ -83,22 +84,48 @@ function startSeizure(){
 
 
 
-    updateTimer();
+
+
+
+    if(timer){
+
+
+        timer.innerHTML =
+        "00:00";
+
+
+    }
+
+
+
+
 
 
 
     seizureTimer =
+
     setInterval(
-        updateTimer,
+
+        function(){
+
+
+
+            seizureSeconds++;
+
+
+
+            updateTimer();
+
+
+
+        },
+
         1000
+
     );
 
 
 
-    console.log(
-        "開始發作",
-        seizureStartTime
-    );
 
 
 }
@@ -108,8 +135,11 @@ function startSeizure(){
 
 
 
+
+
+
 // ===============================
-// 更新計時器
+// 更新秒數
 // ===============================
 
 
@@ -117,57 +147,48 @@ function updateTimer(){
 
 
 
-    if(
-        !isSeizing ||
-        !seizureStartTime
-    ){
-
-        return;
-
-    }
-
-
-
-
-    const now =
-    new Date();
-
-
-
-
-    const seconds =
-    Math.floor(
-        (
-            now -
-            seizureStartTime
-        )
-        /
-        1000
-    );
-
-
-
-
     const timer =
     document.getElementById(
-        "timerBox"
+        "timer"
     );
 
 
 
-    if(timer){
+    if(!timer)return;
 
 
-        timer.textContent =
-        formatDuration(
-            seconds
-        );
 
 
-    }
+    const min =
+    Math.floor(
+        seizureSeconds / 60
+    );
+
+
+
+    const sec =
+    seizureSeconds % 60;
+
+
+
+
+    timer.innerHTML =
+
+    String(min).padStart(2,"0")
+
+    +
+
+    ":"
+
+    +
+
+    String(sec).padStart(2,"0");
+
 
 
 }
+
+
 
 
 
@@ -180,42 +201,17 @@ function updateTimer(){
 // ===============================
 
 
-function endSeizure(){
+function stopSeizure(){
 
 
 
     if(!isSeizing){
 
 
-        alert(
-            "目前沒有發作紀錄"
-        );
-
-
         return;
 
 
     }
-
-
-
-
-
-    const endTime =
-    new Date();
-
-
-
-
-    const duration =
-    Math.floor(
-        (
-            endTime -
-            seizureStartTime
-        )
-        /
-        1000
-    );
 
 
 
@@ -237,6 +233,15 @@ function endSeizure(){
 
 
 
+
+    const endTime =
+    new Date();
+
+
+
+
+
+
     const record = {
 
 
@@ -253,21 +258,21 @@ function endSeizure(){
 
 
         startTime:
-        formatDateTime(
+        formatTime(
             seizureStartTime
         ),
 
 
 
         endTime:
-        formatDateTime(
+        formatTime(
             endTime
         ),
 
 
 
         duration:
-        duration
+        seizureSeconds
 
 
 
@@ -277,16 +282,9 @@ function endSeizure(){
 
 
 
-    console.log(
-        "完成紀錄",
-        record
-    );
 
 
-
-
-
-    // 傳給 history.js
+    // 儲存紀錄
 
 
     if(
@@ -294,12 +292,25 @@ function endSeizure(){
     ){
 
 
+
         addSeizureRecord(
             record
         );
 
 
+
     }
+
+    else{
+
+
+        saveFallbackRecord(
+            record
+        );
+
+
+    }
+
 
 
 
@@ -316,8 +327,9 @@ function endSeizure(){
     if(status){
 
 
-        status.textContent =
-        "✅ 發作已結束";
+        status.innerHTML =
+
+        "✅ 發作結束";
 
 
     }
@@ -327,23 +339,55 @@ function endSeizure(){
 
 
 
-    alert(
 
-        "發作紀錄完成\n\n" +
+}
 
-        "持續時間：" +
 
-        duration +
 
-        " 秒"
+
+
+
+
+
+
+// ===============================
+// 日期格式
+// ===============================
+
+
+function formatDate(date){
+
+
+
+    return (
+
+        date.getFullYear()
+
+        +
+
+        "/"
+
+        +
+
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0")
+
+        +
+
+        "/"
+
+        +
+
+        String(
+            date.getDate()
+        ).padStart(2,"0")
 
     );
 
 
-
-
-
 }
+
 
 
 
@@ -357,46 +401,15 @@ function endSeizure(){
 // ===============================
 
 
-function formatDateTime(date){
+function formatTime(date){
 
 
 
     return (
 
-        date.getFullYear()
-
-        +
-
-        "/"
-
-        +
-
-        String(
-            date.getMonth()+1
-        )
-        .padStart(2,"0")
-
-        +
-
-        "/"
-
-        +
-
-        String(
-            date.getDate()
-        )
-        .padStart(2,"0")
-
-        +
-
-        " "
-
-        +
-
         String(
             date.getHours()
-        )
-        .padStart(2,"0")
+        ).padStart(2,"0")
 
         +
 
@@ -406,8 +419,7 @@ function formatDateTime(date){
 
         String(
             date.getMinutes()
-        )
-        .padStart(2,"0")
+        ).padStart(2,"0")
 
         +
 
@@ -417,8 +429,7 @@ function formatDateTime(date){
 
         String(
             date.getSeconds()
-        )
-        .padStart(2,"0")
+        ).padStart(2,"0")
 
     );
 
@@ -426,100 +437,6 @@ function formatDateTime(date){
 }
 
 
-
-
-function formatDate(date){
-
-
-    return (
-
-        date.getFullYear()
-
-        +
-
-        "/"
-
-        +
-
-        String(
-            date.getMonth()+1
-        )
-        .padStart(2,"0")
-
-        +
-
-        "/"
-
-        +
-
-        String(
-            date.getDate()
-        )
-        .padStart(2,"0")
-
-    );
-
-
-}
-
-
-
-
-
-
-
-function formatDuration(seconds){
-
-
-
-    const h =
-    Math.floor(
-        seconds / 3600
-    );
-
-
-
-    const m =
-    Math.floor(
-        (seconds % 3600)
-        /
-        60
-    );
-
-
-
-    const s =
-    seconds % 60;
-
-
-
-    return (
-
-        String(h)
-        .padStart(2,"0")
-
-        +
-
-        ":"
-
-        +
-
-        String(m)
-        .padStart(2,"0")
-
-        +
-
-        ":"
-
-        +
-
-        String(s)
-        .padStart(2,"0")
-
-    );
-
-
-}
 
 
 
@@ -528,7 +445,59 @@ function formatDuration(seconds){
 
 
 // ===============================
-// 綁定按鈕
+// 備援保存
+// ===============================
+
+
+function saveFallbackRecord(record){
+
+
+
+    let records =
+
+    JSON.parse(
+
+        localStorage.getItem(
+
+            "kw_seizure_records"
+
+        )
+
+        ||
+
+        "[]"
+
+    );
+
+
+
+
+    records.push(record);
+
+
+
+    localStorage.setItem(
+
+        "kw_seizure_records",
+
+        JSON.stringify(records)
+
+    );
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 按鈕綁定
 // ===============================
 
 
@@ -540,21 +509,39 @@ function(){
 
 
 
-    const endBtn =
+    const startBtn =
+
     document.getElementById(
-        "endSeizureBtn"
+
+        "startBtn"
+
     );
 
 
 
-    if(endBtn){
+    const stopBtn =
+
+    document.getElementById(
+
+        "stopBtn"
+
+    );
 
 
-        endBtn.addEventListener(
+
+
+
+
+
+    if(startBtn){
+
+
+
+        startBtn.addEventListener(
 
             "click",
 
-            endSeizure
+            startSeizure
 
         );
 
@@ -564,8 +551,33 @@ function(){
 
 
 
+
+
+
+    if(stopBtn){
+
+
+
+        stopBtn.addEventListener(
+
+            "click",
+
+            stopSeizure
+
+        );
+
+
+    }
+
+
+
+
+
+
     console.log(
-        "🚨 seizure.js 啟動"
+
+        "🚨 seizure.js Stable 啟動"
+
     );
 
 

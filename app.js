@@ -1,22 +1,28 @@
 // ==========================================
-// 愷威 Care V2.0 守護版
+// 愷威 Care V2.3
 // app.js
-// Core Navigation System
+// 頁面控制核心
 // ==========================================
 
 
 
+
+
 // ===============================
-// 頁面切換
+// 切換頁面
 // ===============================
 
 
 function showPage(pageId){
 
 
-    const pages = document.querySelectorAll(
+
+    const pages =
+
+    document.querySelectorAll(
         ".page"
     );
+
 
 
     pages.forEach(function(page){
@@ -31,9 +37,14 @@ function showPage(pageId){
 
 
 
-    const target = document.getElementById(
+
+
+    const target =
+
+    document.getElementById(
         pageId
     );
+
 
 
     if(target){
@@ -44,13 +55,15 @@ function showPage(pageId){
         );
 
 
-        console.log(
-            "目前頁面:",
-            pageId
-        );
-
-
     }
+
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
 
 
 }
@@ -64,7 +77,7 @@ function showPage(pageId){
 
 
 // ===============================
-// 返回首頁
+// 首頁
 // ===============================
 
 
@@ -91,131 +104,64 @@ function goHome(){
 // ===============================
 
 
-function initApp(){
+document.addEventListener(
+
+"DOMContentLoaded",
+
+function(){
 
 
 
     console.log(
-        "👦 愷威 Care V2.0 啟動"
+        "👦 愷威 Care V2.3 app.js 啟動"
     );
 
 
 
 
 
-    // 醫療資訊
+    // 醫療卡
 
 
     const medicalBtn =
+
     document.getElementById(
         "medicalPageBtn"
     );
 
 
+
     if(medicalBtn){
 
 
-        medicalBtn.addEventListener(
-            "click",
-            function(){
+        medicalBtn.onclick = function(){
 
 
-                showPage(
-                    "medicalPage"
-                );
+
+            showPage(
+                "medicalPage"
+            );
 
 
-                if(
-                    typeof renderMedical === "function"
-                ){
 
-                    renderMedical();
+            if(
+                typeof renderMedical === "function"
+            ){
 
-                }
+
+                renderMedical();
 
 
             }
-        );
+
+
+
+        };
 
 
     }
 
 
-
-
-
-
-
-    // 發作紀錄
-
-
-    const seizureBtn =
-    document.getElementById(
-        "seizurePageBtn"
-    );
-
-
-    if(seizureBtn){
-
-
-        seizureBtn.addEventListener(
-            "click",
-            function(){
-
-
-                showPage(
-                    "seizurePage"
-                );
-
-
-            }
-        );
-
-
-    }
-
-
-
-
-
-
-
-    // 緊急模式
-
-
-    const emergencyBtn =
-    document.getElementById(
-        "emergencyPageBtn"
-    );
-
-
-    if(emergencyBtn){
-
-
-        emergencyBtn.addEventListener(
-            "click",
-            function(){
-
-
-                showPage(
-                    "emergencyPage"
-                );
-
-
-                if(
-                    typeof renderEmergency === "function"
-                ){
-
-                    renderEmergency();
-
-                }
-
-
-            }
-        );
-
-
-    }
 
 
 
@@ -227,36 +173,39 @@ function initApp(){
 
 
     const historyBtn =
+
     document.getElementById(
         "historyPageBtn"
     );
 
 
+
     if(historyBtn){
 
 
-        historyBtn.addEventListener(
-            "click",
-            function(){
-
-
-                showPage(
-                    "historyPage"
-                );
+        historyBtn.onclick = function(){
 
 
 
-                if(
-                    typeof renderHistory === "function"
-                ){
+            showPage(
+                "historyPage"
+            );
 
-                    renderHistory();
 
-                }
+
+            if(
+                typeof renderHistory === "function"
+            ){
+
+
+                renderHistory();
 
 
             }
-        );
+
+
+
+        };
 
 
     }
@@ -267,30 +216,45 @@ function initApp(){
 
 
 
-    // 設定
 
 
-    const settingsBtn =
+    // 緊急模式
+
+
+    const emergencyBtn =
+
     document.getElementById(
-        "settingsPageBtn"
+        "emergencyPageBtn"
     );
 
 
-    if(settingsBtn){
+
+    if(emergencyBtn){
 
 
-        settingsBtn.addEventListener(
-            "click",
-            function(){
+        emergencyBtn.onclick = function(){
 
 
-                showPage(
-                    "settingsPage"
-                );
+
+            showPage(
+                "emergencyPage"
+            );
+
+
+
+            if(
+                typeof renderEmergency === "function"
+            ){
+
+
+                renderEmergency();
 
 
             }
-        );
+
+
+
+        };
 
 
     }
@@ -302,10 +266,12 @@ function initApp(){
 
 
 
-    // 所有返回首頁
+
+    // 所有返回按鈕
 
 
     const backButtons =
+
     document.querySelectorAll(
         ".backBtn"
     );
@@ -315,16 +281,17 @@ function initApp(){
     backButtons.forEach(function(btn){
 
 
-        btn.addEventListener(
-            "click",
-            function(){
+
+        btn.onclick = function(){
 
 
-                goHome();
+
+            goHome();
 
 
-            }
-        );
+
+        };
+
 
 
     });
@@ -334,37 +301,36 @@ function initApp(){
 
 
 
-    console.log(
-        "✅ app.js 初始化完成"
+
+
+
+    // 特別處理緊急返回
+
+
+    const emergencyBack =
+
+    document.getElementById(
+        "emergencyBackBtn"
     );
 
 
 
-}
+    if(emergencyBack){
+
+
+        emergencyBack.onclick = function(){
 
 
 
+            goHome();
 
 
 
+        };
+
+
+    }
 
 
 
-// ===============================
-// DOM完成後啟動
-// ===============================
-
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-function(){
-
-
-    initApp();
-
-
-}
-
-);
+});

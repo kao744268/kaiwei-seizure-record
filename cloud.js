@@ -1,173 +1,119 @@
 // ==========================================
 // 愷威 Care V1.0
 // cloud.js
-// 功能：Google Cloud 同步
 // ==========================================
 
 
 
-// ===============================
-// Google Apps Script API網址
-// ===============================
-
-
 const CARE_API_URL =
 
-"https://script.google.com/macros/s/AKfycbzZY5VQUnvrVxhQw0mo7rdMmGheQOemipNY4kEaBE59FOGjBtuqXl0ycprzY4k_M47QsA/exec;
+"https://https://script.google.com/macros/s/AKfycbySMK9kjhbp_dn98fIwiZsoDkoIlnnuMxER9mzvZoxmwAFosuHT8PNhxZNYa8gi_oLLDg/exec";
 
 
 
 
 
 
-
-// ===============================
-// 基礎同步函式
-// ===============================
 
 
 async function cloudSync(type,data){
 
 
 
-    if(
-        !CARE_API_URL ||
-        CARE_API_URL.includes(
-            "請填入"
-        )
-    ){
+if(
+!CARE_API_URL ||
+CARE_API_URL.includes("你的exec")
+){
 
 
-        console.warn(
-            "尚未設定Google API"
-        );
+console.warn(
+"尚未設定API"
+);
 
 
-        return false;
+return false;
 
 
-    }
+}
 
 
 
 
 
 
-    const payload = {
+try{
 
 
-        type:type,
 
+const response =
 
-        data:data,
+await fetch(
 
+CARE_API_URL,
 
-        timestamp:
-        new Date()
-        .toISOString()
+{
 
+method:"POST",
 
+headers:{
 
-    };
+"Content-Type":
+"application/json"
 
+},
 
+body:
 
+JSON.stringify({
 
+type:type,
 
+data:data
 
+})
 
-    try{
 
+}
 
+);
 
-        const response =
 
-        await fetch(
 
-            CARE_API_URL,
 
-            {
 
 
-                method:"POST",
+const result =
+await response.json();
 
 
-                headers:{
 
+console.log(
+"同步成功",
+result
+);
 
-                    "Content-Type":
-                    "application/json"
 
 
-                },
+return true;
 
 
-                body:
 
-                JSON.stringify(
-                    payload
-                )
+}
 
+catch(error){
 
 
-            }
 
-        );
+console.error(
+"同步失敗",
+error
+);
 
 
+return false;
 
 
-
-
-
-        const result =
-
-        await response.json();
-
-
-
-
-
-
-        console.log(
-
-            "同步結果",
-
-            result
-
-        );
-
-
-
-
-
-        return result;
-
-
-
-
-
-    }
-
-    catch(error){
-
-
-
-        console.error(
-
-            "同步失敗",
-
-            error
-
-        );
-
-
-
-        return false;
-
-
-
-    }
+}
 
 
 
@@ -179,24 +125,19 @@ async function cloudSync(type,data){
 
 
 
-
-
-// ===============================
-// 同步發作紀錄
-// ===============================
 
 
 function syncSeizure(record){
 
 
 
-    return cloudSync(
+return cloudSync(
 
-        "seizure",
+"seizure",
 
-        record
+record
 
-    );
+);
 
 
 }
@@ -206,25 +147,18 @@ function syncSeizure(record){
 
 
 
-
-
-
-// ===============================
-// 同步醫療資料
-// ===============================
 
 
 function syncMedical(){
 
 
+return cloudSync(
 
-    return cloudSync(
+"medical",
 
-        "medical",
+window.medicalData || {}
 
-        window.medicalData || {}
-
-    );
+);
 
 
 }
@@ -234,25 +168,19 @@ function syncMedical(){
 
 
 
-
-
-
-// ===============================
-// 同步緊急聯絡
-// ===============================
 
 
 function syncEmergency(){
 
 
 
-    return cloudSync(
+return cloudSync(
 
-        "emergency",
+"emergency",
 
-        window.emergencyContacts || []
+window.emergencyContacts || []
 
-    );
+);
 
 
 }
@@ -262,52 +190,39 @@ function syncEmergency(){
 
 
 
-
-
-
-// ===============================
-// 全部同步
-// ===============================
 
 
 async function syncAll(){
 
 
 
-    const result = await Promise.all([
-
-
-        syncMedical(),
-
-
-        syncEmergency(),
-
-
-        cloudSync(
-
-            "seizure",
-
-            window.seizureRecords || []
-
-        )
+const a =
+await syncMedical();
 
 
 
-    ]);
+const b =
+await syncEmergency();
 
+
+
+const c =
+await cloudSync(
+
+"seizure",
+
+window.seizureRecords || []
+
+);
 
 
 
 
-    alert(
-
-        "☁️ 同步完成"
-
-    );
-
-
-
-    return result;
+return (
+a ||
+b ||
+c
+);
 
 
 
@@ -320,24 +235,6 @@ async function syncAll(){
 
 
 
-
-// ===============================
-// 啟動
-// ===============================
-
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-function(){
-
-
-    console.log(
-
-        "☁️ cloud.js 啟動"
-
-    );
-
-
-});
+console.log(
+"☁️ cloud.js ready"
+);

@@ -1,40 +1,8 @@
 // ==========================================
-// 愷威癲癇紀錄系統
-// V3.0 Clean Stable-1
+// 愷威 Care V1.0
 // app.js
-// 功能：頁面控制
+// 功能：App導航與頁面控制
 // ==========================================
-
-
-
-// ===============================
-// 頁面設定
-// ===============================
-
-
-const pageMap = {
-
-
-    startSeizureBtn:
-    "seizurePage",
-
-
-    recordBtn:
-    "recordPage",
-
-
-    medicalBtn:
-    "medicalPage",
-
-
-    emergencyBtn:
-    "emergencyPage"
-
-
-};
-
-
-
 
 
 
@@ -47,9 +15,14 @@ function showPage(pageId){
 
 
 
-    document
-    .querySelectorAll(".page")
-    .forEach(
+    const pages =
+    document.querySelectorAll(
+        ".page"
+    );
+
+
+
+    pages.forEach(
         function(page){
 
             page.classList.remove(
@@ -80,7 +53,15 @@ function showPage(pageId){
 
 
 
+    window.scrollTo(
+        0,
+        0
+    );
+
+
+
 }
+
 
 
 
@@ -97,75 +78,290 @@ function initApp(){
 
 
     console.log(
-        "🚀 V3.0 Stable-1 app 啟動"
+        "👦 愷威 Care V1.0 啟動"
     );
 
 
 
-    Object
-    .entries(pageMap)
-    .forEach(
-        function([buttonId,pageId]){
+
+
+    // 開始發作
+
+    const startBtn =
+    document.getElementById(
+        "startSeizureBtn"
+    );
 
 
 
-            const button =
-            document.getElementById(
-                buttonId
-            );
+    if(startBtn){
 
 
+        startBtn.addEventListener(
 
-            if(button){
+            "click",
+
+            function(){
 
 
-
-                button.addEventListener(
-                    "click",
-                    function(){
-
-                        showPage(pageId);
-
-                    }
+                showPage(
+                    "seizurePage"
                 );
 
 
 
+                if(
+                    typeof startSeizure === "function"
+                ){
+
+                    startSeizure();
+
+                }
+
+
             }
 
+        );
 
 
-        }
+    }
+
+
+
+
+
+
+
+    // 歷史紀錄
+
+
+    const historyBtn =
+    document.getElementById(
+        "historyBtn"
     );
 
 
 
+    if(historyBtn){
 
 
-    document
-    .querySelectorAll(".backBtn")
-    .forEach(
+        historyBtn.addEventListener(
+
+            "click",
+
+            function(){
+
+
+                showPage(
+                    "historyPage"
+                );
+
+
+
+                if(
+                    typeof renderHistory === "function"
+                ){
+
+                    renderHistory();
+
+                }
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+
+
+
+
+
+    // 醫療卡
+
+
+    const medicalBtn =
+    document.getElementById(
+        "medicalBtn"
+    );
+
+
+
+    if(medicalBtn){
+
+
+        medicalBtn.addEventListener(
+
+            "click",
+
+            function(){
+
+
+                showPage(
+                    "medicalPage"
+                );
+
+
+
+                if(
+                    typeof renderMedical === "function"
+                ){
+
+                    renderMedical();
+
+                }
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+
+
+
+
+    // 緊急聯絡
+
+
+    const emergencyBtn =
+    document.getElementById(
+        "emergencyBtn"
+    );
+
+
+
+    if(emergencyBtn){
+
+
+        emergencyBtn.addEventListener(
+
+            "click",
+
+            function(){
+
+
+                showPage(
+                    "emergencyPage"
+                );
+
+
+
+                if(
+                    typeof renderEmergency === "function"
+                ){
+
+                    renderEmergency();
+
+                }
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+
+
+
+
+    // 設定
+
+
+    const settingsBtn =
+    document.getElementById(
+        "settingsBtn"
+    );
+
+
+
+    if(settingsBtn){
+
+
+        settingsBtn.addEventListener(
+
+            "click",
+
+            function(){
+
+
+                showPage(
+                    "settingsPage"
+                );
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+
+
+
+
+
+
+    // 返回首頁
+
+
+    const backButtons =
+    document.querySelectorAll(
+        ".backBtn"
+    );
+
+
+
+    backButtons.forEach(
+
         function(button){
 
 
 
             button.addEventListener(
+
                 "click",
+
                 function(){
+
 
                     showPage(
                         "homePage"
                     );
 
+
                 }
+
             );
 
 
+
         }
+
     );
 
 
 
+
+
+
+
+    // 預設首頁
 
 
     showPage(
@@ -173,10 +369,16 @@ function initApp(){
     );
 
 
+
 }
 
 
 
+
+
+
+
+// 啟動
 
 
 document.addEventListener(

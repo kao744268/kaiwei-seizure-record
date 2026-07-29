@@ -1,93 +1,188 @@
 // ==========================================
 // 愷威癲癇紀錄系統
-// V3.0 Clean
+// V3.0 Clean Stable-1
 // app.js
-// 功能：頁面切換（唯一職責）
+// 功能：頁面控制
 // ==========================================
 
-// 頁面 ID 對照
-const pages = {
-    home: "homePage",
-    seizure: "seizurePage",
-    record: "recordPage",
-    medical: "medicalPage",
-    emergency: "emergencyPage"
+
+
+// ===============================
+// 頁面設定
+// ===============================
+
+
+const pageMap = {
+
+
+    startSeizureBtn:
+    "seizurePage",
+
+
+    recordBtn:
+    "recordPage",
+
+
+    medicalBtn:
+    "medicalPage",
+
+
+    emergencyBtn:
+    "emergencyPage"
+
+
 };
 
-// ===============================
-// 顯示指定頁面
-// ===============================
-function showPage(pageId) {
 
-    document.querySelectorAll(".page").forEach(page => {
-        page.classList.remove("active");
-    });
 
-    const target = document.getElementById(pageId);
 
-    if (target) {
-        target.classList.add("active");
-    } else {
-        console.warn("找不到頁面：", pageId);
-    }
-}
+
 
 // ===============================
-// 綁定按鈕
+// 顯示頁面
 // ===============================
-function bindButtons() {
 
-    const buttonMap = {
 
-        startSeizureBtn: pages.seizure,
+function showPage(pageId){
 
-        recordBtn: pages.record,
 
-        medicalBtn: pages.medical,
 
-        emergencyBtn: pages.emergency
+    document
+    .querySelectorAll(".page")
+    .forEach(
+        function(page){
 
-    };
+            page.classList.remove(
+                "active"
+            );
 
-    Object.entries(buttonMap).forEach(([buttonId, pageId]) => {
-
-        const button = document.getElementById(buttonId);
-
-        if (!button) {
-            console.warn("找不到按鈕：", buttonId);
-            return;
         }
+    );
 
-        button.addEventListener("click", () => {
-            showPage(pageId);
-        });
 
-    });
 
-    // 返回首頁
-    document.querySelectorAll(".backBtn").forEach(button => {
+    const target =
+    document.getElementById(
+        pageId
+    );
 
-        button.addEventListener("click", () => {
 
-            showPage(pages.home);
 
-        });
+    if(target){
 
-    });
+
+        target.classList.add(
+            "active"
+        );
+
+
+    }
+
+
 
 }
+
+
+
+
+
 
 // ===============================
 // 初始化
 // ===============================
-function initApp() {
 
-    console.log("🚀 V3.0 Clean 啟動");
 
-    bindButtons();
+function initApp(){
 
-    showPage(pages.home);
+
+
+    console.log(
+        "🚀 V3.0 Stable-1 app 啟動"
+    );
+
+
+
+    Object
+    .entries(pageMap)
+    .forEach(
+        function([buttonId,pageId]){
+
+
+
+            const button =
+            document.getElementById(
+                buttonId
+            );
+
+
+
+            if(button){
+
+
+
+                button.addEventListener(
+                    "click",
+                    function(){
+
+                        showPage(pageId);
+
+                    }
+                );
+
+
+
+            }
+
+
+
+        }
+    );
+
+
+
+
+
+    document
+    .querySelectorAll(".backBtn")
+    .forEach(
+        function(button){
+
+
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    showPage(
+                        "homePage"
+                    );
+
+                }
+            );
+
+
+        }
+    );
+
+
+
+
+
+    showPage(
+        "homePage"
+    );
+
 
 }
 
-document.addEventListener("DOMContentLoaded", initApp);
+
+
+
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    initApp
+
+);

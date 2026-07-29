@@ -1,19 +1,18 @@
 // ==========================================
-// 愷威 Care 癲癇紀錄版 V1.0
+// 愷威 Care V2.0 守護版
 // seizure.js
-// Seizure Core System
+// Seizure Record System
 // ==========================================
 
 
 
-var seizureTimer = null;
+let seizureTimer = null;
 
-var seizureSeconds = 0;
+let seizureSeconds = 0;
 
-var seizureRunning = false;
+let seizureRunning = false;
 
-var seizureStartTime = null;
-
+let seizureStartTime = null;
 
 
 
@@ -53,7 +52,7 @@ function startSeizure(){
 
 
 
-    var status =
+    const status =
     document.getElementById(
         "statusBox"
     );
@@ -71,9 +70,7 @@ function startSeizure(){
 
 
 
-
     seizureTimer = setInterval(
-
         function(){
 
 
@@ -84,18 +81,29 @@ function startSeizure(){
 
 
 
+            // 超過5分鐘
+
+            if(seizureSeconds >= 300){
+
+
+                triggerEmergency();
+
+
+            }
+
+
+
         },
-
         1000
-
     );
 
 
 
     console.log(
-        "開始發作",
+        "開始發作:",
         seizureStartTime
     );
+
 
 
 }
@@ -109,7 +117,7 @@ function startSeizure(){
 
 
 // ===============================
-// 更新秒數
+// 計時顯示
 // ===============================
 
 
@@ -117,7 +125,7 @@ function updateTimer(){
 
 
 
-    var timer =
+    const timer =
     document.getElementById(
         "timer"
     );
@@ -132,21 +140,21 @@ function updateTimer(){
 
 
 
-    var min =
+    let min =
     Math.floor(
         seizureSeconds / 60
     );
 
 
 
-    var sec =
+    let sec =
     seizureSeconds % 60;
 
 
 
     timer.innerHTML =
 
-    pad(min)
+    formatNumber(min)
 
     +
 
@@ -154,7 +162,7 @@ function updateTimer(){
 
     +
 
-    pad(sec);
+    formatNumber(sec);
 
 
 
@@ -185,6 +193,7 @@ function stopSeizure(){
 
 
 
+
     clearInterval(
         seizureTimer
     );
@@ -198,15 +207,17 @@ function stopSeizure(){
 
 
 
-    var endTime =
+
+
+    let endTime =
     new Date();
 
 
 
 
 
-    var record =
-    createSeizureRecord(
+    let record =
+    createRecord(
         endTime
     );
 
@@ -222,7 +233,7 @@ function stopSeizure(){
 
 
 
-    var status =
+    const status =
     document.getElementById(
         "statusBox"
     );
@@ -240,10 +251,8 @@ function stopSeizure(){
 
 
 
-
-
     console.log(
-        "完成紀錄",
+        "完成紀錄:",
         record
     );
 
@@ -270,16 +279,15 @@ function stopSeizure(){
 
 
 // ===============================
-// 建立紀錄
+// 建立資料
 // ===============================
 
 
-function createSeizureRecord(endTime){
+function createRecord(endTime){
 
 
 
     return {
-
 
 
         id:
@@ -294,14 +302,14 @@ function createSeizureRecord(endTime){
 
 
 
-        start:
+        startTime:
         formatTime(
             seizureStartTime
         ),
 
 
 
-        end:
+        endTime:
         formatTime(
             endTime
         ),
@@ -314,22 +322,15 @@ function createSeizureRecord(endTime){
 
 
         type:
-        getChecked(
+        getCheckedValues(
             "type"
         ),
 
 
 
-        before:
-        getChecked(
-            "before"
-        ),
-
-
-
-        during:
-        getChecked(
-            "during"
+        condition:
+        getCheckedValues(
+            "condition"
         ),
 
 
@@ -362,7 +363,7 @@ function createSeizureRecord(endTime){
 
 
 // ===============================
-// 儲存紀錄
+// 儲存資料
 // ===============================
 
 
@@ -370,12 +371,12 @@ function saveRecord(record){
 
 
 
-    var records =
+    let records =
 
     JSON.parse(
 
         localStorage.getItem(
-            "care_records"
+            "care_seizure_records"
         )
 
         ||
@@ -398,7 +399,7 @@ function saveRecord(record){
 
     localStorage.setItem(
 
-        "care_records",
+        "care_seizure_records",
 
         JSON.stringify(records)
 
@@ -421,36 +422,33 @@ function saveRecord(record){
 // ===============================
 
 
-function getChecked(name){
+function getCheckedValues(name){
 
 
 
-    var result = [];
+    let result = [];
 
 
 
-    var list =
-    document.querySelectorAll(
+    document
 
-        'input[name="' + name + '"]:checked'
+    .querySelectorAll(
 
+    'input[name="' + name + '"]:checked'
+
+    )
+
+    .forEach(
+        function(item){
+
+
+            result.push(
+                item.value
+            );
+
+
+        }
     );
-
-
-
-    for(
-        var i = 0;
-        i < list.length;
-        i++
-    ){
-
-
-        result.push(
-            list[i].value
-        );
-
-
-    }
 
 
 
@@ -476,22 +474,57 @@ function getValue(id){
 
 
 
-    var el =
+    let element =
     document.getElementById(
         id
     );
 
 
 
-    if(el){
+    if(element){
 
-        return el.value;
+        return element.value;
 
     }
 
 
 
     return "";
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 5分鐘緊急提醒
+// ===============================
+
+
+function triggerEmergency(){
+
+
+
+    console.log(
+        "🚨 發作超過5分鐘"
+    );
+
+
+
+    if(
+        typeof showEmergencyAlert === "function"
+    ){
+
+        showEmergencyAlert();
+
+    }
+
+
 
 }
 
@@ -511,7 +544,6 @@ function getValue(id){
 function formatDate(date){
 
 
-
     return (
 
         date.getFullYear()
@@ -522,7 +554,7 @@ function formatDate(date){
 
         +
 
-        pad(
+        formatNumber(
             date.getMonth()+1
         )
 
@@ -532,7 +564,7 @@ function formatDate(date){
 
         +
 
-        pad(
+        formatNumber(
             date.getDate()
         )
 
@@ -557,10 +589,9 @@ function formatDate(date){
 function formatTime(date){
 
 
-
     return (
 
-        pad(
+        formatNumber(
             date.getHours()
         )
 
@@ -570,7 +601,7 @@ function formatTime(date){
 
         +
 
-        pad(
+        formatNumber(
             date.getMinutes()
         )
 
@@ -580,7 +611,7 @@ function formatTime(date){
 
         +
 
-        pad(
+        formatNumber(
             date.getSeconds()
         )
 
@@ -598,11 +629,11 @@ function formatTime(date){
 
 
 // ===============================
-// 補零
+// 補0
 // ===============================
 
 
-function pad(num){
+function formatNumber(num){
 
 
     return num < 10
@@ -627,7 +658,7 @@ function pad(num){
 
 
 // ===============================
-// 綁定按鈕
+// 啟動
 // ===============================
 
 
@@ -639,14 +670,14 @@ function(){
 
 
 
-    var startBtn =
+    const startBtn =
     document.getElementById(
         "startBtn"
     );
 
 
 
-    var stopBtn =
+    const stopBtn =
     document.getElementById(
         "stopBtn"
     );
@@ -689,12 +720,11 @@ function(){
 
 
 
-
-
     console.log(
         "🚨 seizure.js 初始化完成"
     );
 
 
+}
 
-});
+);

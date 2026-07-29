@@ -1,86 +1,90 @@
 // ==========================================
-// 愷威癲癇紀錄系統
-// V3.0 Clean Stable-1
+// 愷威 Care V1.0
 // data.js
-// 功能：集中管理資料
+// 功能：系統資料中心
 // ==========================================
 
 
 
 // ===============================
-// 使用者資料
+// 發作紀錄資料
 // ===============================
 
-const patientData = {
 
-    name: "愷威",
-
-    birthday: "",
-
-    note: ""
-
-};
+window.seizureRecords = [];
 
 
 
 
 // ===============================
-// 醫療資訊卡
+// 醫療資訊
 // ===============================
 
-const medicalCard = {
+
+window.medicalData = {
 
 
-    name: "愷威",
+    name:
+    "愷威",
 
 
-    diagnosis: "卓飛症候群",
+    birthday:
+    "",
 
 
-    hospital: "",
+    diagnosis:
+    "卓飛症候群",
 
 
-    doctor: "",
+    hospital:
+    "",
 
 
-    medication: "",
+    doctor:
+    "",
+
+
+    medication:
+    "",
+
+
+    allergy:
+    "",
 
 
     note:
-    "如有發作請記錄時間、持續秒數與狀況"
-
-
+    ""
 
 };
 
 
 
 
+
+
+
 // ===============================
-// 緊急聯絡人
+// 緊急聯絡資料
 // ===============================
 
-const emergencyContacts = [
+
+window.emergencyContacts = [
 
 
     {
 
-        name: "爸爸",
 
-        relation: "父親",
-
-        phone: ""
-
-    },
+        name:
+        "",
 
 
-    {
+        relation:
+        "",
 
-        name: "媽媽",
 
-        relation: "母親",
+        phone:
+        ""
 
-        phone: ""
 
     }
 
@@ -90,8 +94,54 @@ const emergencyContacts = [
 
 
 
+
+
+
 // ===============================
-// 發作紀錄
+// 系統設定
 // ===============================
 
-let seizureRecords = [];
+
+window.appSettings = {
+
+
+    childName:
+    "愷威",
+
+
+    autoSync:
+    false,
+
+
+    googleSheetUrl:
+    "",
+
+
+    notification:
+    false
+
+
+};
+
+
+
+
+
+
+
+// ===============================
+// 資料版本
+// ===============================
+
+
+window.CARE_VERSION =
+"V1.0";
+
+
+
+
+
+console.log(
+    "🗂️ data.js 載入完成",
+    CARE_VERSION
+);

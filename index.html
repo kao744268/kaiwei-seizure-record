@@ -8,58 +8,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-愷威癲癇紀錄系統
+愷威 Care
 </title>
 
 
 <link rel="stylesheet" href="style.css">
 
+
 </head>
+
 
 
 <body>
 
 
-<div class="app-container">
+<div class="app">
 
 
+<!-- ======================
+首頁 Dashboard
+====================== -->
 
-<!-- =====================
-首頁
-===================== -->
 
-<section id="homePage" class="page active">
+<section 
+id="homePage"
+class="page active">
+
+
+<header class="header">
 
 
 <h1>
-👦 愷威癲癇紀錄系統
+👦 愷威 Care
 </h1>
 
 
 <p>
-V3.0 Clean Stable-1
+癲癇紀錄與照護系統
 </p>
 
 
+</header>
 
-<button id="startSeizureBtn">
+
+
+<div class="status-card">
+
+
+<h3>
+今日狀態
+</h3>
+
+
+<p id="todayStatus">
+
+🟢 今日尚無紀錄
+
+</p>
+
+
+</div>
+
+
+
+
+
+<!-- 主要功能 -->
+
+
+<div class="main-action">
+
+
+<button 
+id="startSeizureBtn"
+class="danger-btn">
+
+
 🚨 開始發作
+
+
 </button>
 
 
-<button id="recordBtn">
-📋 歷史紀錄
+</div>
+
+
+
+
+
+<div class="menu-grid">
+
+
+
+<button id="historyBtn">
+
+
+📋
+
+<br>
+
+歷史紀錄
+
+
 </button>
+
 
 
 <button id="medicalBtn">
-🏥 醫療資訊卡
+
+
+🏥
+
+<br>
+
+醫療資訊卡
+
+
 </button>
+
+
 
 
 <button id="emergencyBtn">
-📞 緊急聯絡
+
+
+📞
+
+<br>
+
+緊急聯絡
+
+
 </button>
+
+
+
+<button id="settingsBtn">
+
+
+⚙️
+
+<br>
+
+設定
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<div class="latest-card">
+
+
+<h3>
+
+最近一次發作
+
+</h3>
+
+
+
+<div id="latestRecord">
+
+尚無紀錄
+
+</div>
+
+
+
+</div>
+
 
 
 
@@ -70,11 +194,14 @@ V3.0 Clean Stable-1
 
 
 
-<!-- =====================
-發作頁
-===================== -->
+<!-- ======================
+發作紀錄頁
+====================== -->
 
-<section id="seizurePage" class="page">
+
+<section
+id="seizurePage"
+class="page">
 
 
 <h2>
@@ -83,21 +210,77 @@ V3.0 Clean Stable-1
 
 
 
+<div class="timer-card">
+
+
 <div id="timerBox">
+
 00:00:00
+
 </div>
 
 
 
-<button id="endSeizureBtn">
+<p id="seizureStatus">
+
+尚未開始
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+<div id="seizureInfo">
+
+
+<p>
+
+開始時間：
+
+<span id="startTimeText">
+--
+
+</span>
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+<button
+id="endSeizureBtn"
+class="danger-btn">
+
+
 結束發作
+
+
 </button>
+
+
 
 
 
 <button class="backBtn">
+
+
 返回首頁
+
+
 </button>
+
 
 
 </section>
@@ -107,11 +290,15 @@ V3.0 Clean Stable-1
 
 
 
-<!-- =====================
-歷史紀錄
-===================== -->
 
-<section id="recordPage" class="page">
+<!-- ======================
+歷史紀錄
+====================== -->
+
+
+<section
+id="historyPage"
+class="page">
 
 
 <h2>
@@ -119,14 +306,21 @@ V3.0 Clean Stable-1
 </h2>
 
 
-<div id="recordList">
+
+<div
+id="recordList">
+
 
 </div>
 
 
+
 <button class="backBtn">
+
 返回首頁
+
 </button>
+
 
 
 </section>
@@ -136,11 +330,15 @@ V3.0 Clean Stable-1
 
 
 
-<!-- =====================
-醫療卡
-===================== -->
 
-<section id="medicalPage" class="page">
+<!-- ======================
+醫療資訊卡
+====================== -->
+
+
+<section
+id="medicalPage"
+class="page">
 
 
 <h2>
@@ -148,13 +346,20 @@ V3.0 Clean Stable-1
 </h2>
 
 
-<div id="medicalCard">
+
+<div
+id="medicalCard">
+
 
 </div>
 
 
+
+
 <button class="backBtn">
+
 返回首頁
+
 </button>
 
 
@@ -165,11 +370,15 @@ V3.0 Clean Stable-1
 
 
 
-<!-- =====================
-緊急聯絡
-===================== -->
 
-<section id="emergencyPage" class="page">
+<!-- ======================
+緊急聯絡
+====================== -->
+
+
+<section
+id="emergencyPage"
+class="page">
 
 
 <h2>
@@ -177,14 +386,92 @@ V3.0 Clean Stable-1
 </h2>
 
 
-<div id="emergencyList">
+
+
+<div
+id="emergencyList">
+
 
 </div>
 
 
+
+
 <button class="backBtn">
+
 返回首頁
+
 </button>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- ======================
+設定
+====================== -->
+
+
+<section
+id="settingsPage"
+class="page">
+
+
+<h2>
+⚙️ 設定
+</h2>
+
+
+
+
+<div class="settings-list">
+
+
+
+<button id="syncBtn">
+
+☁️ Google 同步
+
+</button>
+
+
+
+
+<button id="backupBtn">
+
+💾 備份資料
+
+</button>
+
+
+
+
+<button id="exportBtn">
+
+📄 匯出紀錄
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+
+<button class="backBtn">
+
+返回首頁
+
+</button>
+
 
 
 </section>
@@ -199,11 +486,18 @@ V3.0 Clean Stable-1
 
 
 
-<!-- JS載入順序 -->
+
+
+<!-- ======================
+Javascript 載入順序
+====================== -->
+
 
 <script src="data.js"></script>
 
 <script src="app.js"></script>
+
+<script src="seizure.js"></script>
 
 <script src="history.js"></script>
 
@@ -211,7 +505,7 @@ V3.0 Clean Stable-1
 
 <script src="emergency.js"></script>
 
-<script src="seizure.js"></script>
+<script src="settings.js"></script>
 
 
 

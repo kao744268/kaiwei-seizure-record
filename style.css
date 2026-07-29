@@ -1,256 +1,16 @@
 /* ==========================================
    愷威癲癇紀錄系統
-   V3.0 Clean
+   V3.0 Clean Stable-1
    style.css
 ========================================== */
 
 
-/* ===============================
-   基本設定
-=============================== */
-// ==========================================
-// V3.0 Clean
-// seizure.js
-// 第二段：結束發作與紀錄建立
-// ==========================================
-
-
-
-// ===============================
-// 結束發作
-// ===============================
-
-
-function endSeizure(){
-
-
-    if(!seizureActive ||
-       !seizureStartTime){
-
-
-        return;
-
-
-    }
-
-
-
-
-    // 取得結束時間
-
-    const endTime =
-    Date.now();
-
-
-
-
-    // 計算持續秒數
-
-    const duration =
-    Math.floor(
-        (endTime - seizureStartTime)
-        / 1000
-    );
-
-
-
-
-    // 停止計時
-
-    clearInterval(seizureTimer);
-
-
-
-    seizureTimer = null;
-
-
-
-    seizureActive = false;
-
-
-
-
-
-    // 建立紀錄
-
-
-    const record = {
-
-
-        startTime:
-        formatDateTime(
-            seizureStartTime
-        ),
-
-
-        endTime:
-        formatDateTime(
-            endTime
-        ),
-
-
-        duration:
-        duration
-
-
-    };
-
-
-
-
-    // 加入紀錄陣列
-
-
-    if(
-        typeof seizureRecords !== "undefined"
-    ){
-
-
-        seizureRecords.push(record);
-
-
-    }
-
-
-
-
-    console.log(
-        "完成發作紀錄:",
-        record
-    );
-
-
-
-    alert(
-
-        "發作結束\n\n" +
-
-        "持續時間：" +
-
-        duration +
-
-        " 秒"
-
-    );
-
-
-
-}
-
-
-
-
-
-// ===============================
-// 日期格式化
-// ===============================
-
-
-function formatDateTime(timestamp){
-
-
-
-    const date =
-    new Date(timestamp);
-
-
-
-    const year =
-    date.getFullYear();
-
-
-
-    const month =
-    String(
-        date.getMonth()+1
-    )
-    .padStart(2,"0");
-
-
-
-    const day =
-    String(
-        date.getDate()
-    )
-    .padStart(2,"0");
-
-
-
-    const hour =
-    String(
-        date.getHours()
-    )
-    .padStart(2,"0");
-
-
-
-    const minute =
-    String(
-        date.getMinutes()
-    )
-    .padStart(2,"0");
-
-
-
-    const second =
-    String(
-        date.getSeconds()
-    )
-    .padStart(2,"0");
-
-
-
-    return (
-
-        `${year}-${month}-${day} `+
-        `${hour}:${minute}:${second}`
-
-    );
-
-
-}
-
-
-
-
-
-// ===============================
-// 結束按鈕綁定
-// ===============================
-
-
-document.addEventListener(
-"DOMContentLoaded",
-function(){
-
-
-
-    const endBtn =
-    document.getElementById(
-        "endSeizureBtn"
-    );
-
-
-
-    if(endBtn){
-
-
-        endBtn.addEventListener(
-            "click",
-            endSeizure
-        );
-
-
-    }
-
-
-
-});
 * {
 
     box-sizing: border-box;
 
 }
+
 
 
 body {
@@ -260,12 +20,11 @@ body {
     padding: 0;
 
     font-family:
-
     "Noto Sans TC",
     Arial,
     sans-serif;
 
-    background: #f5f6f8;
+    background: #f5f5f5;
 
     color: #333;
 
@@ -277,22 +36,14 @@ body {
 
     width: 100%;
 
-    max-width: 480px;
+    max-width: 500px;
 
-    margin: 0 auto;
-
-    min-height: 100vh;
+    margin: auto;
 
     padding: 20px;
 
 }
 
-
-
-
-/* ===============================
-   頁面控制
-=============================== */
 
 
 .page {
@@ -312,18 +63,10 @@ body {
 
 
 
-/* ===============================
-   標題
-=============================== */
-
 
 h1 {
 
     text-align: center;
-
-    font-size: 28px;
-
-    margin-top: 40px;
 
 }
 
@@ -331,68 +74,33 @@ h1 {
 
 h2 {
 
-    text-align: center;
-
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 
 }
 
 
-
-.version {
-
-    text-align: center;
-
-    color: #777;
-
-    margin-bottom: 40px;
-
-}
-
-
-
-
-/* ===============================
-   首頁按鈕
-=============================== */
-
-
-.menu {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 18px;
-
-}
 
 
 
 button {
 
-
     width: 100%;
 
-    padding: 18px;
+    padding: 15px;
+
+    margin: 10px 0;
 
     border: none;
 
-    border-radius: 16px;
+    border-radius: 12px;
 
     font-size: 18px;
 
-    font-weight: bold;
+    background: #4a90e2;
 
-    background: white;
-
-    box-shadow:
-
-    0 4px 12px rgba(0,0,0,0.08);
+    color: white;
 
     cursor: pointer;
-
-    transition: 0.2s;
 
 }
 
@@ -400,95 +108,29 @@ button {
 
 button:active {
 
-
-    transform: scale(0.97);
-
+    transform: scale(0.98);
 
 }
 
 
 
-
-/* ===============================
-   發作頁
-=============================== */
 
 
 #timerBox {
 
+    margin: 30px 0;
 
-    margin: 40px auto;
+    padding: 30px;
 
-    width: 220px;
+    text-align: center;
 
-    height: 220px;
-
-    border-radius: 50%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: white;
-
-    font-size: 38px;
+    font-size: 42px;
 
     font-weight: bold;
 
-    box-shadow:
-
-    0 8px 25px rgba(0,0,0,0.1);
-
-}
-
-
-
-
-
-/* ===============================
-   返回按鈕
-=============================== */
-
-
-.backBtn {
-
-
-    margin-top: 25px;
-
-    background: #eeeeee;
-
-
-}
-
-
-
-
-
-
-/* ===============================
-   資訊卡片
-=============================== */
-
-
-#medicalCard,
-
-#emergencyList,
-
-#recordList {
-
-
     background: white;
 
-    border-radius: 18px;
-
-    padding: 20px;
-
-    box-shadow:
-
-    0 4px 15px rgba(0,0,0,0.08);
-
+    border-radius: 15px;
 
 }
 
@@ -496,100 +138,34 @@ button:active {
 
 
 
-/* ===============================
-   緊急聯絡卡
-=============================== */
-
-
+.record-card,
+.medical-card,
 .contact-card {
 
 
+    background: white;
+
     padding: 15px;
 
-    margin-bottom: 12px;
+    margin: 15px 0;
 
     border-radius: 12px;
 
-    background: #f8f8f8;
-
+    box-shadow:
+    0 2px 8px rgba(0,0,0,0.1);
 
 }
 
 
 
-.contact-name {
 
 
-    font-size: 20px;
+a {
+
+    color: #1976d2;
+
+    text-decoration: none;
 
     font-weight: bold;
-
-
-}
-
-
-
-.contact-phone {
-
-
-    margin-top: 8px;
-
-    font-size: 18px;
-
-
-}
-
-
-
-
-
-
-/* ===============================
-   發作紀錄
-=============================== */
-
-
-.record-item {
-
-
-    padding: 15px;
-
-    border-bottom:
-
-    1px solid #ddd;
-
-
-}
-
-
-
-.record-item:last-child {
-
-
-    border-bottom:none;
-
-
-}
-
-
-
-
-/* ===============================
-   平板 / 電腦
-=============================== */
-
-
-@media(min-width:768px){
-
-
-.app-container{
-
-
-    margin-top:40px;
-
-
-}
-
-
 
 }

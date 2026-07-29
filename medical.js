@@ -1,28 +1,60 @@
 // ==========================================
-// 愷威癲癇紀錄系統
-// V3.0 Clean
+// 愷威 Care V1.0
 // medical.js
 // 功能：醫療資訊卡
 // ==========================================
 
 
 
+
+
 // ===============================
-// 顯示醫療卡
+// 取得資料
 // ===============================
 
-function renderMedicalCard(){
+
+function getMedicalValue(value){
+
+
+    if(
+        value === undefined ||
+        value === null ||
+        value === ""
+    ){
+
+        return "--";
+
+    }
+
+
+    return value;
+
+
+}
 
 
 
-    const box =
+
+
+
+
+// ===============================
+// 顯示醫療資訊
+// ===============================
+
+
+function renderMedical(){
+
+
+
+    const card =
     document.getElementById(
         "medicalCard"
     );
 
 
 
-    if(!box){
+    if(!card){
 
         return;
 
@@ -31,89 +63,92 @@ function renderMedicalCard(){
 
 
 
-    // 檢查資料是否存在
-
-    if(
-        typeof medicalCard === "undefined"
-    ){
-
-
-        box.innerHTML = `
-
-            <p>
-            尚無醫療資訊
-            </p>
-
-        `;
-
-
-        return;
-
-    }
+    const data =
+    window.medicalData || {};
 
 
 
 
-    box.innerHTML = `
 
 
-        <div class="medical-card">
-
-
-            <h3>
-            👦 ${medicalCard.name || "未設定"}
-            </h3>
-
-
-
-            <p>
-            <strong>
-            診斷：
-            </strong>
-
-            ${medicalCard.diagnosis || "未設定"}
-
-            </p>
+    card.className =
+    "medical-card";
 
 
 
 
-            <p>
-            <strong>
-            醫院：
-            </strong>
-
-            ${medicalCard.hospital || "未設定"}
-
-            </p>
+    card.innerHTML =
 
 
 
+    `
 
-            <p>
-            <strong>
-            主治醫師：
-            </strong>
-
-            ${medicalCard.doctor || "未設定"}
-
-            </p>
+    <h3>
+    👦 基本資料
+    </h3>
 
 
+    <p>
+    <strong>姓名：</strong>
+    ${getMedicalValue(data.name)}
+    </p>
 
 
-            <p>
-            <strong>
-            備註：
-            </strong>
-
-            ${medicalCard.note || "無"}
-
-            </p>
+    <p>
+    <strong>生日：</strong>
+    ${getMedicalValue(data.birthday)}
+    </p>
 
 
+    <hr>
 
-        </div>
+
+    <h3>
+    🏥 醫療資訊
+    </h3>
+
+
+    <p>
+    <strong>診斷：</strong>
+    ${getMedicalValue(data.diagnosis)}
+    </p>
+
+
+    <p>
+    <strong>醫院：</strong>
+    ${getMedicalValue(data.hospital)}
+    </p>
+
+
+    <p>
+    <strong>醫師：</strong>
+    ${getMedicalValue(data.doctor)}
+    </p>
+
+
+    <p>
+    <strong>用藥：</strong>
+    ${getMedicalValue(data.medication)}
+    </p>
+
+
+    <p>
+    <strong>過敏：</strong>
+    ${getMedicalValue(data.allergy)}
+    </p>
+
+
+    <hr>
+
+
+    <h3>
+    📝 注意事項
+    </h3>
+
+
+    <p>
+    ${getMedicalValue(data.note)}
+    </p>
 
 
     `;
@@ -127,21 +162,24 @@ function renderMedicalCard(){
 
 
 
+
+
+
 // ===============================
 // 初始化
 // ===============================
 
+
 document.addEventListener(
+
 "DOMContentLoaded",
+
 function(){
-
-
-    renderMedicalCard();
 
 
 
     console.log(
-        "🏥 medical.js 啟動完成"
+        "🏥 medical.js 啟動"
     );
 
 

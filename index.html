@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-愷威癲癇紀錄系統 V3.0
+愷威癲癇紀錄系統
 </title>
 
 
@@ -36,47 +36,31 @@
 </h1>
 
 
-<p class="version">
-V3.0 Clean
+<p>
+V3.0 Clean Stable-1
 </p>
 
 
 
-<div class="menu">
-
-
 <button id="startSeizureBtn">
-
 🚨 開始發作
-
 </button>
-
 
 
 <button id="recordBtn">
-
 📋 歷史紀錄
-
 </button>
-
 
 
 <button id="medicalBtn">
-
 🏥 醫療資訊卡
-
 </button>
-
 
 
 <button id="emergencyBtn">
-
 📞 緊急聯絡
-
 </button>
 
-
-</div>
 
 
 </section>
@@ -87,7 +71,7 @@ V3.0 Clean
 
 
 <!-- =====================
-發作紀錄頁
+發作頁
 ===================== -->
 
 <section id="seizurePage" class="page">
@@ -100,25 +84,19 @@ V3.0 Clean
 
 
 <div id="timerBox">
-
 00:00:00
-
 </div>
 
 
 
 <button id="endSeizureBtn">
-
 結束發作
-
 </button>
 
 
 
 <button class="backBtn">
-
 返回首頁
-
 </button>
 
 
@@ -129,9 +107,8 @@ V3.0 Clean
 
 
 
-
 <!-- =====================
-歷史紀錄頁
+歷史紀錄
 ===================== -->
 
 <section id="recordPage" class="page">
@@ -142,19 +119,13 @@ V3.0 Clean
 </h2>
 
 
-
 <div id="recordList">
-
-尚無紀錄
 
 </div>
 
 
-
 <button class="backBtn">
-
 返回首頁
-
 </button>
 
 
@@ -165,9 +136,8 @@ V3.0 Clean
 
 
 
-
 <!-- =====================
-醫療資訊卡
+醫療卡
 ===================== -->
 
 <section id="medicalPage" class="page">
@@ -178,24 +148,17 @@ V3.0 Clean
 </h2>
 
 
-
 <div id="medicalCard">
-
-尚無資料
 
 </div>
 
 
-
 <button class="backBtn">
-
 返回首頁
-
 </button>
 
 
 </section>
-
 
 
 
@@ -214,23 +177,19 @@ V3.0 Clean
 </h2>
 
 
-
 <div id="emergencyList">
-
-尚無資料
 
 </div>
 
 
-
 <button class="backBtn">
-
 返回首頁
-
 </button>
 
 
 </section>
+
+
 
 
 
@@ -242,13 +201,20 @@ V3.0 Clean
 
 <!-- JS載入順序 -->
 
-<script src="emergency.js"></script>
+<script src="data.js"></script>
 
-<script src="cloud.js"></script>
+<script src="app.js"></script>
+
+<script src="history.js"></script>
+
+<script src="medical.js"></script>
+
+<script src="emergency.js"></script>
 
 <script src="seizure.js"></script>
 
-</body>
 
+
+</body>
 
 </html>

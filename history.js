@@ -1,22 +1,17 @@
 // ==========================================
-// 愷威 Care V2.3
+// 愷威 Care V2.3.1
 // history.js
 // 歷史紀錄顯示
 // ==========================================
 
 
-
-
 function renderHistory(){
 
 
-
     const box =
-
     document.getElementById(
         "historyList"
     );
-
 
 
     if(!box){
@@ -26,88 +21,53 @@ function renderHistory(){
     }
 
 
-
-
-
-
     let records = JSON.parse(
 
-
         localStorage.getItem(
-
             "care_seizure_records"
-
         )
 
         ||
 
         "[]"
 
-
     );
-
-
-
-
-
 
 
     if(records.length === 0){
 
-
-
         box.innerHTML = `
-
 
         <div class="info-card">
 
-
         目前沒有發作紀錄
-
 
         </div>
 
-
         `;
 
-
         return;
-
 
     }
 
 
-
-
-
-
-
     // 最新在前
+    // 使用 slice 避免直接修改原始陣列
 
-
-    records.reverse();
-
-
-
-
-
+    records =
+    records.slice().reverse();
 
 
     box.innerHTML = "";
 
 
-
-
-
-
-
     records.forEach(function(record){
 
 
+        const typeText =
 
-        let typeText =
-
-        record.type && record.type.length
+        record.type &&
+        record.type.length
 
         ?
 
@@ -118,12 +78,10 @@ function renderHistory(){
         "未記錄";
 
 
+        const conditionText =
 
-
-
-        let conditionText =
-
-        record.condition && record.condition.length
+        record.condition &&
+        record.condition.length
 
         ?
 
@@ -134,12 +92,10 @@ function renderHistory(){
         "未記錄";
 
 
+        const afterText =
 
-
-
-        let afterText =
-
-        record.afterState && record.afterState.length
+        record.afterState &&
+        record.afterState.length
 
         ?
 
@@ -150,27 +106,17 @@ function renderHistory(){
         "未記錄";
 
 
-
-
-
-
-
-        let card = document.createElement(
+        const card =
+        document.createElement(
             "div"
         );
-
 
 
         card.className =
         "history-card";
 
 
-
-
-
-
         card.innerHTML = `
-
 
         <h3>
         🚨 ${record.date}
@@ -227,20 +173,13 @@ function renderHistory(){
         ${record.note || "無"}
         </p>
 
-
         `;
-
-
-
 
 
         box.appendChild(card);
 
 
-
     });
-
-
 
 
 }
@@ -261,7 +200,6 @@ function renderHistory(){
 function formatHistoryDuration(sec){
 
 
-
     if(!sec){
 
         return "00:00";
@@ -269,25 +207,16 @@ function formatHistoryDuration(sec){
     }
 
 
-
-
-
-    let min =
+    const min =
 
     Math.floor(
         sec / 60
     );
 
 
-
-
-
-    let second =
+    const second =
 
     sec % 60;
-
-
-
 
 
     return (
@@ -305,8 +234,6 @@ function formatHistoryDuration(sec){
         .padStart(2,"0")
 
     );
-
-
 
 }
 
@@ -330,11 +257,9 @@ document.addEventListener(
 function(){
 
 
-
     console.log(
-        "📋 history.js V2.3 loaded"
+        "📋 history.js V2.3.1 loaded"
     );
-
 
 
 });

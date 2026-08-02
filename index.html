@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>
-愷威 Care V2.3
+愷威 Care V2.3.1
 </title>
 
 <link rel="stylesheet" href="style.css">
@@ -30,21 +30,23 @@
 
 <header class="main-header">
 
-
 <h1>
 👦 愷威 Care
 </h1>
-
 
 <p>
 癲癇紀錄系統
 </p>
 
-
 </header>
 
 
 
+
+
+<!-- ===============================
+發作紀錄
+=============================== -->
 
 
 <section class="seizure-panel">
@@ -63,13 +65,11 @@
 
 
 
-
 <div id="timer">
 
 00:00
 
 </div>
-
 
 
 
@@ -83,7 +83,7 @@
 
 
 
-<button 
+<button
 id="startBtn"
 class="start-button">
 
@@ -93,11 +93,25 @@ class="start-button">
 
 
 
-<button 
+<button
 id="stopBtn"
 class="stop-button">
 
 ⏹ 結束發作
+
+</button>
+
+
+
+<!-- 新增：儲存按鈕 -->
+
+
+<button
+id="saveBtn"
+class="save-button"
+disabled>
+
+💾 儲存紀錄
 
 </button>
 
@@ -129,7 +143,6 @@ class="stop-button">
 <div class="option-card">
 
 
-
 <label>
 
 <input
@@ -140,8 +153,6 @@ value="學校">
 🏫 學校
 
 </label>
-
-
 
 
 <label>
@@ -156,8 +167,6 @@ value="家中">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -168,8 +177,6 @@ value="睡眠中">
 😴 睡眠中
 
 </label>
-
-
 
 
 <label>
@@ -184,8 +191,6 @@ value="外出途中">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -196,8 +201,6 @@ value="戶外活動">
 🌳 戶外活動
 
 </label>
-
-
 
 
 <label>
@@ -212,9 +215,7 @@ value="其他">
 </label>
 
 
-
 </div>
-
 
 </section>
 
@@ -239,9 +240,7 @@ value="其他">
 </h3>
 
 
-
 <div class="option-card">
-
 
 
 <label>
@@ -256,8 +255,6 @@ value="全身抽搐">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -268,8 +265,6 @@ value="局部抽搐">
 局部抽搐
 
 </label>
-
-
 
 
 <label>
@@ -284,8 +279,6 @@ value="失神">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -296,8 +289,6 @@ value="僵直">
 僵直
 
 </label>
-
-
 
 
 <label>
@@ -312,9 +303,7 @@ value="其他">
 </label>
 
 
-
 </div>
-
 
 </section>
 
@@ -339,9 +328,7 @@ value="其他">
 </h3>
 
 
-
 <div class="option-card">
-
 
 
 <label>
@@ -356,8 +343,6 @@ value="有意識">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -368,8 +353,6 @@ value="意識模糊">
 😵 意識模糊
 
 </label>
-
-
 
 
 <label>
@@ -384,8 +367,6 @@ value="無意識">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -398,9 +379,7 @@ value="呼吸異常">
 </label>
 
 
-
 </div>
-
 
 </section>
 
@@ -413,7 +392,7 @@ value="呼吸異常">
 
 
 <!-- ===============================
-發作後狀態 新增
+發作後狀態
 =============================== -->
 
 
@@ -425,9 +404,7 @@ value="呼吸異常">
 </h3>
 
 
-
 <div class="option-card">
-
 
 
 <label>
@@ -442,8 +419,6 @@ value="恢復正常">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -454,8 +429,6 @@ value="疲倦想睡">
 😴 疲倦想睡
 
 </label>
-
-
 
 
 <label>
@@ -470,8 +443,6 @@ value="意識混亂">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -482,8 +453,6 @@ value="情緒不穩">
 😢 情緒不穩
 
 </label>
-
-
 
 
 <label>
@@ -498,8 +467,6 @@ value="肌肉無力">
 </label>
 
 
-
-
 <label>
 
 <input
@@ -512,9 +479,7 @@ value="其他">
 </label>
 
 
-
 </div>
-
 
 </section>
 
@@ -539,12 +504,10 @@ value="其他">
 </h3>
 
 
-
 <textarea
 id="note"
 placeholder="記錄發作前後狀況、特殊反應">
 </textarea>
-
 
 
 </section>
@@ -574,8 +537,6 @@ class="small-menu">
 </button>
 
 
-
-
 <button
 id="historyPageBtn"
 class="small-menu">
@@ -583,8 +544,6 @@ class="small-menu">
 📋 歷史紀錄
 
 </button>
-
-
 
 
 <button
@@ -597,7 +556,6 @@ class="small-menu emergency-small">
 
 
 </section>
-
 
 
 </section>
@@ -623,11 +581,8 @@ class="small-menu emergency-small">
 </h2>
 
 
-
 <div id="medicalCard">
-
 </div>
-
 
 
 <button class="backBtn">
@@ -660,11 +615,8 @@ class="small-menu emergency-small">
 </h2>
 
 
-
 <div id="historyList">
-
 </div>
-
 
 
 <button class="backBtn">
@@ -697,17 +649,11 @@ class="small-menu emergency-small">
 </h2>
 
 
-
-
 <div id="emergencyAlert">
 
 發作超過5分鐘時將自動提醒
 
 </div>
-
-
-
-
 
 
 <div class="info-card">
@@ -736,17 +682,8 @@ class="small-menu emergency-small">
 </div>
 
 
-
-
-
-
 <div id="contactList">
-
 </div>
-
-
-
-
 
 
 <button
@@ -756,7 +693,6 @@ class="backBtn">
 返回紀錄
 
 </button>
-
 
 
 </section>
@@ -782,7 +718,6 @@ class="backBtn">
 <script src="history.js"></script>
 
 <script src="settings.js"></script>
-
 
 
 </body>

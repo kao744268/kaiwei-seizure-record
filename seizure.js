@@ -1,3 +1,4 @@
+```javascript
 // ==========================================
 // 愷威 Care V2.3.1
 // seizure.js
@@ -41,16 +42,12 @@ const PENDING_RECORD_KEY =
 function startSeizure(){
 
 
-    // 已經在發作中
-
     if(seizureRunning){
 
         return;
 
     }
 
-
-    // 如果有上一筆未儲存紀錄
 
     if(seizurePendingSave){
 
@@ -87,7 +84,6 @@ function startSeizure(){
 
     updateTimer();
 
-
     updateButtons();
 
 
@@ -96,11 +92,8 @@ function startSeizure(){
 
         seizureSeconds++;
 
-
         updateTimer();
 
-
-        // 五分鐘提醒
 
         if(
             seizureSeconds >= 300 &&
@@ -166,8 +159,6 @@ function stopSeizure(){
     }
 
 
-    // 停止計時
-
     clearInterval(
         seizureTimer
     );
@@ -179,17 +170,11 @@ function stopSeizure(){
     seizureRunning = false;
 
 
-    // 鎖定真正的結束時間
-
     seizureEndTime = new Date();
 
 
-    // 進入待儲存狀態
-
     seizurePendingSave = true;
 
-
-    // 暫存目前發作核心資料
 
     savePendingRecord();
 
@@ -250,8 +235,6 @@ function saveRecord(){
     }
 
 
-    // 建立完整紀錄
-
     const record = {
 
 
@@ -310,8 +293,6 @@ function saveRecord(){
     };
 
 
-    // 取得歷史紀錄
-
     let records = JSON.parse(
 
         localStorage.getItem(
@@ -337,8 +318,6 @@ function saveRecord(){
     );
 
 
-    // 清除待儲存資料
-
     localStorage.removeItem(
         PENDING_RECORD_KEY
     );
@@ -352,9 +331,68 @@ function saveRecord(){
     );
 
 
-    // 重置
+    resetSeizure();
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 取消本次紀錄
+// ===============================
+
+
+function cancelSeizure(){
+
+
+    if(!seizurePendingSave){
+
+        alert(
+            "目前沒有可以取消的待儲存紀錄。"
+        );
+
+        return;
+
+    }
+
+
+    const confirmCancel = confirm(
+
+        "⚠️ 確定要取消本次紀錄嗎？\n\n" +
+
+        "此次發作資料將不會保存。"
+
+    );
+
+
+    if(!confirmCancel){
+
+        return;
+
+    }
+
+
+    // 清除待儲存資料
+
+    localStorage.removeItem(
+        PENDING_RECORD_KEY
+    );
+
+
+    // 重置所有發作資料
 
     resetSeizure();
+
+
+    alert(
+        "↩️ 本次紀錄已取消"
+    );
 
 }
 
@@ -639,7 +677,11 @@ function updateButtons(){
     );
 
 
-    // 開始按鈕
+    const cancelBtn =
+    document.getElementById(
+        "cancelBtn"
+    );
+
 
     if(startBtn){
 
@@ -650,8 +692,6 @@ function updateButtons(){
     }
 
 
-    // 結束按鈕
-
     if(stopBtn){
 
         stopBtn.disabled =
@@ -660,11 +700,17 @@ function updateButtons(){
     }
 
 
-    // 儲存按鈕
-
     if(saveBtn){
 
         saveBtn.disabled =
+        !seizurePendingSave;
+
+    }
+
+
+    if(cancelBtn){
+
+        cancelBtn.disabled =
         !seizurePendingSave;
 
     }
@@ -1146,6 +1192,12 @@ function(){
     );
 
 
+    const cancelBtn =
+    document.getElementById(
+        "cancelBtn"
+    );
+
+
     if(startBtn){
 
         startBtn.onclick =
@@ -1170,6 +1222,14 @@ function(){
     }
 
 
+    if(cancelBtn){
+
+        cancelBtn.onclick =
+        cancelSeizure;
+
+    }
+
+
     // 嘗試恢復未儲存紀錄
 
     loadPendingRecord();
@@ -1185,3 +1245,4 @@ function(){
     );
 
 });
+```

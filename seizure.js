@@ -1,11 +1,18 @@
 // ==========================================
-// 愷威 Care V2.3
+// 愷威 Care V2.3.1
 // seizure.js
 // 發作紀錄核心
 // ==========================================
 
 
+// ===============================
+// 狀態
+// ===============================
+
+
 let seizureRunning = false;
+
+let seizurePendingSave = false;
 
 let seizureSeconds = 0;
 
@@ -13,8 +20,15 @@ let seizureTimer = null;
 
 let seizureStartTime = null;
 
+let seizureEndTime = null;
+
 let emergencyTriggered = false;
 
+
+// 暫存 key
+
+const PENDING_RECORD_KEY =
+"care_pending_seizure";
 
 
 
@@ -27,6 +41,8 @@ let emergencyTriggered = false;
 function startSeizure(){
 
 
+    // 已經在發作中
+
     if(seizureRunning){
 
         return;
@@ -34,8 +50,23 @@ function startSeizure(){
     }
 
 
+    // 如果有上一筆未儲存紀錄
+
+    if(seizurePendingSave){
+
+        alert(
+            "⚠️ 目前還有一筆尚未儲存的發作紀錄。\n\n" +
+            "請先完成並儲存上一筆紀錄。"
+        );
+
+        return;
+
+    }
+
 
     seizureRunning = true;
+
+    seizurePendingSave = false;
 
     seizureSeconds = 0;
 
@@ -44,19 +75,20 @@ function startSeizure(){
 
     seizureStartTime = new Date();
 
+    seizureEndTime = null;
 
 
     updateStatus(
-        "🚨 發作中"
+        "🚨 發作中｜請先照料與觀察"
     );
 
 
     updateStartTime();
 
-
     updateTimer();
 
 
+    updateButtons();
 
 
     seizureTimer = setInterval(function(){
@@ -68,25 +100,21 @@ function startSeizure(){
         updateTimer();
 
 
+        // 五分鐘提醒
 
         if(
             seizureSeconds >= 300 &&
             emergencyTriggered === false
         ){
 
-
             emergencyTriggered = true;
 
-
             showFiveMinuteAlert();
-
 
         }
 
 
-
     },1000);
-
 
 
 }
@@ -107,24 +135,18 @@ function startSeizure(){
 function stopSeizure(){
 
 
-
     if(!seizureRunning){
-
 
         alert(
             "目前沒有進行中的發作紀錄"
         );
 
-
         return;
-
 
     }
 
 
-
-
-    let confirmStop = confirm(
+    const confirmStop = confirm(
 
         "⏹ 確認結束發作？\n\n" +
 
@@ -137,21 +159,56 @@ function stopSeizure(){
     );
 
 
+    if(!confirmStop){
 
-
-
-    if(confirmStop){
-
-
-        saveRecord();
-
-
-        resetSeizure();
-
+        return;
 
     }
 
 
+    // 停止計時
+
+    clearInterval(
+        seizureTimer
+    );
+
+
+    seizureTimer = null;
+
+
+    seizureRunning = false;
+
+
+    // 鎖定真正的結束時間
+
+    seizureEndTime = new Date();
+
+
+    // 進入待儲存狀態
+
+    seizurePendingSave = true;
+
+
+    // 暫存目前發作核心資料
+
+    savePendingRecord();
+
+
+    updateStatus(
+        "🟡 發作已結束｜請完成紀錄後儲存"
+    );
+
+
+    updateButtons();
+
+
+    alert(
+        "⏹ 發作已結束\n\n" +
+        "持續時間：" +
+        formatDuration(seizureSeconds) +
+        "\n\n" +
+        "請完成下方紀錄，最後按「💾 儲存紀錄」。"
+    );
 
 }
 
@@ -171,13 +228,35 @@ function stopSeizure(){
 function saveRecord(){
 
 
+    if(!seizurePendingSave){
 
-    let record = {
+        alert(
+            "目前沒有等待儲存的發作紀錄。"
+        );
+
+        return;
+
+    }
+
+
+    if(!seizureStartTime){
+
+        alert(
+            "找不到發作開始時間，無法儲存。"
+        );
+
+        return;
+
+    }
+
+
+    // 建立完整紀錄
+
+    const record = {
 
 
         id:
         Date.now(),
-
 
 
         date:
@@ -186,34 +265,24 @@ function saveRecord(){
         ),
 
 
-
-
         startTime:
         formatTime(
             seizureStartTime
         ),
 
 
-
-
         endTime:
         formatTime(
-            new Date()
+            seizureEndTime
         ),
-
-
 
 
         duration:
         seizureSeconds,
 
 
-
-
         situation:
         getSituation(),
-
-
 
 
         type:
@@ -222,17 +291,11 @@ function saveRecord(){
         ),
 
 
-
-
         condition:
         getCheckedValues(
             "condition"
         ),
 
-
-
-
-        // 新增：發作後狀態
 
         afterState:
         getCheckedValues(
@@ -240,18 +303,14 @@ function saveRecord(){
         ),
 
 
-
-
         note:
         getNote()
-
 
 
     };
 
 
-
-
+    // 取得歷史紀錄
 
     let records = JSON.parse(
 
@@ -266,13 +325,7 @@ function saveRecord(){
     );
 
 
-
-
-
     records.push(record);
-
-
-
 
 
     localStorage.setItem(
@@ -284,7 +337,14 @@ function saveRecord(){
     );
 
 
+    // 清除待儲存資料
 
+    localStorage.removeItem(
+        PENDING_RECORD_KEY
+    );
+
+
+    seizurePendingSave = false;
 
 
     alert(
@@ -292,6 +352,155 @@ function saveRecord(){
     );
 
 
+    // 重置
+
+    resetSeizure();
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 暫存紀錄
+// ===============================
+
+
+function savePendingRecord(){
+
+
+    if(
+        !seizureStartTime ||
+        !seizureEndTime
+    ){
+
+        return;
+
+    }
+
+
+    const pendingRecord = {
+
+
+        startTime:
+        seizureStartTime.getTime(),
+
+
+        endTime:
+        seizureEndTime.getTime(),
+
+
+        duration:
+        seizureSeconds
+
+
+    };
+
+
+    localStorage.setItem(
+
+        PENDING_RECORD_KEY,
+
+        JSON.stringify(
+            pendingRecord
+        )
+
+    );
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 讀取暫存
+// ===============================
+
+
+function loadPendingRecord(){
+
+
+    const saved =
+
+    localStorage.getItem(
+        PENDING_RECORD_KEY
+    );
+
+
+    if(!saved){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        const record =
+        JSON.parse(saved);
+
+
+        seizureStartTime =
+        new Date(
+            record.startTime
+        );
+
+
+        seizureEndTime =
+        new Date(
+            record.endTime
+        );
+
+
+        seizureSeconds =
+        Number(
+            record.duration
+        );
+
+
+        seizureRunning = false;
+
+        seizurePendingSave = true;
+
+
+        updateTimer();
+
+        updateStartTime();
+
+
+        updateStatus(
+            "🟡 有一筆尚未儲存的發作紀錄"
+        );
+
+
+        updateButtons();
+
+
+    }catch(error){
+
+
+        console.error(
+            "讀取待儲存紀錄失敗：",
+            error
+        );
+
+
+        localStorage.removeItem(
+            PENDING_RECORD_KEY
+        );
+
+    }
 
 }
 
@@ -311,7 +520,6 @@ function saveRecord(){
 function showFiveMinuteAlert(){
 
 
-
     alert(
 
         "🚨 發作超過 5 分鐘\n\n" +
@@ -325,8 +533,6 @@ function showFiveMinuteAlert(){
         "③ 聯絡家長"
 
     );
-
-
 
 }
 
@@ -346,11 +552,9 @@ function showFiveMinuteAlert(){
 function resetSeizure(){
 
 
-
     clearInterval(
         seizureTimer
     );
-
 
 
     seizureTimer = null;
@@ -358,12 +562,18 @@ function resetSeizure(){
 
     seizureRunning = false;
 
+    seizurePendingSave = false;
+
 
     seizureSeconds = 0;
 
 
     seizureStartTime = null;
 
+    seizureEndTime = null;
+
+
+    emergencyTriggered = false;
 
 
     updateTimer();
@@ -374,23 +584,24 @@ function resetSeizure(){
     );
 
 
-
-    let box =
+    const box =
     document.getElementById(
         "startTimeBox"
     );
 
 
-
     if(box){
-
 
         box.innerHTML =
         "尚未開始";
 
-
     }
 
+
+    clearForm();
+
+
+    updateButtons();
 
 }
 
@@ -403,23 +614,86 @@ function resetSeizure(){
 
 
 // ===============================
-// 更新畫面
+// 更新按鈕狀態
+// ===============================
+
+
+function updateButtons(){
+
+
+    const startBtn =
+    document.getElementById(
+        "startBtn"
+    );
+
+
+    const stopBtn =
+    document.getElementById(
+        "stopBtn"
+    );
+
+
+    const saveBtn =
+    document.getElementById(
+        "saveBtn"
+    );
+
+
+    // 開始按鈕
+
+    if(startBtn){
+
+        startBtn.disabled =
+        seizureRunning ||
+        seizurePendingSave;
+
+    }
+
+
+    // 結束按鈕
+
+    if(stopBtn){
+
+        stopBtn.disabled =
+        !seizureRunning;
+
+    }
+
+
+    // 儲存按鈕
+
+    if(saveBtn){
+
+        saveBtn.disabled =
+        !seizurePendingSave;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 更新計時
 // ===============================
 
 
 function updateTimer(){
 
 
-
-    let timer =
+    const timer =
     document.getElementById(
         "timer"
     );
 
 
-
     if(timer){
-
 
         timer.innerHTML =
 
@@ -427,72 +701,7 @@ function updateTimer(){
             seizureSeconds
         );
 
-
     }
-
-
-}
-
-
-
-
-
-
-function updateStartTime(){
-
-
-
-    let box =
-    document.getElementById(
-        "startTimeBox"
-    );
-
-
-
-    if(box){
-
-
-        box.innerHTML =
-
-        "開始時間："
-
-        +
-
-        formatTime(
-            seizureStartTime
-        );
-
-
-    }
-
-
-
-}
-
-
-
-
-
-
-function updateStatus(text){
-
-
-
-    let box =
-    document.getElementById(
-        "statusBox"
-    );
-
-
-
-    if(box){
-
-
-        box.innerHTML = text;
-
-
-    }
-
 
 }
 
@@ -505,22 +714,87 @@ function updateStatus(text){
 
 
 // ===============================
-// 取得資料
+// 更新開始時間
+// ===============================
+
+
+function updateStartTime(){
+
+
+    const box =
+    document.getElementById(
+        "startTimeBox"
+    );
+
+
+    if(box && seizureStartTime){
+
+        box.innerHTML =
+
+        "開始時間：" +
+
+        formatTime(
+            seizureStartTime
+        );
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 更新狀態
+// ===============================
+
+
+function updateStatus(text){
+
+
+    const box =
+    document.getElementById(
+        "statusBox"
+    );
+
+
+    if(box){
+
+        box.innerHTML =
+        text;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// 取得場合
 // ===============================
 
 
 function getSituation(){
 
 
-
-    let item =
+    const item =
 
     document.querySelector(
 
         'input[name="situation"]:checked'
 
     );
-
 
 
     return item
@@ -533,7 +807,6 @@ function getSituation(){
 
     "未選擇";
 
-
 }
 
 
@@ -544,19 +817,24 @@ function getSituation(){
 
 
 
+// ===============================
+// 取得複選資料
+// ===============================
+
+
 function getCheckedValues(name){
 
 
-
-    let result = [];
-
+    const result = [];
 
 
     document
 
     .querySelectorAll(
 
-        'input[name="' + name + '"]:checked'
+        'input[name="' +
+        name +
+        '"]:checked'
 
     )
 
@@ -571,9 +849,7 @@ function getCheckedValues(name){
     });
 
 
-
     return result;
-
 
 }
 
@@ -585,15 +861,18 @@ function getCheckedValues(name){
 
 
 
+// ===============================
+// 取得備註
+// ===============================
+
+
 function getNote(){
 
 
-
-    let note =
+    const note =
     document.getElementById(
         "note"
     );
-
 
 
     return note
@@ -606,7 +885,87 @@ function getNote(){
 
     "";
 
+}
 
+
+
+
+
+
+
+
+
+// ===============================
+// 清除表單
+// ===============================
+
+
+function clearForm(){
+
+
+    document
+
+    .querySelectorAll(
+        'input[name="situation"]'
+    )
+
+    .forEach(function(item){
+
+        item.checked = false;
+
+    });
+
+
+    document
+
+    .querySelectorAll(
+        'input[name="type"]'
+    )
+
+    .forEach(function(item){
+
+        item.checked = false;
+
+    });
+
+
+    document
+
+    .querySelectorAll(
+        'input[name="condition"]'
+    )
+
+    .forEach(function(item){
+
+        item.checked = false;
+
+    });
+
+
+    document
+
+    .querySelectorAll(
+        'input[name="afterState"]'
+    )
+
+    .forEach(function(item){
+
+        item.checked = false;
+
+    });
+
+
+    const note =
+    document.getElementById(
+        "note"
+    );
+
+
+    if(note){
+
+        note.value = "";
+
+    }
 
 }
 
@@ -619,24 +978,21 @@ function getNote(){
 
 
 // ===============================
-// 格式
+// 格式：時間
 // ===============================
 
 
 function formatDuration(sec){
 
 
-
-    let min =
+    const min =
     Math.floor(
         sec / 60
     );
 
 
-
-    let second =
+    const second =
     sec % 60;
-
 
 
     return (
@@ -655,7 +1011,6 @@ function formatDuration(sec){
 
     );
 
-
 }
 
 
@@ -666,8 +1021,12 @@ function formatDuration(sec){
 
 
 
-function formatTime(date){
+// ===============================
+// 格式：時分秒
+// ===============================
 
+
+function formatTime(date){
 
 
     return (
@@ -701,7 +1060,6 @@ function formatTime(date){
 
     );
 
-
 }
 
 
@@ -712,8 +1070,12 @@ function formatTime(date){
 
 
 
-function formatDate(date){
+// ===============================
+// 格式：日期
+// ===============================
 
+
+function formatDate(date){
 
 
     return (
@@ -744,7 +1106,6 @@ function formatDate(date){
 
     );
 
-
 }
 
 
@@ -767,12 +1128,10 @@ document.addEventListener(
 function(){
 
 
-
     const startBtn =
     document.getElementById(
         "startBtn"
     );
-
 
 
     const stopBtn =
@@ -781,39 +1140,48 @@ function(){
     );
 
 
-
+    const saveBtn =
+    document.getElementById(
+        "saveBtn"
+    );
 
 
     if(startBtn){
 
-
         startBtn.onclick =
         startSeizure;
 
-
     }
-
-
-
 
 
     if(stopBtn){
 
-
         stopBtn.onclick =
         stopSeizure;
-
 
     }
 
 
+    if(saveBtn){
 
+        saveBtn.onclick =
+        saveRecord;
+
+    }
+
+
+    // 嘗試恢復未儲存紀錄
+
+    loadPendingRecord();
+
+
+    // 初始按鈕狀態
+
+    updateButtons();
 
 
     console.log(
-        "🚨 seizure.js V2.3 loaded"
+        "🚨 seizure.js V2.3.1 loaded"
     );
-
-
 
 });

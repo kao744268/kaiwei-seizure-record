@@ -1,8 +1,28 @@
 // ==========================================
-// 👦 愷威 Care V2.3.2
+// 👦 愷威 Care V2.4
 // seizure.js
-// 發作紀錄核心｜穩定版
+// 發作紀錄核心 + Google Sheet
 // ==========================================
+
+
+// ===============================
+// Google Sheet API
+// ===============================
+
+const GOOGLE_SHEET_API =
+"https://script.google.com/macros/s/AKfycbyqBDv6Xnn1bUDnavrEoxIe9x0NWyRiZIImhPb5-G66eh3BOlCa3m_3ZFD-ftbLDPeogg/exec";
+
+
+// ===============================
+// 基本設定
+// ===============================
+
+const CHILD_ID = "P001";
+
+const RECORD_USER = "老師";
+
+const PENDING_RECORD_KEY =
+"care_pending_seizure";
 
 
 // ===============================
@@ -10,6 +30,7 @@
 // ===============================
 
 let seizureRunning = false;
+
 let seizurePendingSave = false;
 
 let seizureSeconds = 0;
@@ -17,12 +38,10 @@ let seizureSeconds = 0;
 let seizureTimer = null;
 
 let seizureStartTime = null;
+
 let seizureEndTime = null;
 
 let emergencyTriggered = false;
-
-const PENDING_RECORD_KEY =
-"care_pending_seizure";
 
 
 // ===============================
@@ -33,16 +52,14 @@ function startSeizure(){
 
     console.log("🚨 startSeizure()");
 
-    // 已經在發作中
+
     if(seizureRunning){
 
-        console.log("⚠️ 已經在計時");
-
         return;
+
     }
 
 
-    // 有上一筆未儲存
     if(seizurePendingSave){
 
         alert(
@@ -51,13 +68,17 @@ function startSeizure(){
         );
 
         return;
+
     }
 
 
     // 清除舊計時器
+
     if(seizureTimer !== null){
 
-        clearInterval(seizureTimer);
+        clearInterval(
+            seizureTimer
+        );
 
         seizureTimer = null;
 
@@ -65,6 +86,7 @@ function startSeizure(){
 
 
     // 初始化
+
     seizureRunning = true;
 
     seizurePendingSave = false;
@@ -79,6 +101,7 @@ function startSeizure(){
 
 
     // 更新畫面
+
     updateStatus(
         "🚨 發作中｜請先照料與觀察"
     );
@@ -97,7 +120,7 @@ function startSeizure(){
 
 
     // ===============================
-    // 穩定計時
+    // 計時
     // ===============================
 
     seizureTimer = setInterval(function(){
@@ -109,13 +132,15 @@ function startSeizure(){
         }
 
 
-        // 使用實際經過時間計算
         const now = new Date();
+
 
         seizureSeconds =
         Math.floor(
-            (now.getTime() -
-            seizureStartTime.getTime()) / 1000
+            (
+                now.getTime() -
+                seizureStartTime.getTime()
+            ) / 1000
         );
 
 
@@ -129,6 +154,7 @@ function startSeizure(){
 
 
         // 五分鐘提醒
+
         if(
             seizureSeconds >= 300 &&
             emergencyTriggered === false
@@ -139,6 +165,7 @@ function startSeizure(){
             showFiveMinuteAlert();
 
         }
+
 
     },1000);
 
@@ -161,6 +188,22 @@ function stopSeizure(){
         );
 
         return;
+
+    }
+
+
+    // 先更新最後秒數
+
+    if(seizureStartTime){
+
+        seizureSeconds =
+        Math.floor(
+            (
+                new Date().getTime() -
+                seizureStartTime.getTime()
+            ) / 1000
+        );
+
     }
 
 
@@ -184,21 +227,8 @@ function stopSeizure(){
     }
 
 
-    // 更新最後一次時間
-    if(seizureStartTime){
-
-        seizureSeconds =
-        Math.floor(
-            (
-                new Date().getTime() -
-                seizureStartTime.getTime()
-            ) / 1000
-        );
-
-    }
-
-
     // 停止計時器
+
     if(seizureTimer !== null){
 
         clearInterval(
@@ -218,6 +248,7 @@ function stopSeizure(){
 
 
     // 暫存
+
     savePendingRecord();
 
 
@@ -253,7 +284,12 @@ function stopSeizure(){
 // 儲存紀錄
 // ===============================
 
-function saveRecord(){
+async function saveRecord(){
+
+    console.log(
+        "💾 saveRecord()"
+    );
+
 
     if(!seizurePendingSave){
 
@@ -262,6 +298,7 @@ function saveRecord(){
         );
 
         return;
+
     }
 
 
@@ -272,8 +309,13 @@ function saveRecord(){
         );
 
         return;
+
     }
 
+
+    // ===============================
+    // 建立完整紀錄
+    // ===============================
 
     const record = {
 
@@ -322,8 +364,18 @@ function saveRecord(){
     };
 
 
-    // 讀取舊紀錄
+    console.log(
+        "📋 本次發作紀錄：",
+        record
+    );
+
+
+    // ===============================
+    // 第一層：LocalStorage
+    // ===============================
+
     let records = [];
+
 
     try{
 
@@ -347,11 +399,9 @@ function saveRecord(){
     }
 
 
-    // 新增
     records.push(record);
 
 
-    // 儲存
     localStorage.setItem(
 
         "care_seizure_records",
@@ -363,18 +413,193 @@ function saveRecord(){
     );
 
 
-    // 清除暫存
-    localStorage.removeItem(
-        PENDING_RECORD_KEY
+    console.log(
+        "✅ LocalStorage 儲存成功"
     );
 
 
-    alert(
-        "✅ 發作紀錄已儲存"
+    // ===============================
+    // 第二層：Google Sheet
+    // ===============================
+
+    const cloudData = {
+
+        action:
+        "saveSeizure",
+
+        child_id:
+        CHILD_ID,
+
+        date:
+        record.date,
+
+        start_time:
+        record.startTime,
+
+        end_time:
+        record.endTime,
+
+        duration:
+        record.duration,
+
+        situation:
+        record.situation,
+
+        type:
+        record.type.join("、"),
+
+        condition:
+        record.condition.join("、"),
+
+        afterState:
+        record.afterState.join("、"),
+
+        note:
+        record.note,
+
+        user:
+        RECORD_USER
+
+    };
+
+
+    console.log(
+        "📡 準備送往 Google Sheet：",
+        cloudData
     );
 
 
-    resetSeizure();
+    // ===============================
+    // 送出 Google Sheet
+    // ===============================
+
+    try{
+
+        const response =
+        await fetch(
+
+            GOOGLE_SHEET_API,
+
+            {
+
+                method:
+                "POST",
+
+                headers:{
+
+                    "Content-Type":
+                    "text/plain;charset=utf-8"
+
+                },
+
+                body:
+                JSON.stringify(
+                    cloudData
+                )
+
+            }
+
+        );
+
+
+        const result =
+        await response.json();
+
+
+        console.log(
+            "📡 Google Sheet 回應：",
+            result
+        );
+
+
+        if(
+            result &&
+            result.status === "success"
+        ){
+
+            console.log(
+                "☁️ Google Sheet 儲存成功",
+                result.id
+            );
+
+
+            // 清除暫存
+
+            localStorage.removeItem(
+                PENDING_RECORD_KEY
+            );
+
+
+            seizurePendingSave =
+            false;
+
+
+            alert(
+                "✅ 發作紀錄已儲存\n\n" +
+                "📱 手機紀錄：成功\n" +
+                "☁️ Google Sheet：成功"
+            );
+
+
+            resetSeizure();
+
+
+            return;
+
+        }
+
+
+        // API 有回應但失敗
+
+        console.error(
+            "Google Sheet 儲存失敗：",
+            result
+        );
+
+
+        alert(
+
+            "⚠️ 發作紀錄已保存在手機\n\n" +
+
+            "📱 手機紀錄：成功\n" +
+
+            "☁️ Google Sheet：失敗\n\n" +
+
+            "請確認網路或稍後再處理。"
+
+        );
+
+
+        // 保留 pending
+
+        return;
+
+
+    }catch(error){
+
+        console.error(
+            "Google Sheet API 錯誤：",
+            error
+        );
+
+
+        alert(
+
+            "⚠️ 發作紀錄已保存在手機\n\n" +
+
+            "📱 手機紀錄：成功\n" +
+
+            "☁️ Google Sheet：連線失敗\n\n" +
+
+            "請確認網路後再試。"
+
+        );
+
+
+        // 不 reset
+        // 保留待儲存狀態
+
+    }
 
 }
 
@@ -392,12 +617,15 @@ function cancelSeizure(){
         );
 
         return;
+
     }
 
 
-    const confirmCancel = confirm(
+    const confirmCancel =
+    confirm(
 
         "⚠️ 確定要取消本次紀錄嗎？\n\n" +
+
         "此次發作資料將不會保存。"
 
     );
@@ -426,7 +654,7 @@ function cancelSeizure(){
 
 
 // ===============================
-// 暫存
+// 暫存紀錄
 // ===============================
 
 function savePendingRecord(){
@@ -465,6 +693,11 @@ function savePendingRecord(){
 
     );
 
+
+    console.log(
+        "💾 待儲存紀錄已暫存"
+    );
+
 }
 
 
@@ -490,7 +723,9 @@ function loadPendingRecord(){
     try{
 
         const record =
-        JSON.parse(saved);
+        JSON.parse(
+            saved
+        );
 
 
         seizureStartTime =
@@ -520,9 +755,11 @@ function loadPendingRecord(){
 
         updateStartTime();
 
+
         updateStatus(
             "🟡 有一筆尚未儲存的發作紀錄"
         );
+
 
         updateButtons();
 
@@ -700,10 +937,6 @@ function updateTimer(){
 
 
     if(!timer){
-
-        console.warn(
-            "⚠️ 找不到 #timer"
-        );
 
         return;
 
@@ -1038,13 +1271,10 @@ function formatDate(date){
 // 初始化
 // ==================================================
 
-// ⚠️ 不再依賴 DOMContentLoaded
-// 使用事件代理，因此即使頁面是動態載入也能工作。
-
 function initSeizure(){
 
     console.log(
-        "🚨 seizure.js V2.3.2 初始化"
+        "🚨 seizure.js V2.4 初始化"
     );
 
 
@@ -1134,7 +1364,7 @@ document.addEventListener(
 
 
 // ==================================================
-// 執行初始化
+// 初始化
 // ==================================================
 
 if(
@@ -1154,5 +1384,5 @@ if(
 
 
 console.log(
-    "🚨 seizure.js V2.3.2 loaded OK"
+    "🚨 seizure.js V2.4 loaded OK"
 );

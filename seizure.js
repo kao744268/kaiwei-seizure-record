@@ -1,7 +1,8 @@
+```javascript
 // ==========================================
 // 愷威 Care V2.3.1
 // seizure.js
-// 發作紀錄核心 + Google Sheet 同步
+// 發作紀錄核心 + Google Sheet 串接
 // ==========================================
 
 
@@ -9,7 +10,7 @@
 // Google Sheet API
 // ===============================
 
-const GOOGLE_SHEET_API_URL =
+const GOOGLE_SHEET_API =
 "https://script.google.com/macros/s/AKfycbyqBDv6Xnn1bUDnavrEoxIe9x0NWyRiZIImhPb5-G66eh3BOlCa3m_3ZFD-ftbLDPeogg/exec";
 
 
@@ -225,8 +226,18 @@ async function saveRecord(){
     }
 
 
+    if(!seizureEndTime){
+
+        alert(
+            "找不到發作結束時間，無法儲存。"
+        );
+
+        return;
+    }
+
+
     // ===============================
-    // 建立完整紀錄
+    // 建立紀錄
     // ===============================
 
     const record = {
@@ -271,197 +282,88 @@ async function saveRecord(){
         ),
 
         note:
-        getNote(),
-
-        syncStatus:
-        "pending"
+        getNote()
 
     };
 
 
     // ===============================
-    // 先儲存本機
+    // 防止重複點擊
     // ===============================
 
-    let records = JSON.parse(
-
-        localStorage.getItem(
-            "care_seizure_records"
-        ) || "[]"
-
+    const saveBtn =
+    document.getElementById(
+        "saveBtn"
     );
 
 
-    records.push(record);
+    if(saveBtn){
 
+        saveBtn.disabled = true;
 
-    localStorage.setItem(
-
-        "care_seizure_records",
-
-        JSON.stringify(
-            records
-        )
-
-    );
-
-
-    // ===============================
-    // 清除待儲存狀態
-    // ===============================
-
-    localStorage.removeItem(
-        PENDING_RECORD_KEY
-    );
-
-
-    seizurePendingSave = false;
-
-
-    updateButtons();
+    }
 
 
     updateStatus(
-        "☁️ 正在同步 Google Sheet..."
+        "☁️ 正在儲存到 Google Sheet..."
     );
 
 
     // ===============================
-    // 同步 Google Sheet
+    // 準備送給 Google Sheet 的資料
     // ===============================
 
-    const result =
-    await syncSeizureToGoogleSheet(
-        record
-    );
+    const sheetData = {
 
+        action:
+        "saveSeizure",
 
-    // ===============================
-    // 同步成功
-    // ===============================
+        child_id:
+        "P001",
 
-    if(result.success){
+        date:
+        record.date,
 
-        updateRecordSyncStatus(
-            record.id,
-            "synced",
-            result.id
-        );
+        start_time:
+        record.startTime,
 
+        end_time:
+        record.endTime,
 
-        alert(
+        duration:
+        record.duration,
 
-            "✅ 發作紀錄已儲存\n\n" +
+        situation:
+        record.situation,
 
-            "☁️ Google Sheet 同步成功\n\n" +
+        type:
+        record.type.join("、"),
 
-            "紀錄編號：" +
-            result.id
+        condition:
+        record.condition.join("、"),
 
-        );
+        afterState:
+        record.afterState.join("、"),
 
-    }
+        note:
+        record.note,
 
+        user:
+        "家長"
 
-    // ===============================
-    // 同步失敗
-    // ===============================
+    };
 
-    else{
-
-        updateRecordSyncStatus(
-            record.id,
-            "pending"
-        );
-
-
-        alert(
-
-            "✅ 發作紀錄已保存於本機\n\n" +
-
-            "⚠️ Google Sheet 暫時同步失敗\n\n" +
-
-            "本機資料不會遺失。"
-
-        );
-
-    }
-
-
-    // ===============================
-    // 完成後歸零
-    // ===============================
-
-    resetSeizure();
-
-}
-
-
-// ===============================
-// Google Sheet 同步
-// ===============================
-
-async function syncSeizureToGoogleSheet(record){
 
     try{
 
-        const payload = {
-
-            action:
-            "saveSeizure",
-
-            child_id:
-            "P001",
-
-            date:
-            record.date,
-
-            start_time:
-            record.startTime,
-
-            end_time:
-            record.endTime,
-
-            duration:
-            record.duration,
-
-            situation:
-            record.situation,
-
-            type:
-            Array.isArray(record.type)
-            ?
-            record.type.join("、")
-            :
-            record.type || "",
-
-            condition:
-            Array.isArray(record.condition)
-            ?
-            record.condition.join("、")
-            :
-            record.condition || "",
-
-            afterState:
-            Array.isArray(record.afterState)
-            ?
-            record.afterState.join("、")
-            :
-            record.afterState || "",
-
-            note:
-            record.note || "",
-
-            user:
-            "愷威 Care"
-
-        };
-
+        // ===============================
+        // 傳送 Google Apps Script
+        // ===============================
 
         const response =
         await fetch(
 
-            GOOGLE_SHEET_API_URL,
+            GOOGLE_SHEET_API,
 
             {
 
@@ -475,7 +377,7 @@ async function syncSeizureToGoogleSheet(record){
 
                 body:
                 JSON.stringify(
-                    payload
+                    sheetData
                 )
 
             }
@@ -483,116 +385,136 @@ async function syncSeizureToGoogleSheet(record){
         );
 
 
-        if(!response.ok){
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
-
+        // ===============================
+        // 讀取回應
+        // ===============================
 
         const result =
         await response.json();
 
 
+        console.log(
+            "Google Sheet 回應：",
+            result
+        );
+
+
+        // ===============================
+        // 判斷是否成功
+        // ===============================
+
         if(
-            result &&
-            result.status === "success"
+            !result ||
+            result.status !== "success"
         ){
 
-            return {
+            throw new Error(
 
-                success:true,
+                result &&
+                result.message
 
-                id:
-                result.id || ""
+                ?
 
-            };
+                result.message
+
+                :
+
+                "Google Sheet 儲存失敗"
+
+            );
 
         }
 
 
-        throw new Error(
-            result.message ||
-            "Google Sheet API 回傳失敗"
+        // ===============================
+        // Google Sheet 成功
+        // ===============================
+
+        let records =
+        JSON.parse(
+
+            localStorage.getItem(
+                "care_seizure_records"
+            )
+
+            ||
+
+            "[]"
+
         );
+
+
+        records.push(record);
+
+
+        localStorage.setItem(
+
+            "care_seizure_records",
+
+            JSON.stringify(
+                records
+            )
+
+        );
+
+
+        // 清除暫存
+
+        localStorage.removeItem(
+            PENDING_RECORD_KEY
+        );
+
+
+        seizurePendingSave = false;
+
+
+        alert(
+
+            "✅ 發作紀錄已成功儲存\n\n" +
+
+            "☁️ Google Sheet：已同步\n" +
+
+            "📱 App：已儲存"
+
+        );
+
+
+        // 完成後歸零
+
+        resetSeizure();
 
 
     }catch(error){
 
         console.error(
-            "Google Sheet 同步失敗：",
+            "Google Sheet 儲存失敗：",
             error
         );
 
 
-        return {
-
-            success:false,
-
-            error:
-            error.toString()
-
-        };
-
-    }
-
-}
+        updateStatus(
+            "🔴 Google Sheet 儲存失敗｜紀錄尚未完成"
+        );
 
 
-// ===============================
-// 更新本機同步狀態
-// ===============================
+        if(saveBtn){
 
-function updateRecordSyncStatus(
-    recordId,
-    status,
-    googleId
-){
-
-    let records = JSON.parse(
-
-        localStorage.getItem(
-            "care_seizure_records"
-        ) || "[]"
-
-    );
-
-
-    records = records.map(function(record){
-
-        if(record.id === recordId){
-
-            record.syncStatus =
-            status;
-
-
-            if(googleId){
-
-                record.googleId =
-                googleId;
-
-            }
+            saveBtn.disabled = false;
 
         }
 
 
-        return record;
+        alert(
 
-    });
+            "❌ Google Sheet 儲存失敗\n\n" +
 
+            "這筆紀錄目前沒有被視為完成儲存。\n\n" +
 
-    localStorage.setItem(
+            "請確認網路連線後，再按一次「💾 儲存紀錄」。"
 
-        "care_seizure_records",
+        );
 
-        JSON.stringify(
-            records
-        )
-
-    );
+    }
 
 }
 
@@ -951,6 +873,7 @@ function updateTimer(){
     if(timer){
 
         timer.textContent =
+
         formatDuration(
             seizureSeconds
         );
@@ -1353,8 +1276,9 @@ document.addEventListener(
 
 
         console.log(
-            "🚨 seizure.js V2.3.1 Google Sheet loaded OK"
+            "🚨 seizure.js V2.3.1 + Google Sheet loaded OK"
         );
 
     }
 );
+```

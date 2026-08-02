@@ -1,8 +1,16 @@
 // ==========================================
 // 愷威 Care V2.3.1
 // seizure.js
-// 發作紀錄核心
+// 發作紀錄核心 + Google Sheet 同步
 // ==========================================
+
+
+// ===============================
+// Google Sheet API
+// ===============================
+
+const GOOGLE_SHEET_API_URL =
+"https://script.google.com/macros/s/AKfycbyqBDv6Xnn1bUDnavrEoxIe9x0NWyRiZIImhPb5-G66eh3BOlCa3m_3ZFD-ftbLDPeogg/exec";
 
 
 // ===============================
@@ -20,7 +28,8 @@ let seizureEndTime = null;
 
 let emergencyTriggered = false;
 
-const PENDING_RECORD_KEY = "care_pending_seizure";
+const PENDING_RECORD_KEY =
+"care_pending_seizure";
 
 
 // ===============================
@@ -32,6 +41,7 @@ function startSeizure(){
     if(seizureRunning){
         return;
     }
+
 
     if(seizurePendingSave){
 
@@ -64,6 +74,7 @@ function startSeizure(){
 
 
     // 防止舊計時器殘留
+
     if(seizureTimer !== null){
 
         clearInterval(
@@ -74,6 +85,7 @@ function startSeizure(){
 
 
     // 開始計時
+
     seizureTimer = setInterval(function(){
 
         seizureSeconds++;
@@ -82,6 +94,7 @@ function startSeizure(){
 
 
         // 五分鐘提醒
+
         if(
             seizureSeconds >= 300 &&
             emergencyTriggered === false
@@ -134,6 +147,7 @@ function stopSeizure(){
 
 
     // 停止計時器
+
     if(seizureTimer !== null){
 
         clearInterval(
@@ -146,6 +160,7 @@ function stopSeizure(){
 
 
     // 發作結束
+
     seizureRunning = false;
 
     seizureEndTime = new Date();
@@ -154,6 +169,7 @@ function stopSeizure(){
 
 
     // 暫存核心資料
+
     savePendingRecord();
 
 
@@ -187,7 +203,7 @@ function stopSeizure(){
 // 儲存紀錄
 // ===============================
 
-function saveRecord(){
+async function saveRecord(){
 
     if(!seizurePendingSave){
 
@@ -208,6 +224,10 @@ function saveRecord(){
         return;
     }
 
+
+    // ===============================
+    // 建立完整紀錄
+    // ===============================
 
     const record = {
 
@@ -251,12 +271,18 @@ function saveRecord(){
         ),
 
         note:
-        getNote()
+        getNote(),
+
+        syncStatus:
+        "pending"
 
     };
 
 
-    // 取得歷史紀錄
+    // ===============================
+    // 先儲存本機
+    // ===============================
+
     let records = JSON.parse(
 
         localStorage.getItem(
@@ -266,11 +292,9 @@ function saveRecord(){
     );
 
 
-    // 新增紀錄
     records.push(record);
 
 
-    // 儲存歷史紀錄
     localStorage.setItem(
 
         "care_seizure_records",
@@ -282,7 +306,10 @@ function saveRecord(){
     );
 
 
-    // 清除暫存
+    // ===============================
+    // 清除待儲存狀態
+    // ===============================
+
     localStorage.removeItem(
         PENDING_RECORD_KEY
     );
@@ -291,13 +318,281 @@ function saveRecord(){
     seizurePendingSave = false;
 
 
-    alert(
-        "✅ 發作紀錄已儲存"
+    updateButtons();
+
+
+    updateStatus(
+        "☁️ 正在同步 Google Sheet..."
     );
 
 
+    // ===============================
+    // 同步 Google Sheet
+    // ===============================
+
+    const result =
+    await syncSeizureToGoogleSheet(
+        record
+    );
+
+
+    // ===============================
+    // 同步成功
+    // ===============================
+
+    if(result.success){
+
+        updateRecordSyncStatus(
+            record.id,
+            "synced",
+            result.id
+        );
+
+
+        alert(
+
+            "✅ 發作紀錄已儲存\n\n" +
+
+            "☁️ Google Sheet 同步成功\n\n" +
+
+            "紀錄編號：" +
+            result.id
+
+        );
+
+    }
+
+
+    // ===============================
+    // 同步失敗
+    // ===============================
+
+    else{
+
+        updateRecordSyncStatus(
+            record.id,
+            "pending"
+        );
+
+
+        alert(
+
+            "✅ 發作紀錄已保存於本機\n\n" +
+
+            "⚠️ Google Sheet 暫時同步失敗\n\n" +
+
+            "本機資料不會遺失。"
+
+        );
+
+    }
+
+
+    // ===============================
     // 完成後歸零
+    // ===============================
+
     resetSeizure();
+
+}
+
+
+// ===============================
+// Google Sheet 同步
+// ===============================
+
+async function syncSeizureToGoogleSheet(record){
+
+    try{
+
+        const payload = {
+
+            action:
+            "saveSeizure",
+
+            child_id:
+            "P001",
+
+            date:
+            record.date,
+
+            start_time:
+            record.startTime,
+
+            end_time:
+            record.endTime,
+
+            duration:
+            record.duration,
+
+            situation:
+            record.situation,
+
+            type:
+            Array.isArray(record.type)
+            ?
+            record.type.join("、")
+            :
+            record.type || "",
+
+            condition:
+            Array.isArray(record.condition)
+            ?
+            record.condition.join("、")
+            :
+            record.condition || "",
+
+            afterState:
+            Array.isArray(record.afterState)
+            ?
+            record.afterState.join("、")
+            :
+            record.afterState || "",
+
+            note:
+            record.note || "",
+
+            user:
+            "愷威 Care"
+
+        };
+
+
+        const response =
+        await fetch(
+
+            GOOGLE_SHEET_API_URL,
+
+            {
+
+                method:
+                "POST",
+
+                headers:{
+                    "Content-Type":
+                    "text/plain;charset=utf-8"
+                },
+
+                body:
+                JSON.stringify(
+                    payload
+                )
+
+            }
+
+        );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const result =
+        await response.json();
+
+
+        if(
+            result &&
+            result.status === "success"
+        ){
+
+            return {
+
+                success:true,
+
+                id:
+                result.id || ""
+
+            };
+
+        }
+
+
+        throw new Error(
+            result.message ||
+            "Google Sheet API 回傳失敗"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Google Sheet 同步失敗：",
+            error
+        );
+
+
+        return {
+
+            success:false,
+
+            error:
+            error.toString()
+
+        };
+
+    }
+
+}
+
+
+// ===============================
+// 更新本機同步狀態
+// ===============================
+
+function updateRecordSyncStatus(
+    recordId,
+    status,
+    googleId
+){
+
+    let records = JSON.parse(
+
+        localStorage.getItem(
+            "care_seizure_records"
+        ) || "[]"
+
+    );
+
+
+    records = records.map(function(record){
+
+        if(record.id === recordId){
+
+            record.syncStatus =
+            status;
+
+
+            if(googleId){
+
+                record.googleId =
+                googleId;
+
+            }
+
+        }
+
+
+        return record;
+
+    });
+
+
+    localStorage.setItem(
+
+        "care_seizure_records",
+
+        JSON.stringify(
+            records
+        )
+
+    );
 
 }
 
@@ -334,12 +629,14 @@ function cancelSeizure(){
 
 
     // 清除暫存
+
     localStorage.removeItem(
         PENDING_RECORD_KEY
     );
 
 
     // 完整歸零
+
     resetSeizure();
 
 
@@ -501,6 +798,7 @@ function showFiveMinuteAlert(){
 function resetSeizure(){
 
     // 停止計時器
+
     if(seizureTimer !== null){
 
         clearInterval(
@@ -530,6 +828,7 @@ function resetSeizure(){
 
 
     // 更新畫面
+
     updateTimer();
 
 
@@ -553,10 +852,12 @@ function resetSeizure(){
 
 
     // 清除表單
+
     clearForm();
 
 
     // 更新按鈕
+
     updateButtons();
 
 }
@@ -593,6 +894,7 @@ function updateButtons(){
 
 
     // 開始按鈕
+
     if(startBtn){
 
         startBtn.disabled =
@@ -603,6 +905,7 @@ function updateButtons(){
 
 
     // 結束按鈕
+
     if(stopBtn){
 
         stopBtn.disabled =
@@ -612,6 +915,7 @@ function updateButtons(){
 
 
     // 儲存按鈕
+
     if(saveBtn){
 
         saveBtn.disabled =
@@ -621,6 +925,7 @@ function updateButtons(){
 
 
     // 取消按鈕
+
     if(cancelBtn){
 
         cancelBtn.disabled =
@@ -1038,15 +1343,17 @@ document.addEventListener(
 
 
         // 嘗試恢復未儲存紀錄
+
         loadPendingRecord();
 
 
         // 初始化按鈕
+
         updateButtons();
 
 
         console.log(
-            "🚨 seizure.js V2.3.1 loaded OK"
+            "🚨 seizure.js V2.3.1 Google Sheet loaded OK"
         );
 
     }

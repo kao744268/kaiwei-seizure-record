@@ -1,5 +1,5 @@
 // ==========================================
-// 👦 愷威 Care V2.3.2
+// 👦 愷威 Care V3.1
 // seizure.js
 // 發作紀錄 + Google Sheet 同步
 // ==========================================
@@ -33,8 +33,16 @@ let seizureEndTime = null;
 
 let emergencyTriggered = false;
 
+
+// ==========================================
+// LocalStorage Key
+// ==========================================
+
 const PENDING_RECORD_KEY =
 "care_pending_seizure";
+
+const SEIZURE_RECORDS_KEY =
+"care_seizure_records";
 
 
 // ==========================================
@@ -253,6 +261,7 @@ async function saveRecord(){
     const saveBtn =
     document.getElementById("saveBtn");
 
+
     if(saveBtn){
 
         saveBtn.disabled = true;
@@ -329,7 +338,7 @@ async function saveRecord(){
         records = JSON.parse(
 
             localStorage.getItem(
-                "care_seizure_records"
+                SEIZURE_RECORDS_KEY
             ) || "[]"
 
         );
@@ -351,7 +360,7 @@ async function saveRecord(){
 
     localStorage.setItem(
 
-        "care_seizure_records",
+        SEIZURE_RECORDS_KEY,
 
         JSON.stringify(
             records
@@ -377,35 +386,106 @@ async function saveRecord(){
         );
 
 
+        // ==================================
+        // Google Sheet 同步成功
+        // ==================================
+
         if(
             result &&
             result.status === "success"
         ){
 
-            // 同步成功
+            console.log(
+                "☁️ Google Sheet 同步成功",
+                result
+            );
+
+
+            // 移除暫存中的未完成紀錄
 
             localStorage.removeItem(
                 PENDING_RECORD_KEY
             );
 
+
             seizurePendingSave = false;
 
 
-            alert(
+            // ==================================
+            // 詢問是否保留本機紀錄
+            // ==================================
 
-                "✅ 發作紀錄已儲存\n\n" +
+            const keepLocalRecords = confirm(
 
-                "☁️ Google Sheet 同步成功"
+                "✅ 發作紀錄已同步成功！\n\n" +
+
+                "☁️ Google Sheet 已完成儲存。\n\n" +
+
+                "是否要保留這台裝置上的歷史紀錄？\n\n" +
+
+                "【確定】保留本機紀錄\n" +
+
+                "【取消】清除本機紀錄"
 
             );
 
+
+            // ==================================
+            // 選擇不保留
+            // ==================================
+
+            if(!keepLocalRecords){
+
+                localStorage.removeItem(
+                    SEIZURE_RECORDS_KEY
+                );
+
+
+                console.log(
+                    "🗑️ 本機發作紀錄已清除"
+                );
+
+
+                alert(
+
+                    "✅ Google Sheet 同步成功\n\n" +
+
+                    "🗑️ 本機歷史紀錄已清除"
+
+                );
+
+            }else{
+
+                console.log(
+                    "📱 保留本機發作紀錄"
+                );
+
+
+                alert(
+
+                    "✅ 發作紀錄已儲存\n\n" +
+
+                    "☁️ Google Sheet 同步成功\n\n" +
+
+                    "📱 本機歷史紀錄已保留"
+
+                );
+
+            }
+
+
+            // ==================================
+            // 最後重置目前發作狀態
+            // ==================================
 
             resetSeizure();
 
 
         }else{
 
-            // API 有回應，但失敗
+            // ==================================
+            // API 有回應，但同步失敗
+            // ==================================
 
             console.error(
                 "Google Sheet 回應錯誤：",
@@ -432,6 +512,10 @@ async function saveRecord(){
 
 
     }catch(error){
+
+        // ==================================
+        // 網路 / API 錯誤
+        // ==================================
 
         console.error(
             "Google Sheet 同步失敗：",
@@ -1213,7 +1297,7 @@ function formatDate(date){
 function initSeizure(){
 
     console.log(
-        "🚨 seizure.js V2.3.2 loaded"
+        "🚨 seizure.js V3.1 loaded"
     );
 
 

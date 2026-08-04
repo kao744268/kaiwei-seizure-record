@@ -1,5 +1,5 @@
 // ==========================================
-// 👦 愷威 Care V3.0
+// 👦 愷威 Care V3.1
 // medical.js
 // Google Sheet 醫療資訊卡
 // ==========================================
@@ -21,7 +21,7 @@ const MEDICAL_CHILD_ID = "P001";
 
 
 // ==========================================
-// 預設醫療資料
+// 預設資料
 // ==========================================
 
 const defaultMedicalInfo = {
@@ -44,7 +44,7 @@ const defaultMedicalInfo = {
     doctor:
     "尚未設定",
 
-    medicine:
+    medication:
     "尚未設定",
 
     emergencyMedicine:
@@ -55,6 +55,12 @@ const defaultMedicalInfo = {
 
     notice:
     "尚未設定",
+
+    height:
+    "",
+
+    weight:
+    "",
 
     update:
     ""
@@ -130,7 +136,7 @@ async function fetchMedicalInfo(){
 
 
         // ======================================
-        // 找 Child_ID = P001 的資料
+        // 找愷威 P001
         // ======================================
 
         const row =
@@ -138,8 +144,7 @@ async function fetchMedicalInfo(){
 
             return String(
                 item.child_id
-            ).trim() ===
-            MEDICAL_CHILD_ID;
+            ) === MEDICAL_CHILD_ID;
 
         });
 
@@ -156,22 +161,8 @@ async function fetchMedicalInfo(){
         }
 
 
-        console.log(
-            "🏥 找到愷威醫療資料：",
-            row
-        );
-
-
         // ======================================
-        // 建立醫療資料
-        // ======================================
-        //
-        // 注意：
-        // Google Sheet 目前回傳欄位叫 medicine
-        //
-        // 所以這裡直接抓 row.medicine
-        //
-        // 同時保留 medication 相容性
+        // 整理資料
         // ======================================
 
         return {
@@ -179,52 +170,50 @@ async function fetchMedicalInfo(){
             name:
             "愷威",
 
-
             disease:
             row.disease ||
             defaultMedicalInfo.disease,
-
 
             description:
             row.description ||
             defaultMedicalInfo.description,
 
-
             symptom:
             row.symptom ||
             defaultMedicalInfo.symptom,
-
 
             hospital:
             row.hospital ||
             defaultMedicalInfo.hospital,
 
-
             doctor:
             row.doctor ||
             defaultMedicalInfo.doctor,
 
-
-            medicine:
-            row.medicine ||
+            medication:
             row.medication ||
-            defaultMedicalInfo.medicine,
-
+            row.medicine ||
+            defaultMedicalInfo.medication,
 
             emergencyMedicine:
             row.emergencyMedicine ||
             defaultMedicalInfo.emergencyMedicine,
 
-
             usage:
             row.usage ||
             defaultMedicalInfo.usage,
-
 
             notice:
             row.notice ||
             defaultMedicalInfo.notice,
 
+            height:
+            row.height ||
+            defaultMedicalInfo.height,
+
+            weight:
+            row.weight ||
+            defaultMedicalInfo.weight,
 
             update:
             row.update ||
@@ -267,18 +256,10 @@ async function renderMedical(){
 
     if(!card){
 
-        console.warn(
-            "找不到 medicalCard"
-        );
-
         return;
 
     }
 
-
-    // ======================================
-    // 載入中
-    // ======================================
 
     card.innerHTML = `
 
@@ -291,17 +272,9 @@ async function renderMedical(){
     `;
 
 
-    // ======================================
-    // 取得 Google Sheet 資料
-    // ======================================
-
     const info =
     await fetchMedicalInfo();
 
-
-    // ======================================
-    // 顯示醫療卡
-    // ======================================
 
     card.innerHTML = `
 
@@ -355,9 +328,35 @@ async function renderMedical(){
 
 
         <p>
+            📏 身高：
+            <br>
+            ${
+                info.height
+                ?
+                lineBreak(String(info.height)) + " cm"
+                :
+                "-"
+            }
+        </p>
+
+
+        <p>
+            ⚖️ 體重：
+            <br>
+            ${
+                info.weight
+                ?
+                lineBreak(String(info.weight)) + " kg"
+                :
+                "-"
+            }
+        </p>
+
+
+        <p>
             💊 目前使用藥物：
             <br>
-            ${lineBreak(info.medicine)}
+            ${lineBreak(info.medication)}
         </p>
 
 
@@ -391,9 +390,7 @@ async function renderMedical(){
                 🔄 最後更新：
                 <br>
 
-                ${lineBreak(
-                    String(info.update)
-                )}
+                ${lineBreak(String(info.update))}
 
             </p>
             `
@@ -461,7 +458,7 @@ function lineBreak(text){
     if(
         text === null ||
         text === undefined ||
-        String(text).trim() === ""
+        text === ""
     ){
 
         return "-";
@@ -482,37 +479,20 @@ function lineBreak(text){
 // 初始化
 // ==========================================
 
-function initMedical(){
+document.addEventListener(
 
-    console.log(
-        "🏥 medical.js V3.0 初始化完成"
-    );
+    "DOMContentLoaded",
 
+    function(){
 
-    // ======================================
-    // 首頁載入時先準備醫療卡
-    // ======================================
-
-    renderMedical();
-
-}
+        console.log(
+            "🏥 medical.js V3.1 初始化完成"
+        );
 
 
-// ==========================================
-// DOM 初始化
-// ==========================================
+        renderMedical();
 
-if(
-    document.readyState === "loading"
-){
+    }
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initMedical
-    );
-
-}else{
-
-    initMedical();
-
-}
+);
+```

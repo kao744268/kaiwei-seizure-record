@@ -178,8 +178,8 @@ async function fetchMedicalInfo(){
             defaultMedicalInfo.doctor,
 
             medication:
-            row.medication ||
-            defaultMedicalInfo.medication,
+row.medicine ||
+defaultMedicalInfo.medication,
 
             emergencyMedicine:
             row.emergencyMedicine ||

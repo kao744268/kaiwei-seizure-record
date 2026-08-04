@@ -25,6 +25,7 @@ const MEDICAL_CHILD_ID = "P001";
 // ==========================================
 
 const defaultMedicalInfo = {
+    console.log("🏥 API 找到的醫療資料：", row);
 return {
 
     name:

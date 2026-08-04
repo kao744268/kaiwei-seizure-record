@@ -25,38 +25,49 @@ const MEDICAL_CHILD_ID = "P001";
 // ==========================================
 
 const defaultMedicalInfo = {
+return {
 
     name:
     "愷威",
 
     disease:
-    "卓飛症候群\nDravet syndrome",
+    row.disease ||
+    defaultMedicalInfo.disease,
 
     description:
-    "尚未設定",
+    row.description ||
+    defaultMedicalInfo.description,
 
     symptom:
-    "癲癇發作",
+    row.symptom ||
+    defaultMedicalInfo.symptom,
 
     hospital:
-    "尚未設定",
+    row.hospital ||
+    defaultMedicalInfo.hospital,
 
     doctor:
-    "尚未設定",
+    row.doctor ||
+    defaultMedicalInfo.doctor,
 
     medication:
-    "尚未設定",
+    row.medicine ||
+    defaultMedicalInfo.medication,
 
     emergencyMedicine:
-    "尚未設定",
+    row.emergencyMedicine ||
+    defaultMedicalInfo.emergencyMedicine,
 
     usage:
-    "依醫囑使用",
+    row.usage ||
+    defaultMedicalInfo.usage,
 
     notice:
-    "尚未設定",
+    row.notice ||
+    defaultMedicalInfo.notice,
 
     update:
+    row.update ||
     ""
 
 };

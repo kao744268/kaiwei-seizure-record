@@ -1,22 +1,20 @@
-
 /* ==========================================
-   愷威 Care V2.3.1
-   現場照護版
-   style.css
-========================================== */
+   👦 愷威 Care V3.1
+   C 方案｜星星 × 小人 × 守護
+   ========================================== */
 
 
 /* =========================
    基礎
 ========================= */
 
-
 *{
-
     box-sizing:border-box;
-
 }
 
+html{
+    min-height:100%;
+}
 
 body{
 
@@ -26,35 +24,92 @@ body{
 
     min-height:100vh;
 
-    background:
-
-    linear-gradient(
-        160deg,
-        #fffaf0,
-        #eaf7ff
-    );
-
     font-family:
-
     -apple-system,
     BlinkMacSystemFont,
     "Noto Sans TC",
     sans-serif;
 
-    color:#334155;
+    color:#eef4ff;
+
+    background:
+
+    radial-gradient(
+        circle at 20% 10%,
+        rgba(83,108,190,.28),
+        transparent 28%
+    ),
+
+    radial-gradient(
+        circle at 85% 25%,
+        rgba(111,87,170,.20),
+        transparent 25%
+    ),
+
+    linear-gradient(
+        160deg,
+        #07142f 0%,
+        #0b1d3d 45%,
+        #101735 100%
+    );
 
 }
 
 
+/* =========================
+   星光背景
+========================= */
 
+body::before{
 
+    content:"";
 
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:-1;
+
+    opacity:.7;
+
+    background-image:
+
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.75) 0 1px,
+        transparent 1.5px
+    ),
+
+    radial-gradient(
+        circle,
+        rgba(255,218,120,.65) 0 1px,
+        transparent 1.5px
+    ),
+
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.4) 0 1px,
+        transparent 1.5px
+    );
+
+    background-size:
+    110px 130px,
+    170px 190px,
+    240px 210px;
+
+    background-position:
+    10px 20px,
+    50px 80px,
+    100px 30px;
+
+}
 
 
 /* =========================
    頁面
 ========================= */
-
 
 .page{
 
@@ -74,21 +129,15 @@ body{
 }
 
 
-
-
-
-
-
 /* =========================
    Header
 ========================= */
-
 
 .main-header{
 
     text-align:center;
 
-    padding:20px 0 10px;
+    padding:22px 0 18px;
 
 }
 
@@ -97,47 +146,104 @@ body{
 
     margin:0;
 
-    font-size:38px;
+    font-size:36px;
 
-    color:#38a3d9;
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    color:#ffe28a;
+
+    text-shadow:
+    0 0 18px rgba(255,214,92,.25);
 
 }
 
 
 .main-header p{
 
-    margin:8px;
+    margin:8px 0 0;
 
-    color:#64748b;
+    color:#aebdd9;
 
-    font-size:17px;
+    font-size:16px;
+
+    letter-spacing:2px;
 
 }
-
-
-
-
-
 
 
 /* =========================
    發作主區
 ========================= */
 
-
 .seizure-panel{
 
-    background:white;
+    position:relative;
 
-    border-radius:35px;
+    overflow:hidden;
+
+    background:
+
+    linear-gradient(
+        145deg,
+        rgba(24,45,84,.94),
+        rgba(13,28,58,.96)
+    );
+
+    border:1px solid rgba(150,175,220,.16);
+
+    border-radius:34px;
 
     padding:25px 20px;
 
     box-shadow:
 
-    0 15px 35px rgba(0,0,0,.08);
+    0 20px 50px rgba(0,0,0,.32),
+
+    inset 0 1px 0 rgba(255,255,255,.06);
 
     text-align:center;
+
+}
+
+
+/* 卡片上的小星光 */
+
+.seizure-panel::before{
+
+    content:"✦";
+
+    position:absolute;
+
+    top:15px;
+
+    right:20px;
+
+    color:#ffe28a;
+
+    font-size:18px;
+
+    opacity:.8;
+
+}
+
+
+.seizure-panel::after{
+
+    content:"✦";
+
+    position:absolute;
+
+    bottom:18px;
+
+    left:20px;
+
+    color:#8ca8df;
+
+    font-size:12px;
+
+    opacity:.65;
 
 }
 
@@ -146,49 +252,47 @@ body{
 
     margin-top:0;
 
-    color:#ef4444;
+    color:#ffcf6e;
 
-    font-size:28px;
+    font-size:26px;
+
+    letter-spacing:.5px;
 
 }
-
-
-
-
-
 
 
 /* =========================
    狀態
 ========================= */
 
-
 #statusBox{
 
     padding:14px;
 
-    border-radius:20px;
+    border-radius:18px;
 
-    background:#f1f5f9;
+    background:
 
-    font-size:18px;
+    rgba(255,255,255,.06);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    color:#d8e3f5;
+
+    font-size:17px;
 
     margin-bottom:20px;
 
 }
 
 
-
-
-
-
-
 /* =========================
    計時器
 ========================= */
 
-
 #timer{
+
+    position:relative;
 
     width:240px;
 
@@ -207,51 +311,87 @@ body{
     background:
 
     radial-gradient(
-        circle,
-        #ffffff,
-        #dbeafe
+        circle at 38% 32%,
+        #273f72,
+        #111f43 58%,
+        #0b1835 100%
     );
 
-    border:10px solid #93c5fd;
+    border:8px solid #d9b95d;
 
-    font-size:55px;
+    font-size:52px;
 
-    font-weight:bold;
+    font-weight:800;
 
-    color:#2563eb;
+    letter-spacing:2px;
+
+    color:#ffe18a;
 
     box-shadow:
 
-    0 15px 30px rgba(37,99,235,.2);
+    0 0 0 8px rgba(217,185,93,.06),
+
+    0 0 35px rgba(217,185,93,.20),
+
+    0 18px 40px rgba(0,0,0,.35);
 
 }
 
 
+/* 計時器星光 */
+
+#timer::before{
+
+    content:"✦";
+
+    position:absolute;
+
+    top:28px;
+
+    right:48px;
+
+    font-size:16px;
+
+    color:#fff0ad;
+
+    opacity:.8;
+
+}
 
 
+#timer::after{
 
+    content:"✦";
+
+    position:absolute;
+
+    bottom:42px;
+
+    left:42px;
+
+    font-size:11px;
+
+    color:#9bb5e8;
+
+    opacity:.7;
+
+}
 
 
 #startTimeBox{
 
-    color:#64748b;
+    color:#9eafd0;
 
     margin-bottom:15px;
 
-    font-size:16px;
+    font-size:15px;
 
 }
 
 
-
-
-
-
-
 /* =========================
-   大按鈕
+   按鈕基礎
 ========================= */
-
 
 button{
 
@@ -259,35 +399,39 @@ button{
 
     border:none;
 
-    border-radius:25px;
+    border-radius:22px;
 
     padding:18px;
 
     margin:10px 0;
 
-    font-size:20px;
+    font-size:19px;
 
     font-weight:bold;
 
     cursor:pointer;
 
-    box-shadow:
+    transition:
 
-    0 8px 18px rgba(0,0,0,.08);
+    transform .15s ease,
+
+    box-shadow .15s ease,
+
+    opacity .15s ease;
 
 }
 
 
 button:active{
 
-    transform:scale(.96);
+    transform:scale(.97);
 
 }
 
 
 button:disabled{
 
-    opacity:.45;
+    opacity:.35;
 
     cursor:not-allowed;
 
@@ -298,33 +442,51 @@ button:disabled{
 }
 
 
+/* =========================
+   開始 / 結束
+========================= */
+
 .start-button{
 
-    background:#34d399;
+    background:
 
-    color:white;
+    linear-gradient(
+        135deg,
+        #e8c96b,
+        #c9a84f
+    );
+
+    color:#172442;
+
+    box-shadow:
+
+    0 8px 22px rgba(218,185,91,.22);
 
 }
 
 
 .stop-button{
 
-    background:#fb7185;
+    background:
+
+    linear-gradient(
+        135deg,
+        #e16c73,
+        #b94858
+    );
 
     color:white;
+
+    box-shadow:
+
+    0 8px 22px rgba(220,80,95,.18);
 
 }
 
 
-
-
-
-
-
 /* =========================
-   儲存 / 取消按鈕
+   儲存 / 取消
 ========================= */
-
 
 .record-action-buttons{
 
@@ -346,42 +508,42 @@ button:disabled{
 
     padding:16px 10px;
 
-    font-size:17px;
+    font-size:16px;
 
 }
 
 
 .save-button{
 
-    background:#38bdf8;
+    background:#4f7fc7;
 
     color:white;
+
+    box-shadow:
+
+    0 7px 18px rgba(79,127,199,.18);
 
 }
 
 
 .cancel-button{
 
-    background:#cbd5e1;
+    background:#263755;
 
-    color:#475569;
+    color:#aebbd1;
+
+    border:1px solid rgba(255,255,255,.08);
 
 }
-
-
-
-
-
 
 
 /* =========================
    紀錄區
 ========================= */
 
-
 .record-section{
 
-    margin-top:22px;
+    margin-top:24px;
 
 }
 
@@ -390,29 +552,38 @@ button:disabled{
 
     margin-bottom:12px;
 
-    color:#475569;
+    color:#d8e4fa;
 
-    font-size:21px;
+    font-size:20px;
+
+    letter-spacing:.5px;
 
 }
 
 
-
-
-
-
+/* =========================
+   選項卡
+========================= */
 
 .option-card{
 
-    background:white;
+    background:
 
-    border-radius:25px;
+    rgba(20,39,73,.78);
+
+    border:
+
+    1px solid rgba(160,184,225,.10);
+
+    border-radius:24px;
 
     padding:15px;
 
     box-shadow:
 
-    0 8px 20px rgba(0,0,0,.06);
+    0 12px 28px rgba(0,0,0,.18),
+
+    inset 0 1px 0 rgba(255,255,255,.04);
 
 }
 
@@ -429,33 +600,51 @@ button:disabled{
 
     border-radius:16px;
 
-    background:#f8fafc;
+    background:
 
-    font-size:17px;
+    rgba(255,255,255,.045);
+
+    color:#dbe6f7;
+
+    font-size:16px;
+
+    transition:
+    background .15s ease;
+
+}
+
+
+.option-card label:last-child{
+
+    margin-bottom:0;
+
+}
+
+
+.option-card label:active{
+
+    background:
+    rgba(255,214,112,.10);
 
 }
 
 
 .option-card input{
 
-    width:22px;
+    width:21px;
 
-    height:22px;
+    height:21px;
 
     margin-right:12px;
 
+    accent-color:#e1bd5e;
+
 }
-
-
-
-
-
 
 
 /* =========================
    備註
 ========================= */
-
 
 textarea{
 
@@ -467,26 +656,46 @@ textarea{
 
     border-radius:22px;
 
-    border:2px solid #e2e8f0;
+    border:
 
-    font-size:17px;
+    1px solid rgba(150,175,220,.18);
 
-    background:white;
+    font-size:16px;
+
+    color:#e7eefc;
+
+    background:
+
+    rgba(19,38,70,.82);
 
     resize:none;
+
+    outline:none;
 
 }
 
 
+textarea::placeholder{
+
+    color:#8091b0;
+
+}
 
 
+textarea:focus{
 
+    border-color:#d9b95d;
+
+    box-shadow:
+
+    0 0 0 3px rgba(217,185,93,.08);
+
+}
 
 
 /* =========================
    快速功能
 ========================= */
-
 
 .quick-menu{
 
@@ -506,43 +715,71 @@ textarea{
 
     padding:15px 5px;
 
-    font-size:15px;
+    font-size:14px;
 
-    background:white;
+    background:
 
-    color:#475569;
+    rgba(20,39,73,.88);
+
+    color:#d7e2f5;
+
+    border:
+
+    1px solid rgba(150,175,220,.10);
 
     border-radius:20px;
 
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.18);
+
 }
 
+
+.small-menu:active{
+
+    background:
+    rgba(255,214,112,.12);
+
+}
+
+
+/* =========================
+   緊急按鈕
+========================= */
 
 .emergency-small{
 
-    color:#e11d48;
+    color:#ff9ba1;
 
-    background:#ffe4e6;
+    background:
+
+    rgba(116,39,54,.42);
+
+    border:
+
+    1px solid rgba(255,110,120,.15);
 
 }
-
-
-
-
-
 
 
 /* =========================
    子頁面
 ========================= */
 
-
 .page h2{
 
     text-align:center;
 
-    color:#38a3d9;
+    color:#ffe18a;
 
-    font-size:28px;
+    font-size:27px;
+
+    letter-spacing:.5px;
+
+    text-shadow:
+
+    0 0 15px rgba(255,214,92,.16);
 
 }
 
@@ -551,63 +788,127 @@ textarea{
 #medicalCard,
 .history-card{
 
-    background:white;
+    background:
+
+    linear-gradient(
+        145deg,
+        rgba(24,45,84,.94),
+        rgba(13,28,58,.96)
+    );
+
+    color:#dce7f8;
 
     padding:22px;
 
     border-radius:28px;
 
+    border:
+
+    1px solid rgba(150,175,220,.12);
+
     box-shadow:
 
-    0 10px 25px rgba(0,0,0,.08);
+    0 15px 35px rgba(0,0,0,.28),
+
+    inset 0 1px 0 rgba(255,255,255,.04);
 
 }
 
 
+/* =========================
+   醫療資訊卡
+========================= */
+
+#medicalCard h3{
+
+    color:#ffe18a;
+
+}
 
 
+#medicalCard hr{
 
+    border:none;
+
+    border-top:
+
+    1px solid rgba(255,255,255,.08);
+
+    margin:18px 0;
+
+}
+
+
+#medicalCard p{
+
+    color:#d5e0f2;
+
+    line-height:1.65;
+
+}
+
+
+#medicalCard strong{
+
+    color:#ffe18a;
+
+}
 
 
 /* =========================
    緊急模式
 ========================= */
 
-
 #emergencyAlert{
 
-    background:#fee2e2;
+    background:
 
-    color:#dc2626;
+    linear-gradient(
+        135deg,
+        rgba(122,40,54,.72),
+        rgba(79,29,43,.78)
+    );
+
+    color:#ffb1b6;
 
     padding:25px;
+
+    border:
+
+    1px solid rgba(255,120,130,.15);
 
     border-radius:28px;
 
     text-align:center;
 
-    font-size:22px;
+    font-size:20px;
 
     font-weight:bold;
 
+    box-shadow:
+
+    0 12px 30px rgba(0,0,0,.22);
+
 }
-
-
-
-
-
 
 
 /* =========================
    聯絡卡
 ========================= */
 
-
 .contact-card{
 
-    background:white;
+    background:
+
+    rgba(20,39,73,.9);
+
+    color:#e0e9f8;
 
     padding:18px;
+
+    border:
+
+    1px solid rgba(150,175,220,.10);
 
     border-radius:22px;
 
@@ -619,41 +920,88 @@ textarea{
 
     align-items:center;
 
+    box-shadow:
+
+    0 8px 20px rgba(0,0,0,.18);
+
 }
-
-
-
-
-
 
 
 /* =========================
    返回
 ========================= */
 
-
 .backBtn{
 
-    background:#94a3b8;
+    background:
 
-    color:white;
+    #273958;
+
+    color:#d7e2f3;
 
     margin-top:30px;
+
+    border:
+
+    1px solid rgba(150,175,220,.10);
 
 }
 
 
+/* =========================
+   滑動效果
+========================= */
 
+button,
+.option-card,
+.info-card,
+#medicalCard,
+.history-card,
+.contact-card{
 
+    -webkit-tap-highlight-color:
+    transparent;
 
+}
 
 
 /* =========================
    手機優化
 ========================= */
 
-
 @media(max-width:420px){
+
+    .page{
+
+        padding:15px;
+
+    }
+
+
+    .main-header{
+
+        padding-top:18px;
+
+    }
+
+
+    .main-header h1{
+
+        font-size:32px;
+
+    }
+
+
+    #timer{
+
+        width:215px;
+
+        height:215px;
+
+        font-size:46px;
+
+    }
+
 
     .record-action-buttons{
 
@@ -661,6 +1009,22 @@ textarea{
         1fr;
 
         gap:0;
+
+    }
+
+
+    .quick-menu{
+
+        gap:8px;
+
+    }
+
+
+    .small-menu{
+
+        font-size:13px;
+
+        padding:14px 4px;
 
     }
 
@@ -678,4 +1042,3 @@ textarea{
     }
 
 }
-

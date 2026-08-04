@@ -24,8 +24,9 @@ const MEDICAL_CHILD_ID = "P001";
 // 預設資料
 // ==========================================
 
-const defaultMedicalInfo = {
-    console.log("🏥 API 找到的醫療資料：", row);
+console.log("🏥 找到的 Medical Row =", row);
+console.log("💊 API medicine =", row ? row.medicine : "找不到");
+
 return {
 
     name:
@@ -150,7 +151,8 @@ async function fetchMedicalInfo(){
             ) === MEDICAL_CHILD_ID;
 
         });
-
+console.log("🏥 找到的 Medical Row =", row);
+console.log("💊 API medicine =", row ? row.medicine : "找不到");
 
         if(!row){
 

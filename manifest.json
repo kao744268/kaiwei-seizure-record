@@ -1,0 +1,16 @@
+{
+  "name": "愷威 Care",
+  "short_name": "愷威 Care",
+  "description": "守護愷威的健康與發作紀錄",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#061B2E",
+  "theme_color": "#061B2E",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

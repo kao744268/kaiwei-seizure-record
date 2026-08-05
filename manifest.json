@@ -1,16 +1,20 @@
 {
   "name": "愷威 Care",
   "short_name": "愷威 Care",
-  "description": "守護愷威的健康與發作紀錄",
+  "description": "愷威癲癇紀錄與照護系統",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#061B2E",
-  "theme_color": "#061B2E",
+  "orientation": "portrait",
+  "background_color": "#172554",
+  "theme_color": "#172554",
+  "lang": "zh-TW",
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "1024x1024",
-      "type": "image/png"
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

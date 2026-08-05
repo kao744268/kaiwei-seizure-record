@@ -1,7 +1,7 @@
 // ==========================================
-// 👦 愷威 Care V3.1
+// 👦 愷威 Care V3.2
 // seizure.js
-// 發作紀錄 + Google Sheet 同步
+// 發作紀錄 + Google Sheet 同步 + 紀錄者
 // ==========================================
 
 
@@ -256,6 +256,72 @@ async function saveRecord(){
     }
 
 
+    // ======================================
+    // 確認紀錄者
+    // ======================================
+
+    let recorder = "未設定";
+
+
+    if(
+        typeof getRecorder === "function"
+    ){
+
+        recorder =
+        getRecorder();
+
+    }
+
+
+    // 如果尚未設定紀錄者
+    // 請使用 settings.js 的設定功能
+
+    if(
+        !recorder ||
+        recorder === "未設定"
+    ){
+
+        if(
+            typeof setRecorder === "function"
+        ){
+
+            setRecorder();
+
+            recorder =
+            getRecorder();
+
+        }
+
+    }
+
+
+    // 如果設定後仍然沒有紀錄者
+
+    if(
+        !recorder ||
+        recorder === "未設定"
+    ){
+
+        const continueSave = confirm(
+
+            "⚠️ 尚未設定紀錄者。\n\n" +
+
+            "這筆紀錄將會標示為「未設定」。\n\n" +
+
+            "確定要繼續儲存嗎？"
+
+        );
+
+
+        if(!continueSave){
+
+            return;
+
+        }
+
+    }
+
+
     // 防止重複按儲存
 
     const saveBtn =
@@ -320,8 +386,18 @@ async function saveRecord(){
         note:
         getNote(),
 
+        // ==================================
+        // 紀錄者
+        // ==================================
+
+        recorder:
+        recorder,
+
+        // 保留原本 user 欄位
+        // Google Sheet 使用這個欄位
+
         user:
-        "現場紀錄"
+        recorder
 
     };
 
@@ -419,6 +495,10 @@ async function saveRecord(){
 
                 "✅ 發作紀錄已同步成功！\n\n" +
 
+                "👤 紀錄者：" +
+                recorder +
+                "\n\n" +
+
                 "☁️ Google Sheet 已完成儲存。\n\n" +
 
                 "是否要保留這台裝置上的歷史紀錄？\n\n" +
@@ -450,6 +530,10 @@ async function saveRecord(){
 
                     "✅ Google Sheet 同步成功\n\n" +
 
+                    "👤 紀錄者：" +
+                    recorder +
+                    "\n\n" +
+
                     "🗑️ 本機歷史紀錄已清除"
 
                 );
@@ -464,6 +548,10 @@ async function saveRecord(){
                 alert(
 
                     "✅ 發作紀錄已儲存\n\n" +
+
+                    "👤 紀錄者：" +
+                    recorder +
+                    "\n\n" +
 
                     "☁️ Google Sheet 同步成功\n\n" +
 
@@ -497,6 +585,10 @@ async function saveRecord(){
 
                 "⚠️ 發作紀錄已儲存在本機\n\n" +
 
+                "👤 紀錄者：" +
+                recorder +
+                "\n\n" +
+
                 "但 Google Sheet 同步失敗。\n\n" +
 
                 "資料不會遺失，請稍後再同步。"
@@ -526,6 +618,10 @@ async function saveRecord(){
         alert(
 
             "⚠️ 發作紀錄已儲存在本機\n\n" +
+
+            "👤 紀錄者：" +
+            recorder +
+            "\n\n" +
 
             "目前無法連線到 Google Sheet。\n\n" +
 
@@ -584,8 +680,12 @@ async function sendToGoogleSheet(record){
         note:
         record.note,
 
+        // ==================================
+        // 紀錄者
+        // ==================================
+
         user:
-        record.user
+        record.recorder
 
     };
 
@@ -1297,7 +1397,7 @@ function formatDate(date){
 function initSeizure(){
 
     console.log(
-        "🚨 seizure.js V3.1 loaded"
+        "🚨 seizure.js V3.2 loaded"
     );
 
 

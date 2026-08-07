@@ -256,70 +256,57 @@ async function saveRecord(){
     }
 
 
-    // ======================================
-    // 確認紀錄者
-    // ======================================
+// ======================================
+// 取得目前使用者
+// ======================================
 
-    let recorder = "未設定";
+let recorder = "未設定";
+
+
+if(
+    typeof getCurrentUser === "function"
+){
+
+    const currentUser =
+    getCurrentUser();
 
 
     if(
-        typeof getRecorder === "function"
+        currentUser &&
+        currentUser.displayName
     ){
 
         recorder =
-        getRecorder();
+        currentUser.displayName;
 
     }
 
-
-    // 如果尚未設定紀錄者
-    // 請使用 settings.js 的設定功能
-
-    if(
-        !recorder ||
-        recorder === "未設定"
-    ){
-
-        if(
-            typeof setRecorder === "function"
-        ){
-
-            setRecorder();
-
-            recorder =
-            getRecorder();
-
-        }
-
-    }
+}
 
 
-    // 如果設定後仍然沒有紀錄者
+// ======================================
+// 確認使用者身份
+// ======================================
 
-    if(
-        !recorder ||
-        recorder === "未設定"
-    ){
+if(
+    !recorder ||
+    recorder === "未設定"
+){
 
-        const continueSave = confirm(
+    alert(
 
-            "⚠️ 尚未設定紀錄者。\n\n" +
+        "⚠️ 尚未設定使用者。\n\n" +
 
-            "這筆紀錄將會標示為「未設定」。\n\n" +
+        "請先完成使用者姓名與身份設定，" +
 
-            "確定要繼續儲存嗎？"
+        "再儲存發作紀錄。"
 
-        );
+    );
 
 
-        if(!continueSave){
+    return;
 
-            return;
-
-        }
-
-    }
+}
 
 
     // 防止重複按儲存

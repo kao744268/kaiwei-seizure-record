@@ -1,315 +1,463 @@
-/* ==========================================
-👦 愷威 Care
-user.js
-使用者身份系統 V1.1
-========================================== */
-
-/* ==========================================
-設定
-========================================== */
-
-const USER_STORAGE_KEY = "kaiweiCareUser";
-
-/* ==========================================
-取得目前使用者
-========================================== */
-
-function getCurrentUser() {
-
-```
-const savedUser =
-    localStorage.getItem(USER_STORAGE_KEY);
+// ==========================================
+// 👦 愷威 Care V1.0
+// user.js
+// 使用者身份管理
+// ==========================================
 
 
-if (!savedUser) {
+// ==========================================
+// LocalStorage Key
+// ==========================================
 
-    return null;
+const USER_STORAGE_KEY =
+"care_current_user";
+
+
+// ==========================================
+// 取得目前使用者
+// ==========================================
+
+function getCurrentUser(){
+
+    const saved =
+    localStorage.getItem(
+        USER_STORAGE_KEY
+    );
+
+
+    if(!saved){
+
+        return null;
+
+    }
+
+
+    try{
+
+        return JSON.parse(
+            saved
+        );
+
+    }catch(error){
+
+        console.error(
+            "讀取使用者資料失敗：",
+            error
+        );
+
+        localStorage.removeItem(
+            USER_STORAGE_KEY
+        );
+
+        return null;
+
+    }
 
 }
 
 
-try {
+// ==========================================
+// 儲存使用者
+// ==========================================
 
-    return JSON.parse(savedUser);
+function saveCurrentUser(
+    name,
+    role
+){
 
-} catch (error) {
+    const user = {
 
-    console.error(
-        "使用者資料讀取失敗：",
-        error
+        name:
+        name.trim(),
+
+        role:
+        role,
+
+        displayName:
+        name.trim() +
+        "｜" +
+        role
+
+    };
+
+
+    localStorage.setItem(
+
+        USER_STORAGE_KEY,
+
+        JSON.stringify(
+            user
+        )
+
     );
+
+
+    return user;
+
+}
+
+
+// ==========================================
+// 顯示使用者設定畫面
+// ==========================================
+
+function showUserSetup(){
+
+    const setupPage =
+    document.getElementById(
+        "userSetupPage"
+    );
+
+
+    const homePage =
+    document.getElementById(
+        "homePage"
+    );
+
+
+    if(setupPage){
+
+        setupPage.classList.add(
+            "active"
+        );
+
+    }
+
+
+    if(homePage){
+
+        homePage.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// 進入主畫面
+// ==========================================
+
+function enterApp(){
+
+    const setupPage =
+    document.getElementById(
+        "userSetupPage"
+    );
+
+
+    const homePage =
+    document.getElementById(
+        "homePage"
+    );
+
+
+    if(setupPage){
+
+        setupPage.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    if(homePage){
+
+        homePage.classList.add(
+            "active"
+        );
+
+    }
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+// ==========================================
+// 開始使用
+// ==========================================
+
+function startUserSetup(){
+
+    const nameInput =
+    document.getElementById(
+        "userName"
+    );
+
+
+    const roleSelect =
+    document.getElementById(
+        "userRole"
+    );
+
+
+    if(!nameInput){
+
+        console.error(
+            "找不到 userName"
+        );
+
+        return;
+
+    }
+
+
+    if(!roleSelect){
+
+        console.error(
+            "找不到 userRole"
+        );
+
+        return;
+
+    }
+
+
+    const name =
+    nameInput.value.trim();
+
+
+    const role =
+    roleSelect.value;
+
+
+    // ===============================
+    // 檢查姓名
+    // ===============================
+
+    if(!name){
+
+        alert(
+            "請先輸入姓名。"
+        );
+
+
+        nameInput.focus();
+
+        return;
+
+    }
+
+
+    // ===============================
+    // 檢查身份
+    // ===============================
+
+    if(!role){
+
+        alert(
+            "請先選擇身份。"
+        );
+
+
+        roleSelect.focus();
+
+        return;
+
+    }
+
+
+    // ===============================
+    // 儲存
+    // ===============================
+
+    const user =
+    saveCurrentUser(
+        name,
+        role
+    );
+
+
+    console.log(
+        "👤 使用者設定完成：",
+        user
+    );
+
+
+    // ===============================
+    // 進入 App
+    // ===============================
+
+    enterApp();
+
+
+    alert(
+
+        "👋 歡迎 " +
+        user.displayName +
+        "\n\n" +
+        "之後的發作紀錄會自動記錄您的身份。"
+
+    );
+
+}
+
+
+// ==========================================
+// 更換使用者
+// ==========================================
+
+function changeUser(){
+
+    const currentUser =
+    getCurrentUser();
+
+
+    if(currentUser){
+
+        const confirmChange =
+        confirm(
+
+            "目前使用者：\n" +
+
+            currentUser.displayName +
+
+            "\n\n" +
+
+            "確定要更換使用者嗎？"
+
+        );
+
+
+        if(!confirmChange){
+
+            return;
+
+        }
+
+    }
+
 
     localStorage.removeItem(
         USER_STORAGE_KEY
     );
 
-    return null;
 
-}
-```
+    // 清空輸入欄位
 
-}
-
-/* ==========================================
-儲存使用者
-========================================== */
-
-function saveCurrentUser(name, role) {
-
-```
-const user = {
-
-    name: name,
-
-    role: role
-
-};
-
-
-localStorage.setItem(
-
-    USER_STORAGE_KEY,
-
-    JSON.stringify(user)
-
-);
-
-
-return user;
-```
-
-}
-
-/* ==========================================
-顯示使用者設定
-========================================== */
-
-function showUserSetup() {
-
-```
-const setupPage =
+    const nameInput =
     document.getElementById(
-        "userSetupPage"
-    );
-
-const homePage =
-    document.getElementById(
-        "homePage"
+        "userName"
     );
 
 
-if (!setupPage) {
-
-    return;
-
-}
-
-
-setupPage.classList.add("active");
-
-
-if (homePage) {
-
-    homePage.classList.remove("active");
-
-}
-```
-
-}
-
-/* ==========================================
-顯示主畫面
-========================================== */
-
-function showHomePage() {
-
-```
-const setupPage =
+    const roleSelect =
     document.getElementById(
-        "userSetupPage"
-    );
-
-const homePage =
-    document.getElementById(
-        "homePage"
+        "userRole"
     );
 
 
-if (setupPage) {
+    if(nameInput){
 
-    setupPage.classList.remove("active");
+        nameInput.value = "";
 
-}
-
-
-if (homePage) {
-
-    homePage.classList.add("active");
-
-}
-```
-
-}
-
-/* ==========================================
-初始化
-========================================== */
-
-function initUserSystem() {
-
-```
-const currentUser =
-    getCurrentUser();
+    }
 
 
-if (!currentUser) {
+    if(roleSelect){
+
+        roleSelect.value = "";
+
+    }
+
 
     showUserSetup();
 
-    return;
-
 }
 
 
-showHomePage();
-```
+// ==========================================
+// 初始化使用者系統
+// ==========================================
 
-}
+function initUser(){
 
-/* ==========================================
-開始使用
-========================================== */
-
-function handleUserStart() {
-
-```
-const nameInput =
-    document.getElementById(
-        "userName"
-    );
-
-const roleInput =
-    document.getElementById(
-        "userRole"
+    console.log(
+        "👤 user.js V1.0 初始化"
     );
 
 
-if (!nameInput || !roleInput) {
-
-    return;
-
-}
-
-
-const name =
-    nameInput.value.trim();
-
-
-const role =
-    roleInput.value;
-
-
-if (!name) {
-
-    alert("請輸入姓名");
-
-    nameInput.focus();
-
-    return;
-
-}
-
-
-if (!role) {
-
-    alert("請選擇身份");
-
-    roleInput.focus();
-
-    return;
-
-}
-
-
-saveCurrentUser(
-
-    name,
-
-    role
-
-);
-
-
-showHomePage();
-```
-
-}
-
-/* ==========================================
-更換使用者
-========================================== */
-
-function changeUser() {
-
-```
-const nameInput =
+    const startBtn =
     document.getElementById(
-        "userName"
-    );
-
-const roleInput =
-    document.getElementById(
-        "userRole"
+        "userStartBtn"
     );
 
 
-if (nameInput) {
+    if(startBtn){
 
-    nameInput.value = "";
+        startBtn.onclick =
+        startUserSetup;
+
+    }else{
+
+        console.error(
+            "❌ 找不到 userStartBtn"
+        );
+
+    }
+
+
+    const currentUser =
+    getCurrentUser();
+
+
+    // ===============================
+    // 已經設定過使用者
+    // ===============================
+
+    if(currentUser){
+
+        console.log(
+            "👤 目前使用者：",
+            currentUser.displayName
+        );
+
+
+        enterApp();
+
+
+    }else{
+
+        // ===============================
+        // 第一次使用
+        // ===============================
+
+        console.log(
+            "👤 尚未設定使用者"
+        );
+
+
+        showUserSetup();
+
+    }
 
 }
 
 
-if (roleInput) {
+// ==========================================
+// DOM 初始化
+// ==========================================
 
-    roleInput.value = "";
+if(
+    document.readyState === "loading"
+){
 
-}
+    document.addEventListener(
 
+        "DOMContentLoaded",
 
-showUserSetup();
-```
+        initUser
 
-}
+    );
 
-/* ==========================================
-初始化使用者系統
-注意：
-user.js 是最後載入
-不需要等待 DOMContentLoaded
-========================================== */
+}else{
 
-const userStartButton =
-document.getElementById(
-"userStartBtn"
-);
-
-if (userStartButton) {
-
-```
-userStartButton.addEventListener(
-
-    "click",
-
-    handleUserStart
-
-);
-```
+    initUser();
 
 }
-
-/* ==========================================
-立即初始化
-========================================== */
-
-initUserSystem();

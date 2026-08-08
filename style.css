@@ -13,17 +13,31 @@
 }
 
 html{
+    width:100%;
     min-height:100%;
+    overflow-x:hidden;
+
+    touch-action:manipulation;
 }
 
 body{
 
     margin:0;
-
     padding:0;
 
+    width:100%;
     min-height:100vh;
 
+    overflow-x:hidden;
+
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Noto Sans TC",
+    sans-serif;
     font-family:
     -apple-system,
     BlinkMacSystemFont,

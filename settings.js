@@ -1,7 +1,7 @@
 // ==========================================
 // 👦 愷威 Care
 // settings.js
-// 家長控制＋紀錄者設定
+// 家長控制＋資料管理
 // ==========================================
 
 
@@ -13,9 +13,7 @@ const defaultSettings = {
 
     parentMode: false,
 
-    pin: "1234",
-
-    recorder: ""
+    pin: "1234"
 
 };
 
@@ -37,8 +35,11 @@ function getSettings(){
         try{
 
             return {
+
                 ...defaultSettings,
+
                 ...JSON.parse(data)
+
             };
 
         }catch(error){
@@ -54,7 +55,9 @@ function getSettings(){
 
 
     return {
+
         ...defaultSettings
+
     };
 
 }
@@ -73,99 +76,6 @@ function saveSettings(data){
         JSON.stringify(data)
 
     );
-
-}
-
-
-// ===============================
-// 設定紀錄者
-// ===============================
-
-function setRecorder(){
-
-    const settings =
-    getSettings();
-
-
-    const current =
-    settings.recorder || "";
-
-
-    const input =
-    prompt(
-
-        "請輸入紀錄者姓名\n\n" +
-
-        "例如：媽媽、爸爸、老師、阿姨\n\n" +
-
-        "目前紀錄者：" +
-
-        (current || "尚未設定"),
-
-        current
-
-    );
-
-
-    if(input === null){
-
-        return;
-
-    }
-
-
-    const recorder =
-    input.trim();
-
-
-    if(!recorder){
-
-        alert(
-            "⚠️ 紀錄者不能為空白"
-        );
-
-        return;
-
-    }
-
-
-    settings.recorder =
-    recorder;
-
-
-    saveSettings(
-        settings
-    );
-
-
-    alert(
-
-        "✅ 紀錄者已設定為：\n\n" +
-
-        recorder
-
-    );
-
-
-    console.log(
-        "👤 紀錄者設定：",
-        recorder
-    );
-
-}
-
-
-// ===============================
-// 取得紀錄者
-// ===============================
-
-function getRecorder(){
-
-    const settings =
-    getSettings();
-
-
-    return settings.recorder || "未設定";
 
 }
 
@@ -296,7 +206,20 @@ function backupData(){
 
         settings:
 
-        getSettings()
+        getSettings(),
+
+
+        user:
+
+        typeof getCurrentUser === "function"
+
+        ?
+
+        getCurrentUser()
+
+        :
+
+        null
 
     };
 
@@ -305,16 +228,24 @@ function backupData(){
     new Blob(
 
         [
+
             JSON.stringify(
+
                 backup,
+
                 null,
+
                 2
+
             )
+
         ],
 
         {
+
             type:
             "application/json"
+
         }
 
     );
@@ -445,7 +376,19 @@ function exportRecords(){
 
             +
 
-            (item.recorder || "未設定")
+            (
+
+                item.recorder
+
+                ||
+
+                item.user
+
+                ||
+
+                "未設定"
+
+            )
 
             +
 
@@ -460,12 +403,16 @@ function exportRecords(){
     new Blob(
 
         [
+
             text
+
         ],
 
         {
+
             type:
             "text/plain"
+
         }
 
     );
@@ -554,10 +501,27 @@ document.addEventListener(
         );
 
 
-        console.log(
-            "👤 目前紀錄者：",
-            getRecorder()
-        );
+        if(
+            typeof getCurrentUser === "function"
+        ){
+
+            const user =
+            getCurrentUser();
+
+
+            console.log(
+
+                "👤 目前使用者：",
+
+                user
+                ?
+                user.displayName
+                :
+                "尚未設定"
+
+            );
+
+        }
 
     }
 

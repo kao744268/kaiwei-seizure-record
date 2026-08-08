@@ -983,76 +983,26 @@ button,
    手機優化
 ========================= */
 
-@media(max-width:420px){
-
-    .page{
-
-        padding:15px;
-
-    }
-
-
-    .main-header{
-
-        padding-top:18px;
-
-    }
-
-
-    .main-header h1{
-
-        font-size:32px;
-
-    }
-
-
-    #timer{
-
-        width:215px;
-
-        height:215px;
-
-        font-size:46px;
-
-    }
-
-
-    .record-action-buttons{
-
-        grid-template-columns:
-        1fr;
-
-        gap:0;
-
-    }
-
-
-    .quick-menu{
-
-        gap:8px;
-
-    }
-
-
-    .small-menu{
-
-        font-size:13px;
-
-        padding:14px 4px;
-
-    }
-
+html{
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
+body{
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
 
-@media(min-width:600px){
+button{
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
 
-    .page{
-
-        max-width:520px;
-
-        margin:auto;
-
-    }
-
+input,
+select,
+textarea{
+    -webkit-user-select: text;
+    user-select: text;
 }

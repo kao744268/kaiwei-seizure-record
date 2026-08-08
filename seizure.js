@@ -32,6 +32,93 @@ let seizureStartTime = null;
 let seizureEndTime = null;
 
 let emergencyTriggered = false;
+// ==========================================
+// Screen Wake Lock
+// ==========================================
+
+let wakeLock = null;
+
+
+async function requestWakeLock(){
+
+    if(!("wakeLock" in navigator)){
+
+        console.log(
+            "📱 此裝置／瀏覽器不支援螢幕保持喚醒"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        wakeLock =
+        await navigator.wakeLock.request(
+            "screen"
+        );
+
+
+        console.log(
+            "🔒 螢幕保持喚醒已啟用"
+        );
+
+
+        wakeLock.addEventListener(
+            "release",
+            function(){
+
+                console.log(
+                    "🔓 Wake Lock 已釋放"
+                );
+
+                wakeLock = null;
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.warn(
+            "⚠️ 無法啟用螢幕保持喚醒：",
+            error
+        );
+
+        wakeLock = null;
+
+    }
+
+}
+
+
+async function releaseWakeLock(){
+
+    if(!wakeLock){
+
+        return;
+
+    }
+
+
+    try{
+
+        await wakeLock.release();
+
+    }catch(error){
+
+        console.warn(
+            "解除 Wake Lock 失敗：",
+            error
+        );
+
+    }
+
+
+    wakeLock = null;
+
+}
 
 
 // ==========================================

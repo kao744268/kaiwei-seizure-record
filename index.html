@@ -4,7 +4,6 @@
 
 <head>
 
-```
 <meta charset="UTF-8">
 
 <meta
@@ -48,11 +47,12 @@
 >
 
 <title>愷威 Care</title>
-```
 
 </head>
 
+
 <body>
+
 
 <!-- ===============================
 使用者設定
@@ -64,82 +64,81 @@
     class="page active"
 >
 
-```
-<div class="user-setup-card">
+    <div class="user-setup-card">
 
-    <div class="user-setup-icon">
-        👦
-    </div>
+        <div class="user-setup-icon">
+            👦
+        </div>
 
-    <h2>
-        歡迎使用 愷威 Care
-    </h2>
+        <h2>
+            歡迎使用 愷威 Care
+        </h2>
 
-    <p class="user-setup-description">
-        請先設定目前使用者
-    </p>
+        <p class="user-setup-description">
+            請先設定目前使用者
+        </p>
 
 
-    <div class="user-input-group">
+        <div class="user-input-group">
 
-        <label for="userName">
-            👤 姓名
-        </label>
+            <label for="userName">
+                👤 姓名
+            </label>
 
-        <input
-            type="text"
-            id="userName"
-            placeholder="請輸入姓名"
-            autocomplete="name"
+            <input
+                type="text"
+                id="userName"
+                placeholder="請輸入姓名"
+                autocomplete="name"
+            >
+
+        </div>
+
+
+        <div class="user-input-group">
+
+            <label for="userRole">
+                🪪 身份
+            </label>
+
+            <select id="userRole">
+
+                <option value="">
+                    請選擇身份
+                </option>
+
+                <option value="家長">
+                    家長
+                </option>
+
+                <option value="老師">
+                    老師
+                </option>
+
+                <option value="保母／照顧者">
+                    保母／照顧者
+                </option>
+
+                <option value="其他">
+                    其他
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            id="userStartBtn"
+            class="start-button"
         >
+            開始使用
+        </button>
 
     </div>
-
-
-    <div class="user-input-group">
-
-        <label for="userRole">
-            🪪 身份
-        </label>
-
-        <select id="userRole">
-
-            <option value="">
-                請選擇身份
-            </option>
-
-            <option value="家長">
-                家長
-            </option>
-
-            <option value="老師">
-                老師
-            </option>
-
-            <option value="保母／照顧者">
-                保母／照顧者
-            </option>
-
-            <option value="其他">
-                其他
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <button
-        id="userStartBtn"
-        class="start-button"
-    >
-        開始使用
-    </button>
-
-</div>
-```
 
 </section>
+
 
 <!-- ===============================
 主畫面
@@ -150,423 +149,416 @@
     class="page"
 >
 
-```
-<header class="main-header">
 
-    <h1>
-        👦 愷威 Care
-    </h1>
+    <header class="main-header">
 
-    <p>
-        癲癇紀錄系統
-    </p>
+        <h1>
+            👦 愷威 Care
+        </h1>
 
-</header>
-```
+        <p>
+            癲癇紀錄系統
+        </p>
 
-<!-- ===============================
-發作紀錄
-=============================== -->
-
-<section class="seizure-panel">
-
-```
-<h2>
-    🚨 發作紀錄
-</h2>
+    </header>
 
 
-<div id="statusBox">
-    等待開始紀錄
-</div>
+    <!-- ===============================
+    發作紀錄
+    =============================== -->
+
+    <section class="seizure-panel">
+
+        <h2>
+            🚨 發作紀錄
+        </h2>
 
 
-<div id="timer">
-    00:00
-</div>
+        <div id="statusBox">
+            等待開始紀錄
+        </div>
 
 
-<div id="startTimeBox">
-    尚未開始
-</div>
+        <div id="timer">
+            00:00
+        </div>
 
 
-<button
-    id="startBtn"
-    class="start-button"
->
-    ▶️ 開始發作
-</button>
+        <div id="startTimeBox">
+            尚未開始
+        </div>
 
 
-<button
-    id="stopBtn"
-    class="stop-button"
->
-    ⏹ 結束發作
-</button>
+        <button
+            id="startBtn"
+            class="start-button"
+        >
+            ▶️ 開始發作
+        </button>
 
 
-<div class="record-action-buttons">
-
-    <button
-        id="saveBtn"
-        class="save-button"
-        disabled
-    >
-        💾 儲存紀錄
-    </button>
+        <button
+            id="stopBtn"
+            class="stop-button"
+        >
+            ⏹ 結束發作
+        </button>
 
 
-    <button
-        id="cancelBtn"
-        class="cancel-button"
-        disabled
-    >
-        ↩️ 取消本次紀錄
-    </button>
+        <div class="record-action-buttons">
 
-</div>
-```
+            <button
+                id="saveBtn"
+                class="save-button"
+                disabled
+            >
+                💾 儲存紀錄
+            </button>
+
+
+            <button
+                id="cancelBtn"
+                class="cancel-button"
+                disabled
+            >
+                ↩️ 取消本次紀錄
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===============================
+    發作場合
+    =============================== -->
+
+    <section class="record-section">
+
+        <h3>
+            📍 發作場合
+        </h3>
+
+
+        <div class="option-card">
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="學校"
+                >
+                🏫 學校
+            </label>
+
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="家中"
+                >
+                🏠 家中
+            </label>
+
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="睡眠中"
+                >
+                😴 睡眠中
+            </label>
+
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="外出途中"
+                >
+                🚗 外出途中
+            </label>
+
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="戶外活動"
+                >
+                🌳 戶外活動
+            </label>
+
+
+            <label>
+                <input
+                    type="radio"
+                    name="situation"
+                    value="其他"
+                >
+                其他
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===============================
+    發作型態
+    =============================== -->
+
+    <section class="record-section">
+
+        <h3>
+            🧠 發作型態
+        </h3>
+
+
+        <div class="option-card">
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="type"
+                    value="全身抽搐"
+                >
+                全身抽搐
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="type"
+                    value="局部抽搐"
+                >
+                局部抽搐
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="type"
+                    value="失神"
+                >
+                失神
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="type"
+                    value="僵直"
+                >
+                僵直
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="type"
+                    value="其他"
+                >
+                其他
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===============================
+    意識狀態
+    =============================== -->
+
+    <section class="record-section">
+
+        <h3>
+            👀 意識狀態
+        </h3>
+
+
+        <div class="option-card">
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="condition"
+                    value="有意識"
+                >
+                🙂 有意識
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="condition"
+                    value="意識模糊"
+                >
+                😵 意識模糊
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="condition"
+                    value="無意識"
+                >
+                😴 無意識
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="condition"
+                    value="呼吸異常"
+                >
+                ⚠️ 呼吸異常
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===============================
+    發作後狀態
+    =============================== -->
+
+    <section class="record-section">
+
+        <h3>
+            🌱 發作後狀態
+        </h3>
+
+
+        <div class="option-card">
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="恢復正常"
+                >
+                😊 恢復正常
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="疲倦想睡"
+                >
+                😴 疲倦想睡
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="意識混亂"
+                >
+                😵 意識混亂
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="情緒不穩"
+                >
+                😢 情緒不穩
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="肌肉無力"
+                >
+                💤 肌肉無力
+            </label>
+
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="afterState"
+                    value="其他"
+                >
+                其他
+            </label>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===============================
+    備註
+    =============================== -->
+
+    <section class="record-section">
+
+        <h3>
+            📝 備註
+        </h3>
+
+
+        <textarea
+            id="note"
+            placeholder="記錄發作前後狀況、特殊反應"
+        ></textarea>
+
+    </section>
+
+
+    <!-- ===============================
+    快速功能
+    =============================== -->
+
+    <section class="quick-menu">
+
+        <button
+            id="medicalPageBtn"
+            class="small-menu"
+        >
+            🏥 醫療卡
+        </button>
+
+
+        <button
+            id="historyPageBtn"
+            class="small-menu"
+        >
+            📋 歷史紀錄
+        </button>
+
+
+        <button
+            id="emergencyPageBtn"
+            class="small-menu emergency-small"
+        >
+            ⚠️ 緊急模式
+        </button>
+
+    </section>
 
 </section>
 
-<!-- ===============================
-發作場合
-=============================== -->
-
-<section class="record-section">
-
-```
-<h3>
-    📍 發作場合
-</h3>
-
-
-<div class="option-card">
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="學校"
-        >
-        🏫 學校
-    </label>
-
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="家中"
-        >
-        🏠 家中
-    </label>
-
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="睡眠中"
-        >
-        😴 睡眠中
-    </label>
-
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="外出途中"
-        >
-        🚗 外出途中
-    </label>
-
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="戶外活動"
-        >
-        🌳 戶外活動
-    </label>
-
-
-    <label>
-        <input
-            type="radio"
-            name="situation"
-            value="其他"
-        >
-        其他
-    </label>
-
-</div>
-```
-
-</section>
-
-<!-- ===============================
-發作型態
-=============================== -->
-
-<section class="record-section">
-
-```
-<h3>
-    🧠 發作型態
-</h3>
-
-
-<div class="option-card">
-
-    <label>
-        <input
-            type="checkbox"
-            name="type"
-            value="全身抽搐"
-        >
-        全身抽搐
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="type"
-            value="局部抽搐"
-        >
-        局部抽搐
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="type"
-            value="失神"
-        >
-        失神
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="type"
-            value="僵直"
-        >
-        僵直
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="type"
-            value="其他"
-        >
-        其他
-    </label>
-
-</div>
-```
-
-</section>
-
-<!-- ===============================
-意識狀態
-=============================== -->
-
-<section class="record-section">
-
-```
-<h3>
-    👀 意識狀態
-</h3>
-
-
-<div class="option-card">
-
-    <label>
-        <input
-            type="checkbox"
-            name="condition"
-            value="有意識"
-        >
-        🙂 有意識
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="condition"
-            value="意識模糊"
-        >
-        😵 意識模糊
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="condition"
-            value="無意識"
-        >
-        😴 無意識
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="condition"
-            value="呼吸異常"
-        >
-        ⚠️ 呼吸異常
-    </label>
-
-</div>
-```
-
-</section>
-
-<!-- ===============================
-發作後狀態
-=============================== -->
-
-<section class="record-section">
-
-```
-<h3>
-    🌱 發作後狀態
-</h3>
-
-
-<div class="option-card">
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="恢復正常"
-        >
-        😊 恢復正常
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="疲倦想睡"
-        >
-        😴 疲倦想睡
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="意識混亂"
-        >
-        😵 意識混亂
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="情緒不穩"
-        >
-        😢 情緒不穩
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="肌肉無力"
-        >
-        💤 肌肉無力
-    </label>
-
-
-    <label>
-        <input
-            type="checkbox"
-            name="afterState"
-            value="其他"
-        >
-        其他
-    </label>
-
-</div>
-```
-
-</section>
-
-<!-- ===============================
-備註
-=============================== -->
-
-<section class="record-section">
-
-```
-<h3>
-    📝 備註
-</h3>
-
-
-<textarea
-    id="note"
-    placeholder="記錄發作前後狀況、特殊反應"
-></textarea>
-```
-
-</section>
-
-<!-- ===============================
-快速功能
-=============================== -->
-
-<section class="quick-menu">
-
-```
-<button
-    id="medicalPageBtn"
-    class="small-menu"
->
-    🏥 醫療卡
-</button>
-
-
-<button
-    id="historyPageBtn"
-    class="small-menu"
->
-    📋 歷史紀錄
-</button>
-
-
-<button
-    id="emergencyPageBtn"
-    class="small-menu emergency-small"
->
-    ⚠️ 緊急模式
-</button>
-```
-
-</section>
-
-</section>
 
 <!-- ===============================
 醫療卡
@@ -577,22 +569,21 @@
     class="page"
 >
 
-```
-<h2>
-    🏥 醫療資訊卡
-</h2>
+    <h2>
+        🏥 醫療資訊卡
+    </h2>
 
 
-<div id="medicalCard">
-</div>
+    <div id="medicalCard">
+    </div>
 
 
-<button class="backBtn">
-    返回紀錄
-</button>
-```
+    <button class="backBtn">
+        返回紀錄
+    </button>
 
 </section>
+
 
 <!-- ===============================
 歷史紀錄
@@ -603,22 +594,21 @@
     class="page"
 >
 
-```
-<h2>
-    📋 歷史紀錄
-</h2>
+    <h2>
+        📋 歷史紀錄
+    </h2>
 
 
-<div id="historyList">
-</div>
+    <div id="historyList">
+    </div>
 
 
-<button class="backBtn">
-    返回紀錄
-</button>
-```
+    <button class="backBtn">
+        返回紀錄
+    </button>
 
 </section>
+
 
 <!-- ===============================
 緊急模式
@@ -629,58 +619,57 @@
     class="page"
 >
 
-```
-<h2>
-    ⚠️ 緊急模式
-</h2>
+    <h2>
+        ⚠️ 緊急模式
+    </h2>
 
 
-<div id="emergencyAlert">
-    發作超過5分鐘時將自動提醒
-</div>
+    <div id="emergencyAlert">
+        發作超過5分鐘時將自動提醒
+    </div>
 
 
-<div class="info-card">
+    <div class="info-card">
 
-    <h3>
-        請依醫囑處理：
-    </h3>
-
-
-    <p>
-        ① 給予緊急藥物
-    </p>
+        <h3>
+            請依醫囑處理：
+        </h3>
 
 
-    <p>
-        ② 通知鄰近醫院送醫
-    </p>
+        <p>
+            ① 給予緊急藥物
+        </p>
 
 
-    <p>
-        ③ 聯絡家長
-    </p>
-
-</div>
+        <p>
+            ② 通知鄰近醫院送醫
+        </p>
 
 
-<div id="contactList">
-</div>
+        <p>
+            ③ 聯絡家長
+        </p>
+
+    </div>
 
 
-<button
-    id="emergencyBackBtn"
-    class="backBtn"
->
-    返回紀錄
-</button>
-```
+    <div id="contactList">
+    </div>
+
+
+    <button
+        id="emergencyBackBtn"
+        class="backBtn"
+    >
+        返回紀錄
+    </button>
 
 </section>
 
+
 <!-- ===============================
 JavaScript
-載入順序維持目前穩定版本
+載入順序
 =============================== -->
 
 <script src="data.js"></script>
@@ -698,6 +687,7 @@ JavaScript
 <script src="settings.js"></script>
 
 <script src="user.js"></script>
+
 
 </body>
 

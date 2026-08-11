@@ -1,7 +1,9 @@
 // ==========================================
 // 👦 愷威 Care V3.2
 // seizure.js
-// 發作紀錄 + Google Sheet 同步 + 紀錄者
+// 發作紀錄 + Google Sheet 同步
+// + Screen Wake Lock
+// + 背景計時保護
 // ==========================================
 
 
@@ -12,12 +14,27 @@
 const GOOGLE_SHEET_API =
 "https://script.google.com/macros/s/AKfycbyqBDv6Xnn1bUDnavrEoxIe9x0NWyRiZIImhPb5-G66eh3BOlCa3m_3ZFD-ftbLDPeogg/exec";
 
+
+// ==========================================
+// Child ID
+// ==========================================
+
 const CHILD_ID = "P001";
 
 
 // ==========================================
-// 狀態
+// LocalStorage
 // ==========================================
+
+const PENDING_RECORD_KEY =
+"care_pending_seizure";
+
+
+// ==========================================
+// 發作狀態
+// ==========================================
+
+let seizureTimer = null;
 
 let seizureRunning = false;
 
@@ -25,13 +42,13 @@ let seizurePendingSave = false;
 
 let seizureSeconds = 0;
 
-let seizureTimer = null;
-
 let seizureStartTime = null;
 
 let seizureEndTime = null;
 
 let emergencyTriggered = false;
+
+
 // ==========================================
 // Screen Wake Lock
 // ==========================================
@@ -39,20 +56,36 @@ let emergencyTriggered = false;
 let wakeLock = null;
 
 
+// ==========================================
+// 取得螢幕保持喚醒
+// ==========================================
+
 async function requestWakeLock(){
 
-    if(!("wakeLock" in navigator)){
-
-        console.log(
-            "📱 此裝置／瀏覽器不支援螢幕保持喚醒"
-        );
-
-        return;
-
-    }
-
-
     try{
+
+        if(
+            !("wakeLock" in navigator)
+        ){
+
+            console.warn(
+                "📱 此瀏覽器不支援 Screen Wake Lock"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            wakeLock &&
+            !wakeLock.released
+        ){
+
+            return;
+
+        }
+
 
         wakeLock =
         await navigator.wakeLock.request(
@@ -61,7 +94,7 @@ async function requestWakeLock(){
 
 
         console.log(
-            "🔒 螢幕保持喚醒已啟用"
+            "📱 Screen Wake Lock 已啟用"
         );
 
 
@@ -70,10 +103,8 @@ async function requestWakeLock(){
             function(){
 
                 console.log(
-                    "🔓 Wake Lock 已釋放"
+                    "📱 Screen Wake Lock 已解除"
                 );
-
-                wakeLock = null;
 
             }
         );
@@ -82,54 +113,67 @@ async function requestWakeLock(){
     }catch(error){
 
         console.warn(
-            "⚠️ 無法啟用螢幕保持喚醒：",
+            "📱 無法啟用 Screen Wake Lock：",
             error
         );
-
-        wakeLock = null;
 
     }
 
 }
 
 
-async function releaseWakeLock(){
+// ==========================================
+// 重新取得 Wake Lock
+// App 從背景回來時使用
+// ==========================================
 
-    if(!wakeLock){
+async function reacquireWakeLock(){
+
+    if(
+        document.visibilityState !==
+        "visible"
+    ){
 
         return;
 
     }
 
 
-    try{
+    if(
+        !seizureRunning
+    ){
 
-        await wakeLock.release();
-
-    }catch(error){
-
-        console.warn(
-            "解除 Wake Lock 失敗：",
-            error
-        );
+        return;
 
     }
 
 
-    wakeLock = null;
+    await requestWakeLock();
 
 }
 
 
 // ==========================================
-// LocalStorage Key
+// App 可見狀態變化
 // ==========================================
 
-const PENDING_RECORD_KEY =
-"care_pending_seizure";
+document.addEventListener(
+    "visibilitychange",
+    function(){
 
-const SEIZURE_RECORDS_KEY =
-"care_seizure_records";
+        if(
+            document.visibilityState ===
+            "visible"
+        ){
+
+            reacquireWakeLock();
+
+            updateElapsedTime();
+
+        }
+
+    }
+);
 
 
 // ==========================================
@@ -138,91 +182,135 @@ const SEIZURE_RECORDS_KEY =
 
 function startSeizure(){
 
-    if(seizureRunning){
+    if(
+        seizureRunning ||
+        seizurePendingSave
+    ){
 
         return;
 
     }
 
 
-    if(seizurePendingSave){
-
-        alert(
-            "⚠️ 目前還有一筆尚未儲存的發作紀錄。\n\n" +
-            "請先完成並儲存上一筆紀錄。"
-        );
-
-        return;
-
-    }
+    seizureStartTime =
+    new Date();
 
 
-    // 清除舊計時器
-
-    if(seizureTimer !== null){
-
-        clearInterval(seizureTimer);
-
-        seizureTimer = null;
-
-    }
+    seizureEndTime =
+    null;
 
 
-    // 初始化
-
-    seizureRunning = true;
-
-    seizurePendingSave = false;
-
-    seizureSeconds = 0;
-
-    emergencyTriggered = false;
-
-    seizureStartTime = new Date();
-
-    seizureEndTime = null;
+    seizureSeconds =
+    0;
 
 
-    updateStatus(
-        "🚨 發作中｜請先照料與觀察"
-    );
+    seizureRunning =
+    true;
+
+
+    seizurePendingSave =
+    false;
+
+
+    emergencyTriggered =
+    false;
+
 
     updateStartTime();
 
     updateTimer();
 
+    updateStatus(
+        "🔴 發作進行中..."
+    );
+
+
     updateButtons();
 
 
-    // 開始計時
+    // 啟用螢幕保持喚醒
 
-    seizureTimer = setInterval(
-
-        function(){
-
-            seizureSeconds++;
-
-            updateTimer();
+    requestWakeLock();
 
 
-            // 五分鐘提醒
+    // 使用實際時間計算
 
-            if(
-                seizureSeconds >= 300 &&
-                emergencyTriggered === false
-            ){
+    if(
+        seizureTimer !== null
+    ){
 
-                emergencyTriggered = true;
+        clearInterval(
+            seizureTimer
+        );
 
-                showFiveMinuteAlert();
+    }
 
-            }
 
-        },
+    seizureTimer =
+    setInterval(
+
+        updateElapsedTime,
 
         1000
 
     );
+
+
+}
+
+
+// ==========================================
+// 更新實際經過時間
+// ==========================================
+
+function updateElapsedTime(){
+
+    if(
+        !seizureRunning ||
+        !seizureStartTime
+    ){
+
+        return;
+
+    }
+
+
+    const now =
+    new Date();
+
+
+    seizureSeconds =
+    Math.floor(
+
+        (
+            now.getTime() -
+            seizureStartTime.getTime()
+        )
+        /
+        1000
+
+    );
+
+
+    updateTimer();
+
+
+    // ======================================
+    // 五分鐘提醒
+    // ======================================
+
+    if(
+        seizureSeconds >= 300 &&
+        !emergencyTriggered
+    ){
+
+        emergencyTriggered =
+        true;
+
+
+        showFiveMinuteAlert();
+
+    }
 
 }
 
@@ -233,95 +321,76 @@ function startSeizure(){
 
 function stopSeizure(){
 
-    if(!seizureRunning){
-
-        alert(
-            "目前沒有進行中的發作紀錄"
-        );
+    if(
+        !seizureRunning
+    ){
 
         return;
 
     }
 
 
-    const confirmStop = confirm(
+    // 先更新最後秒數
 
-        "⏹ 確認結束發作？\n\n" +
-
-        "持續時間：" +
-
-        formatDuration(
-            seizureSeconds
-        )
-
-    );
+    updateElapsedTime();
 
 
-    if(!confirmStop){
-
-        return;
-
-    }
+    seizureEndTime =
+    new Date();
 
 
-    // 停止計時器
+    seizureRunning =
+    false;
 
-    if(seizureTimer !== null){
+
+    if(
+        seizureTimer !== null
+    ){
 
         clearInterval(
             seizureTimer
         );
 
-        seizureTimer = null;
-
     }
 
 
-    seizureRunning = false;
-
-    seizureEndTime = new Date();
-
-    seizurePendingSave = true;
+    seizureTimer =
+    null;
 
 
-    // 暫存
+    updateStatus(
+        "🟡 發作已結束，請確認資料"
+    );
+
+
+    seizurePendingSave =
+    true;
+
 
     savePendingRecord();
 
 
-    updateStatus(
-        "🟡 發作已結束｜請完成紀錄後儲存"
-    );
-
     updateButtons();
 
 
-    alert(
-
-        "⏹ 發作已結束\n\n" +
-
-        "持續時間：" +
-
-        formatDuration(
-            seizureSeconds
-        ) +
-
-        "\n\n" +
-
-        "請完成下方紀錄，最後按「💾 儲存紀錄」。"
-
+    console.log(
+        "⏹ 發作結束：",
+        seizureSeconds,
+        "秒"
     );
 
 }
 
 
 // ==========================================
-// 儲存紀錄
+// 建立完整紀錄
 // ==========================================
 
 async function saveRecord(){
 
-    if(!seizurePendingSave){
+    if(
+        !seizurePendingSave
+    ){
 
         alert(
             "目前沒有等待儲存的發作紀錄。"
@@ -332,7 +401,9 @@ async function saveRecord(){
     }
 
 
-    if(!seizureStartTime){
+    if(
+        !seizureStartTime
+    ){
 
         alert(
             "找不到發作開始時間，無法儲存。"
@@ -343,68 +414,58 @@ async function saveRecord(){
     }
 
 
-// ======================================
-// 取得目前使用者
-// ======================================
-
-let recorder = "未設定";
-
-
-if(
-    typeof getCurrentUser === "function"
-){
-
-    const currentUser =
-    getCurrentUser();
-
-
-    if(
-        currentUser &&
-        currentUser.displayName
-    ){
-
-        recorder =
-        currentUser.displayName;
-
-    }
-
-}
-
-
-// ======================================
-// 確認使用者身份
-// ======================================
-
-if(
-    !recorder ||
-    recorder === "未設定"
-){
-
-    alert(
-
-        "⚠️ 尚未設定使用者。\n\n" +
-
-        "請先完成使用者姓名與身份設定，" +
-
-        "再儲存發作紀錄。"
-
-    );
-
-
-    return;
-
-}
-
-
     // 防止重複按儲存
 
     const saveBtn =
-    document.getElementById("saveBtn");
+    document.getElementById(
+        "saveBtn"
+    );
 
 
     if(saveBtn){
 
-        saveBtn.disabled = true;
+        saveBtn.disabled =
+        true;
+
+    }
+
+
+    // ======================================
+    // 取得目前使用者
+    // ======================================
+
+    let currentUser =
+    "現場紀錄";
+
+
+    try{
+
+        if(
+            typeof getUser ===
+            "function"
+        ){
+
+            const user =
+            getUser();
+
+
+            if(user){
+
+                currentUser =
+                user.name +
+                "｜" +
+                user.role;
+
+            }
+
+        }
+
+    }catch(error){
+
+        console.warn(
+            "取得使用者資訊失敗：",
+            error
+        );
 
     }
 
@@ -460,18 +521,8 @@ if(
         note:
         getNote(),
 
-        // ==================================
-        // 紀錄者
-        // ==================================
-
-        recorder:
-        recorder,
-
-        // 保留原本 user 欄位
-        // Google Sheet 使用這個欄位
-
         user:
-        recorder
+        currentUser
 
     };
 
@@ -488,7 +539,7 @@ if(
         records = JSON.parse(
 
             localStorage.getItem(
-                SEIZURE_RECORDS_KEY
+                "care_seizure_records"
             ) || "[]"
 
         );
@@ -505,12 +556,14 @@ if(
     }
 
 
-    records.push(record);
+    records.push(
+        record
+    );
 
 
     localStorage.setItem(
 
-        SEIZURE_RECORDS_KEY,
+        "care_seizure_records",
 
         JSON.stringify(
             records
@@ -536,109 +589,54 @@ if(
         );
 
 
-        // ==================================
-        // Google Sheet 同步成功
-        // ==================================
-
         if(
             result &&
             result.status === "success"
         ){
 
-            console.log(
-                "☁️ Google Sheet 同步成功",
-                result
-            );
-
-
-            // 移除暫存中的未完成紀錄
+            // ==================================
+            // Google Sheet 成功
+            // ==================================
 
             localStorage.removeItem(
                 PENDING_RECORD_KEY
             );
 
 
-            seizurePendingSave = false;
+            seizurePendingSave =
+            false;
 
 
             // ==================================
-            // 詢問是否保留本機紀錄
+            // 詢問是否保留手機紀錄
             // ==================================
 
-            const keepLocalRecords = confirm(
+            const keepLocal =
+            confirm(
 
-                "✅ 發作紀錄已同步成功！\n\n" +
+                "✅ 發作紀錄已儲存\n\n" +
 
-                "👤 紀錄者：" +
-                recorder +
-                "\n\n" +
+                "☁️ Google Sheet 同步成功\n\n" +
 
-                "☁️ Google Sheet 已完成儲存。\n\n" +
+                "是否要保留這筆紀錄在此手機？\n\n" +
 
-                "是否要保留這台裝置上的歷史紀錄？\n\n" +
+                "按「確定」＝保留\n" +
 
-                "【確定】保留本機紀錄\n" +
-
-                "【取消】清除本機紀錄"
+                "按「取消」＝從此手機刪除"
 
             );
 
 
-            // ==================================
-            // 選擇不保留
-            // ==================================
+            if(
+                !keepLocal
+            ){
 
-            if(!keepLocalRecords){
-
-                localStorage.removeItem(
-                    SEIZURE_RECORDS_KEY
-                );
-
-
-                console.log(
-                    "🗑️ 本機發作紀錄已清除"
-                );
-
-
-                alert(
-
-                    "✅ Google Sheet 同步成功\n\n" +
-
-                    "👤 紀錄者：" +
-                    recorder +
-                    "\n\n" +
-
-                    "🗑️ 本機歷史紀錄已清除"
-
-                );
-
-            }else{
-
-                console.log(
-                    "📱 保留本機發作紀錄"
-                );
-
-
-                alert(
-
-                    "✅ 發作紀錄已儲存\n\n" +
-
-                    "👤 紀錄者：" +
-                    recorder +
-                    "\n\n" +
-
-                    "☁️ Google Sheet 同步成功\n\n" +
-
-                    "📱 本機歷史紀錄已保留"
-
+                removeLocalRecord(
+                    record.id
                 );
 
             }
 
-
-            // ==================================
-            // 最後重置目前發作狀態
-            // ==================================
 
             resetSeizure();
 
@@ -659,10 +657,6 @@ if(
 
                 "⚠️ 發作紀錄已儲存在本機\n\n" +
 
-                "👤 紀錄者：" +
-                recorder +
-                "\n\n" +
-
                 "但 Google Sheet 同步失敗。\n\n" +
 
                 "資料不會遺失，請稍後再同步。"
@@ -670,7 +664,9 @@ if(
             );
 
 
-            seizurePendingSave = false;
+            seizurePendingSave =
+            false;
+
 
             updateButtons();
 
@@ -678,10 +674,6 @@ if(
 
 
     }catch(error){
-
-        // ==================================
-        // 網路 / API 錯誤
-        // ==================================
 
         console.error(
             "Google Sheet 同步失敗：",
@@ -693,10 +685,6 @@ if(
 
             "⚠️ 發作紀錄已儲存在本機\n\n" +
 
-            "👤 紀錄者：" +
-            recorder +
-            "\n\n" +
-
             "目前無法連線到 Google Sheet。\n\n" +
 
             "資料不會遺失。"
@@ -704,9 +692,68 @@ if(
         );
 
 
-        seizurePendingSave = false;
+        seizurePendingSave =
+        false;
+
 
         updateButtons();
+
+    }
+
+}
+
+
+// ==========================================
+// 刪除手機上的單筆紀錄
+// ==========================================
+
+function removeLocalRecord(id){
+
+    try{
+
+        const records =
+        JSON.parse(
+
+            localStorage.getItem(
+                "care_seizure_records"
+            ) || "[]"
+
+        );
+
+
+        const filtered =
+        records.filter(
+            function(item){
+
+                return item.id !== id;
+
+            }
+        );
+
+
+        localStorage.setItem(
+
+            "care_seizure_records",
+
+            JSON.stringify(
+                filtered
+            )
+
+        );
+
+
+        console.log(
+            "🗑️ 已從手機刪除紀錄：",
+            id
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "刪除本機紀錄失敗：",
+            error
+        );
 
     }
 
@@ -754,12 +801,8 @@ async function sendToGoogleSheet(record){
         note:
         record.note,
 
-        // ==================================
-        // 紀錄者
-        // ==================================
-
         user:
-        record.recorder
+        record.user
 
     };
 
@@ -783,17 +826,22 @@ async function sendToGoogleSheet(record){
             },
 
             body:
-            JSON.stringify(payload)
+            JSON.stringify(
+                payload
+            )
 
         }
 
     );
 
 
-    if(!response.ok){
+    if(
+        !response.ok
+    ){
 
         throw new Error(
-            "HTTP " + response.status
+            "HTTP " +
+            response.status
         );
 
     }
@@ -810,7 +858,9 @@ async function sendToGoogleSheet(record){
 
 function cancelSeizure(){
 
-    if(!seizurePendingSave){
+    if(
+        !seizurePendingSave
+    ){
 
         alert(
             "目前沒有可以取消的待儲存紀錄。"
@@ -821,7 +871,8 @@ function cancelSeizure(){
     }
 
 
-    const confirmCancel = confirm(
+    const confirmCancel =
+    confirm(
 
         "⚠️ 確定要取消本次紀錄嗎？\n\n" +
 
@@ -830,7 +881,9 @@ function cancelSeizure(){
     );
 
 
-    if(!confirmCancel){
+    if(
+        !confirmCancel
+    ){
 
         return;
 
@@ -907,7 +960,9 @@ function loadPendingRecord(){
     );
 
 
-    if(!saved){
+    if(
+        !saved
+    ){
 
         return;
 
@@ -917,7 +972,9 @@ function loadPendingRecord(){
     try{
 
         const record =
-        JSON.parse(saved);
+        JSON.parse(
+            saved
+        );
 
 
         seizureStartTime =
@@ -938,9 +995,12 @@ function loadPendingRecord(){
         ) || 0;
 
 
-        seizureRunning = false;
+        seizureRunning =
+        false;
 
-        seizurePendingSave = true;
+
+        seizurePendingSave =
+        true;
 
 
         updateTimer();
@@ -1002,7 +1062,9 @@ function showFiveMinuteAlert(){
 
 function resetSeizure(){
 
-    if(seizureTimer !== null){
+    if(
+        seizureTimer !== null
+    ){
 
         clearInterval(
             seizureTimer
@@ -1011,22 +1073,75 @@ function resetSeizure(){
     }
 
 
-    seizureTimer = null;
+    seizureTimer =
+    null;
 
-    seizureRunning = false;
 
-    seizurePendingSave = false;
+    seizureRunning =
+    false;
 
-    seizureSeconds = 0;
 
-    seizureStartTime = null;
+    seizurePendingSave =
+    false;
 
-    seizureEndTime = null;
 
-    emergencyTriggered = false;
+    seizureSeconds =
+    0;
+
+
+    seizureStartTime =
+    null;
+
+
+    seizureEndTime =
+    null;
+
+
+    emergencyTriggered =
+    false;
+
+
+    // ======================================
+    // 釋放 Wake Lock
+    // ======================================
+
+    if(
+        wakeLock &&
+        !wakeLock.released
+    ){
+
+        wakeLock.release()
+        .then(
+            function(){
+
+                wakeLock =
+                null;
+
+                console.log(
+                    "📱 發作結束，已解除螢幕保持喚醒"
+                );
+
+            }
+        )
+        .catch(
+            function(error){
+
+                console.warn(
+                    "解除 Wake Lock 失敗：",
+                    error
+                );
+
+                wakeLock =
+                null;
+
+            }
+        );
+
+    }
 
 
     updateTimer();
+
 
     updateStatus(
         "等待開始紀錄"
@@ -1234,13 +1349,15 @@ function getCheckedValues(name){
         name +
         '"]:checked'
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        result.push(
-            item.value
-        );
+            result.push(
+                item.value
+            );
 
-    });
+        }
+    );
 
 
     return result;
@@ -1279,44 +1396,56 @@ function clearForm(){
     .querySelectorAll(
         'input[name="situation"]'
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        item.checked = false;
+            item.checked =
+            false;
 
-    });
+        }
+    );
 
 
     document
     .querySelectorAll(
         'input[name="type"]'
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        item.checked = false;
+            item.checked =
+            false;
 
-    });
+        }
+    );
 
 
     document
     .querySelectorAll(
         'input[name="condition"]'
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        item.checked = false;
+            item.checked =
+            false;
 
-    });
+        }
+    );
 
 
     document
     .querySelectorAll(
         'input[name="afterState"]'
     )
-    .forEach(function(item){
+    .forEach(
+        function(item){
 
-        item.checked = false;
+            item.checked =
+            false;
 
-    });
+        }
+    );
 
 
     const note =
@@ -1327,7 +1456,8 @@ function clearForm(){
 
     if(note){
 
-        note.value = "";
+        note.value =
+        "";
 
     }
 
@@ -1357,7 +1487,10 @@ function formatDuration(sec){
     return (
 
         String(min)
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
         +
 
@@ -1366,7 +1499,10 @@ function formatDuration(sec){
         +
 
         String(second)
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
     );
 
@@ -1391,7 +1527,10 @@ function formatTime(date){
         String(
             date.getHours()
         )
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
         +
 
@@ -1402,7 +1541,10 @@ function formatTime(date){
         String(
             date.getMinutes()
         )
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
         +
 
@@ -1413,7 +1555,10 @@ function formatTime(date){
         String(
             date.getSeconds()
         )
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
     );
 
@@ -1446,7 +1591,10 @@ function formatDate(date){
         String(
             date.getMonth() + 1
         )
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
         +
 
@@ -1457,7 +1605,10 @@ function formatDate(date){
         String(
             date.getDate()
         )
-        .padStart(2,"0")
+        .padStart(
+            2,
+            "0"
+        )
 
     );
 
@@ -1545,7 +1696,8 @@ function initSeizure(){
 // ==========================================
 
 if(
-    document.readyState === "loading"
+    document.readyState ===
+    "loading"
 ){
 
     document.addEventListener(

@@ -138,7 +138,44 @@ function showUserSetup(){
 // ==========================================
 // 進入主畫面
 // ==========================================
+// ==========================================
+// 顯示目前使用者
+// ==========================================
 
+function renderCurrentUser(){
+
+    const display =
+    document.getElementById(
+        "currentUserDisplay"
+    );
+
+
+    if(!display){
+
+        return;
+
+    }
+
+
+    const user =
+    getCurrentUser();
+
+
+    if(!user){
+
+        display.textContent =
+        "👤 尚未設定使用者";
+
+        return;
+
+    }
+
+
+    display.textContent =
+    "👤 目前紀錄者：" +
+    user.displayName;
+
+}
 function enterApp(){
 
     const setupPage =
@@ -175,7 +212,7 @@ function enterApp(){
         0,
         0
     );
-
+renderCurrentUser();
 }
 
 

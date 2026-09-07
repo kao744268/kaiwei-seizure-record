@@ -1,5 +1,5 @@
 // ==========================================
-// 👦 愷威 Care V3.2
+// 👦 愷威 Care V3.3
 // seizure.js
 // 發作紀錄 + Google Sheet 同步
 // + Screen Wake Lock
@@ -255,7 +255,6 @@ function startSeizure(){
 
     );
 
-
 }
 
 
@@ -440,21 +439,48 @@ async function saveRecord(){
 
     try{
 
+        // ======================================
+        // 使用新版使用者系統
+        // user.js：getCurrentUser()
+        // ======================================
+
         if(
-            typeof getUser ===
+            typeof getCurrentUser ===
             "function"
         ){
 
             const user =
-            getUser();
+            getCurrentUser();
 
 
             if(user){
 
-                currentUser =
-                user.name +
-                "｜" +
-                user.role;
+                // 優先使用 displayName
+                // 例如：冠如｜老師
+
+                if(
+                    user.displayName
+                ){
+
+                    currentUser =
+                    user.displayName;
+
+                }else{
+
+                    // 相容舊格式
+
+                    currentUser =
+                    (
+                        user.name ||
+                        "未設定姓名"
+                    ) +
+                    "｜" +
+                    (
+                        user.role ||
+                        "未設定角色"
+                    );
+
+                }
 
             }
 
@@ -463,7 +489,7 @@ async function saveRecord(){
     }catch(error){
 
         console.warn(
-            "取得使用者資訊失敗：",
+            "取得目前紀錄者資訊失敗：",
             error
         );
 
@@ -1117,6 +1143,7 @@ function resetSeizure(){
                 wakeLock =
                 null;
 
+
                 console.log(
                     "📱 發作結束，已解除螢幕保持喚醒"
                 );
@@ -1130,6 +1157,7 @@ function resetSeizure(){
                     "解除 Wake Lock 失敗：",
                     error
                 );
+
 
                 wakeLock =
                 null;
@@ -1622,7 +1650,7 @@ function formatDate(date){
 function initSeizure(){
 
     console.log(
-        "🚨 seizure.js V3.2 loaded"
+        "🚨 seizure.js V3.3 loaded"
     );
 
 
